@@ -229,8 +229,12 @@ if (dropped) {
 // (fontTools, in .venv: `python3 -m venv .venv && .venv/bin/pip install fonttools brotli`) builds
 // one small font from those. Without it, the stylesheet just lists the pieces that are needed.
 const KANJI_WEIGHT = 400;
+// Every kanji in the app's source: the inks' names, the masthead, the palettes' names.
 const used = new Set(
-  [...readFileSync(`${ROOT}src/inks.ts`, "utf8"), ...readFileSync(`${ROOT}src/App.tsx`, "utf8")].filter((c) => c.codePointAt(0)! >= 0x2e80),
+  readdirSync(`${ROOT}src`, { recursive: true, encoding: "utf8" })
+    .filter((f) => /\.tsx?$/.test(f))
+    .flatMap((f) => [...readFileSync(`${ROOT}src/${f}`, "utf8")])
+    .filter((c) => c.codePointAt(0)! >= 0x2e80),
 );
 const covers = (range: string) =>
   range.split(",").some((r) => {

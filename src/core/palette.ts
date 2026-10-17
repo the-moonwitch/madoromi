@@ -67,15 +67,15 @@ export interface Accent {
 
 /** The accents, roughly Catppuccin's: rosewater … blue. */
 export const ACCENTS: Accent[] = [
-  { key: "sakura", name: "sakura", kanji: "桜", english: "cherry blossom", hue: 0, dL: { hiru: 0.08, yoru: 0.1 }, minChroma: 0.03, vivid: false, chroma: { hiru: 0.08, yoru: 0.05 } },
+  { key: "sakura", name: "sakura", kanji: "桜", english: "cherry blossom", hue: 0, dL: { hiru: 0.08, yoru: 0.1 }, minChroma: 0.03, vivid: false, chroma: { hiru: 0.09, yoru: 0.09 } },
   { key: "nadeshiko", name: "nadeshiko", kanji: "撫子", english: "pink", hue: 352, dL: { hiru: 0.05, yoru: 0.04 }, minChroma: 0.08, vivid: true },
   { key: "botan", name: "botan", kanji: "牡丹", english: "peony", hue: 340, dL: { hiru: 0, yoru: 0 }, minChroma: 0.12, vivid: true },
   { key: "fuji", name: "fuji", kanji: "藤", english: "wisteria", hue: 305, dL: { hiru: 0, yoru: 0 }, minChroma: 0.1, vivid: true },
   { key: "kikyo", name: "kikyō", kanji: "桔梗", english: "bellflower", hue: 285, dL: { hiru: -0.02, yoru: 0 }, minChroma: 0.1, vivid: true },
   { key: "beni", name: "beni", kanji: "紅", english: "crimson", hue: 22, dL: { hiru: -0.02, yoru: -0.03 }, minChroma: 0.14, vivid: true },
   { key: "akane", name: "akane", kanji: "茜", english: "madder", hue: 8, dL: { hiru: 0.04, yoru: 0.04 }, minChroma: 0.1, vivid: true },
-  { key: "kaki", name: "kaki", kanji: "柿", english: "persimmon", hue: 50, dL: { hiru: 0.14, yoru: 0.03 }, minChroma: 0.12, vivid: true, contrast: { hiru: 2.6 } },
-  { key: "yamabuki", name: "yamabuki", kanji: "山吹", english: "kerria gold", hue: 88, dL: { hiru: 0.14, yoru: 0.07 }, minChroma: 0.12, vivid: true, contrast: { hiru: 2.6 } },
+  { key: "kaki", name: "kaki", kanji: "柿", english: "persimmon", hue: 50, dL: { hiru: 0.17, yoru: 0.03 }, minChroma: 0.12, vivid: true, contrast: { hiru: 2.6 } },
+  { key: "yamabuki", name: "yamabuki", kanji: "山吹", english: "kerria gold", hue: 85, dL: { hiru: 0.21, yoru: 0.08 }, minChroma: 0.15, vivid: true, contrast: { hiru: 2.2 } },
   { key: "wakaba", name: "wakaba", kanji: "若葉", english: "young leaves", hue: 135, dL: { hiru: 0.06, yoru: 0.05 }, minChroma: 0.1, vivid: true },
   { key: "tokiwa", name: "tokiwa", kanji: "常磐", english: "evergreen", hue: 175, dL: { hiru: 0.02, yoru: 0.02 }, minChroma: 0.08, vivid: true },
   { key: "sora", name: "sora", kanji: "空", english: "sky", hue: 220, dL: { hiru: 0.04, yoru: 0.04 }, minChroma: 0.08, vivid: true },
@@ -111,13 +111,17 @@ export const NEUTRALS: Neutral[] = [
 ];
 
 /** Accents' lightness before contrast, and the contrast they must reach against the paper. */
-const ACCENT_L: Record<Mode, number> = { hiru: 0.56, yoru: 0.8 };
-const ACCENT_CONTRAST: Record<Mode, number> = { hiru: 3.5, yoru: 7 };
+const ACCENT_L: Record<Mode, number> = { hiru: 0.53, yoru: 0.74 };
+const ACCENT_CONTRAST: Record<Mode, number> = { hiru: 4, yoru: 5.5 };
 /** How far contrast may push an accent from its target lightness. */
 const ACCENT_REACH = 0.14;
 /** Accents in one flavour are at least this far apart (ΔE in oklab). */
 const MIN_DELTA = 0.05;
+/** How far an accent's hue may stray from its name's. */
+const MAX_HUE_SHIFT = 40;
 const accentContrast = (a: Accent, mode: Mode) => a.contrast?.[mode] ?? ACCENT_CONTRAST[mode];
+/** The most chroma the neutrals take from their grey ink. */
+const GREY_CHROMA = { text: 0.055, rest: 0.04 };
 /** The text tiers' minimum contrast against the paper. */
 const TEXT_CONTRAST: Record<string, number> = { sumi: 7, usuzumi0: 4.5, kasure2: 3 };
 
@@ -155,10 +159,27 @@ export function colourAt(v: Curve, L: number): Vec3 | undefined {
 }
 
 /**
- * A grey ink's colour at a lightness, kept nearly neutral. Past the ends of its ramp it keeps the
- * end's hue, its chroma tapering away.
+ * A grey ink's cast: its hue where it's dense (the darker half of its ramp), weighted by chroma.
+ * Thinned out, the greys all drift towards the same blue; dense, each has its own colour.
  */
-function greyAt(v: Curve, L: number, cap: number): Vec3 {
+function castOf(v: Curve): number {
+  const lab = v.curve.lab;
+  const n = lab.length / 3;
+  const mid = (lab[0] + lab[(n - 1) * 3]) / 2;
+  let a = 0;
+  let b = 0;
+  for (let i = 0; i < n && lab[i * 3] <= mid; i++) {
+    a += lab[i * 3 + 1];
+    b += lab[i * 3 + 2];
+  }
+  return (Math.atan2(b, a) * 180) / Math.PI;
+}
+
+/**
+ * A grey ink's colour at a lightness, in its cast and kept nearly neutral: as much chroma as the
+ * ink has there, up to `cap`. Past the ends of its ramp the chroma tapers away.
+ */
+function greyAt(v: Curve, L: number, cast: number, cap: number): Vec3 {
   const lab = v.curve.lab;
   const n = lab.length / 3;
   let c = colourAt(v, L);
@@ -166,11 +187,11 @@ function greyAt(v: Curve, L: number, cap: number): Vec3 {
   if (!c) {
     const e = L < lab[0] ? 0 : n - 1;
     c = [L, lab[e * 3 + 1], lab[e * 3 + 2]];
-    taper = Math.max(0, 1 - Math.abs(L - lab[e * 3]) * 4);
+    taper = Math.max(0, 1 - Math.abs(L - lab[e * 3]) * 2);
   }
-  const [, C, h] = oklabToOklch(c);
+  const [, C] = oklabToOklch(c);
   const k = Math.min(C, cap) * taper;
-  return [L, k * Math.cos((h * Math.PI) / 180), k * Math.sin((h * Math.PI) / 180)];
+  return [L, k * Math.cos((cast * Math.PI) / 180), k * Math.sin((cast * Math.PI) / 180)];
 }
 
 const hueDistance = (a: number, b: number) => Math.abs(((a - b + 540) % 360) - 180);
@@ -180,10 +201,11 @@ const deltaE = (a: Vec3, b: Vec3) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] -
 export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mode): Flavour {
   const s = SEASONS.find((x) => x.id === season)!;
   const grey = views.get(s.grey)!;
+  const cast = castOf(grey);
   const colours: Record<string, Swatch> = {};
 
   // --- Neutrals: the season's grey ink at each tier's lightness.
-  for (const n of NEUTRALS) colours[n.key] = swatch(greyAt(grey, n.L[mode], n.text ? 0.045 : 0.03), s.grey, n.L[mode]);
+  for (const n of NEUTRALS) colours[n.key] = swatch(greyAt(grey, n.L[mode], cast, n.text ? GREY_CHROMA.text : GREY_CHROMA.rest), s.grey, n.L[mode]);
   const paper = colours.kami.lab;
   // Text tiers move away from the paper until they're legible enough.
   for (const [key, min] of Object.entries(TEXT_CONTRAST)) {
@@ -191,7 +213,7 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
     let L = n.L[mode];
     while (contrast(colours[key].lab, paper) < min && L > 0.02 && L < 0.98) {
       L += mode === "yoru" ? 0.01 : -0.01;
-      colours[key] = swatch(greyAt(grey, L, n.text ? 0.045 : 0.03), s.grey, L);
+      colours[key] = swatch(greyAt(grey, L, cast, n.text ? GREY_CHROMA.text : GREY_CHROMA.rest), s.grey, L);
     }
   }
 
@@ -222,7 +244,9 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
     candidates.set(a.key, list);
   }
   const near = (key: string) => candidates.get(key)!.filter((c) => hueDistance(c.h, ACCENTS.find((a) => a.key === key)!.hue) < 20 && c.C > 0.05).length;
-  const order = ACCENTS.map((a) => a.key).sort((x, y) => near(x) - near(y));
+  // The pale ones first: the vivid ones would otherwise take the few soft inks they need.
+  const pale = (key: string) => (ACCENTS.find((a) => a.key === key)!.vivid ? 1 : 0);
+  const order = ACCENTS.map((a) => a.key).sort((x, y) => pale(x) - pale(y) || near(x) - near(y));
   const used = new Map<string, number>();
   const chosen: Vec3[] = [];
   for (const key of order) {
@@ -232,13 +256,15 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
     for (const c of candidates.get(key)!) {
       if (chosen.some((o) => deltaE(o, c.lab) < MIN_DELTA)) continue;
       const hd = hueDistance(c.h, a.hue);
+      if (hd > MAX_HUE_SHIFT) continue;
       const score =
-        hd / 10 +
-        Math.max(0, hd - 20) / 3 +
-        (a.vivid ? Math.max(0, a.minChroma - c.C) * 30 - c.C * 3 : Math.abs(c.C - a.chroma![mode]) * 30) +
+        hd / 8 +
+        Math.max(0, hd - 15) / 2 +
+        (a.vivid ? Math.max(0, a.minChroma - c.C) * 60 - c.C * 6 : Math.abs(c.C - a.chroma![mode]) * 60) +
         Math.abs(c.L - L0) * 8 +
         (used.get(c.ink) ?? 0) * 0.6 -
-        (s.inks.includes(c.ink) ? 1.5 : 0);
+        // The season's own inks, where they're colourful enough for it.
+        (s.inks.includes(c.ink) && (!a.vivid || c.C >= a.minChroma) ? 3 : 0);
       if (!best || score < best.score) best = { ...c, score };
     }
     if (!best) throw new Error(`no ink fits ${key} in ${season}-${mode}`);
