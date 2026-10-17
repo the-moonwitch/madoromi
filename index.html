@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>madoromi</title>
+    <!-- Everything the first screen shows; fetched while the script loads. -->
+    <link rel="preload" href="/precomputed/summary.json" as="fetch" crossorigin />
+    <link rel="preload" href="/precomputed/strokes.webp" as="image" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
