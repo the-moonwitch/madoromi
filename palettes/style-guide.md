@@ -120,9 +120,9 @@ Bright colours are the same ink as their normal colour, read 0.06 further from t
 | 6 cyan | tokiwa 常磐 | tokiwa 常磐 |
 | 7 white | nijimi 2 滲み | usuzumi 1 薄墨 |
 | 8 bright black | usuzumi 0 薄墨 | nijimi 2 滲み |
-| 9 bright red | beni 紅, stronger | beni 紅, stronger |
+| 9 bright red | beni 紅 | beni 紅, stronger |
 | 10 bright green | wakaba 若葉, stronger | wakaba 若葉, stronger |
-| 11 bright yellow | yamabuki 山吹 | yamabuki 山吹, stronger |
+| 11 bright yellow | yamabuki 山吹, stronger | yamabuki 山吹, stronger |
 | 12 bright blue | ai 藍, stronger | ai 藍, stronger |
 | 13 bright magenta | botan 牡丹, stronger | botan 牡丹, stronger |
 | 14 bright cyan | tokiwa 常磐, stronger | tokiwa 常磐, stronger |

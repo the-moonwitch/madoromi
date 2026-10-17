@@ -68,15 +68,15 @@ export interface Accent {
 
 /** The accents, roughly Catppuccin's: rosewater … blue. */
 export const ACCENTS: Accent[] = [
-  { key: "sakura", name: "sakura", kanji: "桜", english: "cherry blossom", hue: 0, dL: { hiru: 0.08, yoru: 0.1 }, minChroma: 0.03, vivid: false, chroma: { hiru: 0.09, yoru: 0.09 } },
+  { key: "sakura", name: "sakura", kanji: "桜", english: "cherry blossom", hue: 0, dL: { hiru: 0, yoru: 0.1 }, minChroma: 0.03, vivid: false, chroma: { hiru: 0.09, yoru: 0.09 } },
   { key: "nadeshiko", name: "nadeshiko", kanji: "撫子", english: "pink", hue: 352, dL: { hiru: 0.05, yoru: 0.04 }, minChroma: 0.08, vivid: true },
   { key: "botan", name: "botan", kanji: "牡丹", english: "peony", hue: 340, dL: { hiru: 0, yoru: 0 }, minChroma: 0.12, vivid: true },
   { key: "fuji", name: "fuji", kanji: "藤", english: "wisteria", hue: 305, dL: { hiru: 0, yoru: 0 }, minChroma: 0.1, vivid: true },
   { key: "kikyo", name: "kikyō", kanji: "桔梗", english: "bellflower", hue: 285, dL: { hiru: -0.02, yoru: 0 }, minChroma: 0.1, vivid: true },
   { key: "beni", name: "beni", kanji: "紅", english: "crimson", hue: 22, dL: { hiru: -0.02, yoru: -0.03 }, minChroma: 0.14, vivid: true },
   { key: "akane", name: "akane", kanji: "茜", english: "madder", hue: 8, dL: { hiru: 0.04, yoru: 0.04 }, minChroma: 0.1, vivid: true },
-  { key: "kaki", name: "kaki", kanji: "柿", english: "persimmon", hue: 50, dL: { hiru: 0.17, yoru: 0.03 }, minChroma: 0.12, vivid: true, contrast: { hiru: 2.6 } },
-  { key: "yamabuki", name: "yamabuki", kanji: "山吹", english: "kerria gold", hue: 85, dL: { hiru: 0.21, yoru: 0.04 }, minChroma: 0.15, vivid: true, contrast: { hiru: 2.2 } },
+  { key: "kaki", name: "kaki", kanji: "柿", english: "persimmon", hue: 50, dL: { hiru: 0.12, yoru: 0.03 }, minChroma: 0.12, vivid: true, contrast: { hiru: 2.8 } },
+  { key: "yamabuki", name: "yamabuki", kanji: "山吹", english: "kerria gold", hue: 85, dL: { hiru: 0.16, yoru: 0.04 }, minChroma: 0.15, vivid: true, contrast: { hiru: 2.5 } },
   { key: "wakaba", name: "wakaba", kanji: "若葉", english: "young leaves", hue: 135, dL: { hiru: 0.06, yoru: 0.05 }, minChroma: 0.1, vivid: true },
   { key: "tokiwa", name: "tokiwa", kanji: "常磐", english: "evergreen", hue: 175, dL: { hiru: 0.02, yoru: 0.02 }, minChroma: 0.08, vivid: true },
   { key: "sora", name: "sora", kanji: "空", english: "sky", hue: 220, dL: { hiru: 0.04, yoru: 0.04 }, minChroma: 0.08, vivid: true },
@@ -145,8 +145,8 @@ export const MOODS: Record<Season, { apparent: number; chroma: number }> = {
  * How much each way of straying costs, per unit (hue in degrees, the rest as fractions). Chroma
  * past the flavour's costs `loud`, short of it `chroma`: a loud accent spoils a flavour more.
  */
-export const COST = { hue: 1 / 8, hueFar: 1 / 2, chroma: 50, loud: 150, shortfall: 300, apparent: 30, glow: 30, gamut: 25, reuse: 0.6, season: 4, echo: 1.5 };
-/** No accent looks lighter than its target by more than this (in L**): the ones that glare. */
+export const COST = { hue: 1 / 8, hueFar: 1, chroma: 50, loud: 150, shortfall: 300, apparent: 60, glow: 30, gamut: 25, reuse: 0.6, season: 4, echo: 1.5 };
+/** No accent looks lighter or darker than its target by more than this (in L**), where any ink can. */
 const APPARENT_BAND = 0.06;
 /** Hue strays up to this many degrees cost only `hue`; past it, `hueFar` too. */
 const HUE_EASY = 15;
@@ -155,7 +155,7 @@ const ACCENT_REACH = 0.15;
 /** Accents in one flavour are at least this far apart (ΔE in oklab). */
 const MIN_DELTA = 0.05;
 /** How far an accent's hue may stray from its name's. */
-const MAX_HUE_SHIFT = 40;
+const MAX_HUE_SHIFT = 25;
 const accentContrast = (a: Accent, mode: Mode) => a.contrast?.[mode] ?? ACCENT_CONTRAST[mode];
 /**
  * The neutrals' chroma, the same in every season so that only the cast differs: the papers
@@ -281,10 +281,13 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
     // dL is in oklab lightness; L** runs about 1.16 times as fast.
     const apparent = harmony.apparent + a.dL[mode] * 1.16;
     let best: (Candidate & { score: number }) | undefined;
+    // Within the band if anything is; past it only where nothing is.
+    for (const band of [APPARENT_BAND, Infinity]) {
+    if (best) break;
     for (const c of candidates.get(key)!) {
       if (chosen.some((o) => deltaE(o, c.lab) < MIN_DELTA)) continue;
       const hd = hueDistance(c.h, a.hue);
-      if (hd > MAX_HUE_SHIFT || c.apparent > apparent + APPARENT_BAND) continue;
+      if (hd > MAX_HUE_SHIFT || Math.abs(c.apparent - apparent) > band) continue;
       const score =
         hd * COST.hue +
         Math.max(0, hd - HUE_EASY) * COST.hueFar +
@@ -292,11 +295,12 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
         Math.abs(c.apparent - apparent) * COST.apparent +
         Math.max(0, c.glow - harmony.glow) * COST.glow +
         Math.max(0, c.gamut - harmony.gamut) * COST.gamut +
-        (used.get(c.ink) ?? 0) * COST.reuse -
+        (used.get(c.ink) ?? 0) * COST.reuse +
         (echoes.get(key)?.has(c.ink) ? COST.echo : 0) -
         // The season's own inks, where they're colourful enough for the accent.
         (s.inks.includes(c.ink) && (!a.vivid || c.C >= a.minChroma) ? COST.season : 0);
       if (!best || score < best.score) best = { ...c, score };
+    }
     }
     if (!best) throw new Error(`no ink fits ${key} in ${season}-${mode}`);
     colours[key] = swatch(best.lab, best.ink, best.L);

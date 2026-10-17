@@ -5,6 +5,8 @@ import { Palette, type Sprite } from "./components/Palette";
 import { Ramp1D } from "./components/Ramp1D";
 import { WhenNear } from "./components/WhenNear";
 import { PAGES } from "./components/palettes/pages";
+import { buildFamily } from "./core/palette";
+import { legibleOn, paperLab, Picker, useTheme } from "./theme";
 import { analyze, combineScans, defaultAnalysisOptions, type Analysis, type Cloud } from "./core/analyze";
 import { oklabToHex } from "./core/color";
 import { viewOf, type InkView } from "./core/inkview";
@@ -117,6 +119,14 @@ export function App() {
 
   const ramp = (id: string): Ramp | undefined => precomputedFor(id) ?? computed().get(id);
   const ramps = createMemo(() => new Map(inks.flatMap((i) => (ramp(i.id) ? [[i.id, ramp(i.id)!] as const] : []))));
+  // Every page is shown in a madoromi flavour, built from the inks once they're all here.
+  const family = createMemo(() => (ramps().size === inks.length ? buildFamily(ramps()) : []));
+  const flavour = useTheme(family);
+  /** An ink's colour for its name: itself, read thinner where the paper is too dark for it. */
+  const inkColour = (id: string) => {
+    const r = ramp(id);
+    return r ? oklabToHex(legibleOn(r.curve.lab, r.main, paperLab(), 4.5)) : "#dddbd6";
+  };
   const hists = createMemo(() => {
     const out = new Map<string, InkHistogram>();
     for (const ink of inks) {
@@ -184,12 +194,12 @@ export function App() {
             )}
           </For>
         </nav>
-        <div id="masthead-tools" />
+        <Picker family={family()} />
       </header>
 
       <Show when={palettes()}>
         <Suspense>
-          <Site page={selected()} ramps={ramps()} ready={ramps().size === inks.length} sprite={sprite} go={go} />
+          <Show when={flavour()}>{(f) => <Site page={selected()} flavour={f()} family={family()} sprite={sprite} ramp={ramp} strokeUrl={(id) => (precomputedFor(id) ? precomputed(strokeFile(id)) : undefined)} go={go} />}</Show>
         </Suspense>
       </Show>
 
@@ -198,6 +208,7 @@ export function App() {
           inks={inks}
           order={order()}
           ramp={ramp}
+          colour={inkColour}
           sprite={sprite}
           mode={current() ? "list" : "grid"}
           selected={selected()}
@@ -207,10 +218,7 @@ export function App() {
         />
         <Show when={current()} keyed>
           {(ink) => {
-            const color = () => {
-              const r = ramp(ink.id);
-              return r ? oklabToHex(r.main) : "#dddbd6";
-            };
+            const color = () => inkColour(ink.id);
             return (
               <main class="detail">
                 <button class="close" onClick={() => select("")} title="all inks">

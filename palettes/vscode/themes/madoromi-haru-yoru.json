@@ -112,7 +112,7 @@
     "peekViewTitle.background": "#160f18",
     "editor.background": "#241c26",
     "editor.foreground": "#e1d1e7",
-    "editorCursor.foreground": "#f9b3d1",
+    "editorCursor.foreground": "#ffc3e3",
     "editorLineNumber.foreground": "#615665",
     "editorLineNumber.activeForeground": "#dfb8ff",
     "editor.lineHighlightBackground": "#392e3c73",
@@ -147,10 +147,10 @@
     "editorOverviewRuler.warningForeground": "#ffc849",
     "editorOverviewRuler.infoForeground": "#7bddff",
     "editorBracketHighlight.foreground1": "#dfb8ff",
-    "editorBracketHighlight.foreground2": "#829eeb",
+    "editorBracketHighlight.foreground2": "#91acf2",
     "editorBracketHighlight.foreground3": "#ffc849",
     "editorBracketHighlight.foreground4": "#c1dd4a",
-    "editorBracketHighlight.foreground5": "#cf87b5",
+    "editorBracketHighlight.foreground5": "#f894d8",
     "editorBracketHighlight.foreground6": "#7bddff",
     "editorBracketHighlight.unexpectedBracket.foreground": "#ff8799",
     "diffEditor.insertedTextBackground": "#c1dd4a2e",
@@ -158,7 +158,7 @@
     "diffEditor.insertedLineBackground": "#c1dd4a1a",
     "diffEditor.removedLineBackground": "#ff87991a",
     "merge.currentHeaderBackground": "#c1dd4a66",
-    "merge.incomingHeaderBackground": "#829eeb66",
+    "merge.incomingHeaderBackground": "#91acf266",
     "gitDecoration.addedResourceForeground": "#c1dd4a",
     "gitDecoration.untrackedResourceForeground": "#c1dd4a",
     "gitDecoration.modifiedResourceForeground": "#ffc849",
@@ -168,21 +168,21 @@
     "terminal.background": "#241c26",
     "terminal.foreground": "#e1d1e7",
     "terminal.selectionBackground": "#61566599",
-    "terminalCursor.foreground": "#f9b3d1",
+    "terminalCursor.foreground": "#ffc3e3",
     "terminal.ansiBlack": "#4e4352",
     "terminal.ansiRed": "#ff8799",
     "terminal.ansiGreen": "#c1dd4a",
     "terminal.ansiYellow": "#ffc849",
-    "terminal.ansiBlue": "#829eeb",
-    "terminal.ansiMagenta": "#cf87b5",
+    "terminal.ansiBlue": "#91acf2",
+    "terminal.ansiMagenta": "#f894d8",
     "terminal.ansiCyan": "#81d9ba",
     "terminal.ansiWhite": "#cdbed3",
     "terminal.ansiBrightBlack": "#615665",
     "terminal.ansiBrightRed": "#ffa7bb",
     "terminal.ansiBrightGreen": "#dcee73",
     "terminal.ansiBrightYellow": "#ffe387",
-    "terminal.ansiBrightBlue": "#99b2f5",
-    "terminal.ansiBrightMagenta": "#dd9fbf",
+    "terminal.ansiBrightBlue": "#a8c0fa",
+    "terminal.ansiBrightMagenta": "#ffb1e6",
     "terminal.ansiBrightCyan": "#a3e9d1",
     "terminal.ansiBrightWhite": "#b7a8bd"
   },
@@ -280,7 +280,7 @@
         "punctuation.section.embedded"
       ],
       "settings": {
-        "foreground": "#cf87b5"
+        "foreground": "#f894d8"
       }
     },
     {
@@ -288,7 +288,7 @@
         "string.regexp"
       ],
       "settings": {
-        "foreground": "#cf87b5"
+        "foreground": "#f894d8"
       }
     },
     {
@@ -329,7 +329,7 @@
         "variable.function"
       ],
       "settings": {
-        "foreground": "#829eeb"
+        "foreground": "#91acf2"
       }
     },
     {
@@ -362,7 +362,7 @@
         "meta.attribute"
       ],
       "settings": {
-        "foreground": "#dfa3c0"
+        "foreground": "#ebbcc7"
       }
     },
     {
@@ -398,7 +398,7 @@
         "entity.name.variable.parameter"
       ],
       "settings": {
-        "foreground": "#fc9bc4",
+        "foreground": "#faa7ca",
         "fontStyle": "italic"
       }
     },
@@ -433,7 +433,7 @@
         "punctuation.definition.tag"
       ],
       "settings": {
-        "foreground": "#cf87b5"
+        "foreground": "#f894d8"
       }
     },
     {
@@ -462,7 +462,7 @@
         "punctuation.definition.label"
       ],
       "settings": {
-        "foreground": "#f9b3d1"
+        "foreground": "#ffc3e3"
       }
     },
     {
@@ -603,7 +603,7 @@
       "fontStyle": "italic"
     },
     "parameter": {
-      "foreground": "#fc9bc4",
+      "foreground": "#faa7ca",
       "fontStyle": "italic"
     },
     "variable": {
@@ -622,10 +622,10 @@
       "foreground": "#81d9ba"
     },
     "function": {
-      "foreground": "#829eeb"
+      "foreground": "#91acf2"
     },
     "method": {
-      "foreground": "#829eeb"
+      "foreground": "#91acf2"
     },
     "function.defaultLibrary": {
       "foreground": "#ff8799"
@@ -634,7 +634,7 @@
       "foreground": "#81d9ba"
     },
     "decorator": {
-      "foreground": "#dfa3c0"
+      "foreground": "#ebbcc7"
     },
     "keyword": {
       "foreground": "#dfb8ff"
@@ -646,7 +646,7 @@
       "foreground": "#ffb66d"
     },
     "regexp": {
-      "foreground": "#cf87b5"
+      "foreground": "#f894d8"
     },
     "operator": {
       "foreground": "#7bddff"

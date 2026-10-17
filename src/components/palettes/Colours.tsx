@@ -1,7 +1,8 @@
 import { createSignal, For, Show } from "solid-js";
 import { oklabToOklch } from "../../core/color";
 import { ACCENTS, MODES, NEUTRALS, SEASONS, type Flavour } from "../../core/palette";
-import { SHEET_COLUMNS } from "../../core/summary";
+import { oklabToHex } from "../../core/color";
+import { SHEET_COLUMNS, type Ramp } from "../../core/summary";
 import { inks } from "../../inks";
 import type { Sprite } from "../Palette";
 
@@ -39,7 +40,14 @@ const INK = new Map(inks.map((i) => [i.id, i]));
  * Every colour of every flavour side by side, then the chosen flavour's in detail: each in the
  * format chosen, with the ink it is.
  */
-export function Colours(props: { flavour: Flavour; family: Flavour[]; sprite: (id: string) => Sprite | undefined; go: (page: string) => void }) {
+export function Colours(props: {
+  flavour: Flavour;
+  family: Flavour[];
+  sprite: (id: string) => Sprite | undefined;
+  ramp: (id: string) => Ramp | undefined;
+  strokeUrl: (id: string) => string | undefined;
+  go: (page: string) => void;
+}) {
   const [as, setAs] = createSignal<Format>("hex");
   const [copied, setCopied] = createSignal("");
   const copy = (key: string, text: string) =>
@@ -89,7 +97,7 @@ export function Colours(props: { flavour: Flavour; family: Flavour[]; sprite: (i
               <a href={`#${c().ink}`} onClick={(e) => (e.preventDefault(), props.go(c().ink))}>
                 {c().ink} <span class="kanji">{ink()?.kanji}</span>
               </a>{" "}
-              <span class="m-at">at {c().L.toFixed(2)}</span>
+              <Story ramp={props.ramp(c().ink)} L={c().L} stroke={props.strokeUrl(c().ink)} />
             </td>
           </tr>
         );
@@ -192,5 +200,45 @@ export function Colours(props: { flavour: Flavour; family: Flavour[]; sprite: (i
         <tbody>{rows(NEUTRALS)}</tbody>
       </table>
     </main>
+  );
+}
+
+/**
+ * Where on its ink a colour comes from: the ink's ramp from its densest stroke to its palest wash,
+ * marked where the colour is read; its brush stroke on hover.
+ */
+export function Story(props: { ramp: Ramp | undefined; L: number; stroke: string | undefined }) {
+  const strip = () => {
+    const lab = props.ramp?.curve.lab;
+    if (!lab) return;
+    const n = lab.length / 3;
+    const [L0, L1] = [lab[0], lab[(n - 1) * 3]];
+    const stops = Array.from({ length: 12 }, (_, k) => {
+      const i = Math.round((k / 11) * (n - 1));
+      return `${oklabToHex([lab[i * 3], lab[i * 3 + 1], lab[i * 3 + 2]])} ${((k / 11) * 100).toFixed(0)}%`;
+    });
+    const at = Math.min(1, Math.max(0, (props.L - L0) / (L1 - L0 || 1)));
+    return { gradient: `linear-gradient(to right, ${stops.join(", ")})`, at, L0, L1 };
+  };
+  return (
+    <Show when={strip()}>
+      {(st) => (
+        <span class="m-story" tabindex="0">
+          <span class="m-strip" style={{ background: st().gradient }}>
+            <i style={{ left: `${st().at * 100}%` }} />
+          </span>
+          <span class="m-at">{props.L.toFixed(2)}</span>
+          <span class="m-story-card">
+            <Show when={props.stroke}>{(src) => <img src={src()} alt="" width="125" height="125" />}</Show>
+            <span class="m-strip big" style={{ background: st().gradient }}>
+              <i style={{ left: `${st().at * 100}%` }} />
+            </span>
+            <span class="m-at">
+              read at {props.L.toFixed(2)}, of {st().L0.toFixed(2)} (densest) to {st().L1.toFixed(2)} (palest)
+            </span>
+          </span>
+        </span>
+      )}
+    </Show>
   );
 }

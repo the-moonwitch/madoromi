@@ -2,15 +2,15 @@
 [colors]
 foreground = "#5d4c3c"
 background = "#f8f0e9"
-cursor_bg = "#aa6e89"
+cursor_bg = "#a26480"
 cursor_fg = "#f8f0e9"
-cursor_border = "#aa6e89"
+cursor_border = "#a26480"
 selection_fg = "#5d4c3c"
 selection_bg = "#beae9f"
 scrollbar_thumb = "#cebeaf"
 split = "#cebeaf"
-ansi = ["#715f4f", "#c13461", "#5e8933", "#e2900b", "#20609e", "#9e458a", "#008a5b", "#beae9f"]
-brights = ["#7d6b5a", "#9e3c32", "#4c7635", "#e2900b", "#1c4c8a", "#8b3278", "#007749", "#cebeaf"]
+ansi = ["#715f4f", "#a43b3b", "#618c32", "#b2953c", "#20609e", "#9e458a", "#028a7d", "#beae9f"]
+brights = ["#7d6b5a", "#a43b3b", "#4f7935", "#a18138", "#1c4c8a", "#8b3278", "#0b766f", "#cebeaf"]
 
 [metadata]
 name = "madoromi aki-hiru"

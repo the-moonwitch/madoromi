@@ -1,5 +1,4 @@
 import { createEffect, createMemo, For } from "solid-js";
-import { oklabToHex } from "../core/color";
 import { SHEET_COLUMNS, TABLE_STROKE, type Ramp } from "../core/summary";
 import type { Ink } from "../inks";
 import { Stroke } from "./Stroke";
@@ -11,6 +10,13 @@ export interface Sprite {
   rows: number;
 }
 
+/** CSS that shows a sprite's cell of the stroke sheet, at whatever size the element is. */
+export const spriteStyle = (sp: Sprite) => ({
+  "background-image": `url(${sp.url})`,
+  "background-size": `${SHEET_COLUMNS * 100}% ${sp.rows * 100}%`,
+  "background-position": `${((sp.index % SHEET_COLUMNS) / (SHEET_COLUMNS - 1)) * 100}% ${sp.rows > 1 ? (Math.floor(sp.index / SHEET_COLUMNS) / (sp.rows - 1)) * 100 : 0}%`,
+});
+
 /**
  * Every ink as a brush stroke, in the order of the shortest loop through their ramps: a centred
  * flowing sheet when browsing, a one-wide list beside an open ink.
@@ -19,6 +25,8 @@ export function Palette(props: {
   inks: Ink[];
   order: string[];
   ramp: (id: string) => Ramp | undefined;
+  /** The colour an ink's name is written in. */
+  colour: (id: string) => string;
   sprite: (id: string) => Sprite | undefined;
   mode: "grid" | "list";
   selected: string;
@@ -49,10 +57,7 @@ export function Palette(props: {
         {(id) => {
           const ink = byId.get(id)!;
           const ramp = createMemo(() => props.ramp(id));
-          const color = () => {
-            const r = ramp();
-            return r ? oklabToHex(r.main) : "#dddbd6";
-          };
+          const color = () => props.colour(id);
           return (
             <li
               ref={(el) => cells.set(id, el)}
