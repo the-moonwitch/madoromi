@@ -18,7 +18,7 @@ import type { SampleResult } from "./worker";
 // three.js is only fetched once a 3D view is near the screen (and warmed up when idle).
 const loadView3D = () => import("./components/View3D").then((m) => ({ default: m.View3D }));
 const View3D = lazy(loadView3D);
-const Palettes = lazy(() => import("./components/Palettes").then((m) => ({ default: m.Palettes })));
+const Site = lazy(() => import("./components/palettes/Site").then((m) => ({ default: m.Site })));
 const SharedSpace3D = lazy(() => import("./components/SharedSpace3D").then((m) => ({ default: m.SharedSpace3D })));
 
 const PALETTES = "palettes";
@@ -46,21 +46,23 @@ export function App() {
     window.addEventListener("hashchange", follow);
     (window.requestIdleCallback ?? setTimeout)(() => void loadView3D());
   });
-  /** Selecting the open ink again closes it. */
-  const select = (id: string) => {
-    const next = selected() === id ? "" : id;
-    if (!next !== !selected()) window.scrollTo({ top: 0 });
+  /** Opens an ink or a page; "" is the table of inks. */
+  const go = (next: string) => {
+    if (next === selected()) return;
+    if (!next !== !selected() || next.startsWith(PALETTES) || selected().startsWith(PALETTES)) window.scrollTo({ top: 0 });
     history.pushState(null, "", next ? `#${next}` : location.pathname);
     setHovered("");
     setSelected(next);
   };
+  /** Selecting the open ink again closes it. */
+  const select = (id: string) => go(selected() === id ? "" : id);
   const hover = (id: string) => {
     setHovered(id);
     if (id && precomputedFor(id)) prefetchInk(id);
   };
   const current = createMemo(() => inks.find((i) => i.id === selected()));
   /** The palettes page, at #palettes. */
-  const palettes = () => selected() === PALETTES;
+  const palettes = () => selected() === PALETTES || selected().startsWith(`${PALETTES}/`);
 
   // --- What the summary covers: inks whose scans haven't changed since preprocessing.
   // Anything else is analysed here from the ink's scans.
@@ -163,12 +165,15 @@ export function App() {
           微睡
         </span>
         <h1>
-          <a href="#" onClick={(e) => (e.preventDefault(), select(""))}>
+          <a href="#" onClick={(e) => (e.preventDefault(), go(""))}>
             madoromi
           </a>
         </h1>
         <nav>
-          <a class="link" classList={{ on: palettes() }} href={`#${PALETTES}`} onClick={(e) => (e.preventDefault(), select(PALETTES))}>
+          <a class="link" classList={{ on: !palettes() }} href="#" onClick={(e) => (e.preventDefault(), go(""))}>
+            inks
+          </a>
+          <a class="link" classList={{ on: palettes() }} href={`#${PALETTES}`} onClick={(e) => (e.preventDefault(), go(PALETTES))}>
             palettes
           </a>
         </nav>
@@ -176,7 +181,7 @@ export function App() {
 
       <Show when={palettes()}>
         <Suspense>
-          <Palettes ramps={ramps()} ready={ramps().size === inks.length} sprite={sprite} />
+          <Site page={selected()} ramps={ramps()} ready={ramps().size === inks.length} sprite={sprite} go={go} />
         </Suspense>
       </Show>
 

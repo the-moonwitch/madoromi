@@ -1,6 +1,6 @@
 // A VS Code extension with every flavour: workbench colours, TextMate scopes and semantic tokens.
 // The extension's package.json is written here too; only the themes under it are rewritten.
-import { SEASONS, type Flavour, type Role } from "../../src/core/palette";
+import { SEASONS, type Flavour, type Role } from "../core/palette";
 import { alpha, hex, isDark, role, slug, themeName, type Files } from "./common";
 
 type Style = { fg: Role; style?: string };

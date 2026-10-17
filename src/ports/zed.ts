@@ -1,5 +1,5 @@
 // A Zed theme family with every flavour.
-import type { Flavour, Role } from "../../src/core/palette";
+import type { Flavour, Role } from "../core/palette";
 import { AUTHOR, alpha, hex, isDark, role, themeName, type Files } from "./common";
 
 type Style = { fg: Role; style?: "italic"; weight?: number };

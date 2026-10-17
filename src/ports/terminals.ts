@@ -1,5 +1,5 @@
 // Terminal themes: Ghostty, Kitty, WezTerm, Alacritty and iTerm2, one file per flavour.
-import type { Flavour } from "../../src/core/palette";
+import type { Flavour } from "../core/palette";
 import { AUTHOR, HEADER, hex, role, slug, themeName, type Files } from "./common";
 
 const ANSI_NAMES = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"];

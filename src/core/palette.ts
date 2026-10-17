@@ -113,7 +113,7 @@ export const NEUTRALS: Neutral[] = [
 
 /** Accents' lightness before contrast, and the contrast they must reach against the paper. */
 const ACCENT_L: Record<Mode, number> = { hiru: 0.54, yoru: 0.76 };
-const ACCENT_CONTRAST: Record<Mode, number> = { hiru: 4, yoru: 6 };
+export const ACCENT_CONTRAST: Record<Mode, number> = { hiru: 4, yoru: 6 };
 
 /**
  * What makes a flavour's accents sit together, per mode; the knobs to turn for a calmer or a

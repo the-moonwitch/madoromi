@@ -1,7 +1,7 @@
 // A Neovim colour scheme plugin: every flavour's colours in lua/madoromi/palettes.lua, the highlight
 // groups (core, Treesitter, LSP, diagnostics, git signs) in lua/madoromi/init.lua, and a
 // colors/madoromi-<flavour>.lua for each flavour.
-import { ACCENTS, NEUTRALS, ROLES, type Flavour, type Role } from "../../src/core/palette";
+import { ACCENTS, NEUTRALS, ROLES, type Flavour, type Role } from "../core/palette";
 import { HEADER, wash, type Files } from "./common";
 
 /** Tints washed over the paper, since highlight groups have no transparency. */
