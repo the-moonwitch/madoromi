@@ -147,7 +147,7 @@ function FlavourPanel(props: { flavour: Flavour; kanji: string; english: string;
         <For each={CODE}>
           {(line) => (
             <div>
-              <For each={line}>{([text, role]) => <span style={{ color: r(role) }}>{text}</span>}</For>
+              <For each={line}>{([text, role]) => <span style={{ color: r(role), "font-style": role === "comment" ? "italic" : undefined }}>{text}</span>}</For>
               {line.length ? "" : " "}
             </div>
           )}

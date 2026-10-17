@@ -5,6 +5,7 @@ import "@fontsource/cormorant-garamond/600.css";
 import "@fontsource/cormorant-garamond/700.css";
 import { App } from "./App";
 import "./kanji-font.css";
+import "./fonts/ilta-mono/ilta-mono.css";
 import "./styles.css";
 
 render(() => <App />, document.getElementById("root")!);
