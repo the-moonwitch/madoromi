@@ -71,7 +71,7 @@ export const PORTS: Port[] = [
     name: "VS Code",
     group: "editors",
     dir: "vscode",
-    install: ["Copy `palettes/vscode` to `~/.vscode/extensions/madoromi`.", "Restart, then Preferences: Color Theme → {name}."],
+    install: ["Unzip, and copy the `madoromi` folder (or `palettes/vscode`) to `~/.vscode/extensions/`.", "Restart, then Preferences: Color Theme → {name}."],
   },
   {
     id: "zed",
@@ -86,7 +86,7 @@ export const PORTS: Port[] = [
     name: "Neovim",
     group: "editors",
     dir: "nvim",
-    install: ['Add `palettes/nvim` to your runtime path, e.g. with lazy.nvim: `{ dir = "…/palettes/nvim" }`.', "`:colorscheme madoromi-{id}`"],
+    install: ['Unzip, and add the `madoromi.nvim` folder (or `palettes/nvim`) to your runtime path, e.g. with lazy.nvim: `{ dir = "…/madoromi.nvim" }`.', "`:colorscheme madoromi-{id}`"],
   },
   {
     id: "css",
@@ -115,6 +115,16 @@ export const GROUPS: { id: Port["group"]; name: string }[] = [
 /** Every port's files, by path under palettes/. */
 export function portFiles(family: Flavour[]): Files {
   return { ...tokens(family), ...terminals(family), ...vscode(family), ...zed(family), ...nvim(family) };
+}
+
+/** A port's whole folder, as the files to put in its zip (under one folder named after it). */
+export function portFolder(port: Port, files: Files): { name: string; files: Files } {
+  const folder = port.id === "vscode" ? "madoromi" : port.id === "nvim" ? "madoromi.nvim" : `madoromi-${port.id}`;
+  const prefix = `${port.dir}/`;
+  return {
+    name: `madoromi-${port.id}.zip`,
+    files: Object.fromEntries(Object.entries(files).filter(([p]) => p.startsWith(prefix)).map(([p, t]) => [`${folder}/${p.slice(prefix.length)}`, t])),
+  };
 }
 
 /** An install step with a flavour's names filled in. */

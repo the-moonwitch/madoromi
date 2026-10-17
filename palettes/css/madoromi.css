@@ -14,20 +14,20 @@
   --madoromi-kami: #f6eff8;
   --madoromi-hyoshi: #ece5ef;
   --madoromi-chitsu: #e2dbe5;
-  --madoromi-sakura: #9f617c;
-  --madoromi-nadeshiko: #c8428f;
-  --madoromi-botan: #a9378a;
-  --madoromi-fuji: #6c2ac1;
-  --madoromi-kikyo: #4a63c3;
-  --madoromi-beni: #aa3944;
-  --madoromi-akane: #c13461;
+  --madoromi-sakura: #aa6e89;
+  --madoromi-nadeshiko: #9c5f79;
+  --madoromi-botan: #b560a0;
+  --madoromi-fuji: #62366a;
+  --madoromi-kikyo: #4d66c6;
+  --madoromi-beni: #c13461;
+  --madoromi-akane: #aa3944;
   --madoromi-kaki: #ff6111;
-  --madoromi-yamabuki: #baa041;
-  --madoromi-wakaba: #558034;
-  --madoromi-tokiwa: #008758;
-  --madoromi-sora: #0081a3;
-  --madoromi-ruri: #2770ad;
-  --madoromi-ai: #1955bf;
+  --madoromi-yamabuki: #e2900b;
+  --madoromi-wakaba: #5e8933;
+  --madoromi-tokiwa: #009162;
+  --madoromi-sora: #008bae;
+  --madoromi-ruri: #2e79b6;
+  --madoromi-ai: #2369a7;
 }
 
 [data-madoromi="haru-yoru"] {
@@ -44,20 +44,20 @@
   --madoromi-kami: #241c26;
   --madoromi-hyoshi: #1c151f;
   --madoromi-chitsu: #160f18;
-  --madoromi-sakura: #f8b8d4;
-  --madoromi-nadeshiko: #dd9fbf;
-  --madoromi-botan: #f68fd6;
-  --madoromi-fuji: #ddb3ff;
+  --madoromi-sakura: #f9b3d1;
+  --madoromi-nadeshiko: #dfa3c0;
+  --madoromi-botan: #cf87b5;
+  --madoromi-fuji: #dfb8ff;
   --madoromi-kikyo: #b8b4ff;
   --madoromi-beni: #ff8799;
-  --madoromi-akane: #fba1c7;
+  --madoromi-akane: #fc9bc4;
   --madoromi-kaki: #ffb66d;
-  --madoromi-yamabuki: #e2d37f;
+  --madoromi-yamabuki: #ffc849;
   --madoromi-wakaba: #c1dd4a;
   --madoromi-tokiwa: #81d9ba;
   --madoromi-sora: #7bddff;
   --madoromi-ruri: #66ccf6;
-  --madoromi-ai: #95aff3;
+  --madoromi-ai: #829eeb;
 }
 
 [data-madoromi="natsu-hiru"] {
@@ -74,20 +74,20 @@
   --madoromi-kami: #e9f4f8;
   --madoromi-hyoshi: #ddeaf0;
   --madoromi-chitsu: #d3e1e6;
-  --madoromi-sakura: #a26480;
-  --madoromi-nadeshiko: #c8428f;
+  --madoromi-sakura: #aa6e89;
+  --madoromi-nadeshiko: #d64891;
   --madoromi-botan: #ad5698;
-  --madoromi-fuji: #6526b9;
+  --madoromi-fuji: #62366a;
   --madoromi-kikyo: #455cbd;
-  --madoromi-beni: #aa3944;
-  --madoromi-akane: #c13461;
+  --madoromi-beni: #9e3c32;
+  --madoromi-akane: #b0384b;
   --madoromi-kaki: #ff5f36;
-  --madoromi-yamabuki: #bda343;
-  --madoromi-wakaba: #558034;
-  --madoromi-tokiwa: #048478;
-  --madoromi-sora: #0081a3;
-  --madoromi-ruri: #2770ad;
-  --madoromi-ai: #1a52bb;
+  --madoromi-yamabuki: #e2900b;
+  --madoromi-wakaba: #618c32;
+  --madoromi-tokiwa: #028e7f;
+  --madoromi-sora: #008bae;
+  --madoromi-ruri: #2e79b6;
+  --madoromi-ai: #526ccb;
 }
 
 [data-madoromi="natsu-yoru"] {
@@ -104,16 +104,16 @@
   --madoromi-kami: #132227;
   --madoromi-hyoshi: #0e1a1f;
   --madoromi-chitsu: #091317;
-  --madoromi-sakura: #f8b8d4;
-  --madoromi-nadeshiko: #dd9fbf;
-  --madoromi-botan: #f68fd6;
-  --madoromi-fuji: #d3a1ff;
-  --madoromi-kikyo: #a2adff;
-  --madoromi-beni: #ff8799;
-  --madoromi-akane: #fba1c7;
+  --madoromi-sakura: #f9b3d1;
+  --madoromi-nadeshiko: #dfa3c0;
+  --madoromi-botan: #f48ad3;
+  --madoromi-fuji: #d5a6ff;
+  --madoromi-kikyo: #9ea9ff;
+  --madoromi-beni: #ff8c9f;
+  --madoromi-akane: #fc9bc4;
   --madoromi-kaki: #ffac60;
-  --madoromi-yamabuki: #ddcc73;
-  --madoromi-wakaba: #b9d740;
+  --madoromi-yamabuki: #ffc849;
+  --madoromi-wakaba: #c1dd4a;
   --madoromi-tokiwa: #5eccc5;
   --madoromi-sora: #5cd7f5;
   --madoromi-ruri: #58bfff;
@@ -134,20 +134,20 @@
   --madoromi-kami: #f8f0e9;
   --madoromi-hyoshi: #f0e6dd;
   --madoromi-chitsu: #e6dcd3;
-  --madoromi-sakura: #9f617c;
-  --madoromi-nadeshiko: #c3408e;
+  --madoromi-sakura: #aa6e89;
+  --madoromi-nadeshiko: #9c5f79;
   --madoromi-botan: #9e458a;
-  --madoromi-fuji: #551aa2;
-  --madoromi-kikyo: #364aaa;
-  --madoromi-beni: #aa3944;
-  --madoromi-akane: #c13461;
+  --madoromi-fuji: #62366a;
+  --madoromi-kikyo: #303385;
+  --madoromi-beni: #c13461;
+  --madoromi-akane: #aa3944;
   --madoromi-kaki: #ff6111;
-  --madoromi-yamabuki: #bda343;
-  --madoromi-wakaba: #558034;
-  --madoromi-tokiwa: #008758;
-  --madoromi-sora: #0081a3;
+  --madoromi-yamabuki: #e2900b;
+  --madoromi-wakaba: #5e8933;
+  --madoromi-tokiwa: #008a5b;
+  --madoromi-sora: #008bae;
   --madoromi-ruri: #2770ad;
-  --madoromi-ai: #1b3d9c;
+  --madoromi-ai: #20609e;
 }
 
 [data-madoromi="aki-yoru"] {
@@ -165,17 +165,17 @@
   --madoromi-hyoshi: #20160e;
   --madoromi-chitsu: #181008;
   --madoromi-sakura: #ffb6cc;
-  --madoromi-nadeshiko: #f998da;
-  --madoromi-botan: #f180ce;
-  --madoromi-fuji: #c083fb;
-  --madoromi-kikyo: #aaa4ff;
+  --madoromi-nadeshiko: #dfa3c0;
+  --madoromi-botan: #f68fd6;
+  --madoromi-fuji: #d09dff;
+  --madoromi-kikyo: #91acf2;
   --madoromi-beni: #ff8b79;
-  --madoromi-akane: #ff96b1;
-  --madoromi-kaki: #ff9200;
-  --madoromi-yamabuki: #d0bb5a;
-  --madoromi-wakaba: #a6c830;
-  --madoromi-tokiwa: #58c59f;
-  --madoromi-sora: #4acded;
+  --madoromi-akane: #ff9cb5;
+  --madoromi-kaki: #ffb66d;
+  --madoromi-yamabuki: #ffc340;
+  --madoromi-wakaba: #84ac2d;
+  --madoromi-tokiwa: #6fd0ae;
+  --madoromi-sora: #66c7dd;
   --madoromi-ruri: #5ea3d4;
   --madoromi-ai: #7f9bea;
 }
@@ -194,20 +194,20 @@
   --madoromi-kami: #f0f1f8;
   --madoromi-hyoshi: #e5e7f3;
   --madoromi-chitsu: #dbdde9;
-  --madoromi-sakura: #9f617c;
-  --madoromi-nadeshiko: #ad5698;
-  --madoromi-botan: #9e458a;
+  --madoromi-sakura: #aa6e89;
+  --madoromi-nadeshiko: #9c5f79;
+  --madoromi-botan: #b560a0;
   --madoromi-fuji: #68386b;
   --madoromi-kikyo: #4259ba;
-  --madoromi-beni: #a43b3b;
-  --madoromi-akane: #db2d64;
+  --madoromi-beni: #c13461;
+  --madoromi-akane: #aa3944;
   --madoromi-kaki: #ff5e3f;
-  --madoromi-yamabuki: #bda343;
+  --madoromi-yamabuki: #e2900b;
   --madoromi-wakaba: #558034;
-  --madoromi-tokiwa: #008755;
-  --madoromi-sora: #0081a3;
-  --madoromi-ruri: #386fa5;
-  --madoromi-ai: #1a4cb2;
+  --madoromi-tokiwa: #028e7f;
+  --madoromi-sora: #008bae;
+  --madoromi-ruri: #2678af;
+  --madoromi-ai: #2266a4;
 }
 
 [data-madoromi="fuyu-yoru"] {
@@ -224,18 +224,18 @@
   --madoromi-kami: #1c1e2a;
   --madoromi-hyoshi: #151722;
   --madoromi-chitsu: #0f111b;
-  --madoromi-sakura: #e9b8c6;
+  --madoromi-sakura: #ffb6cb;
   --madoromi-nadeshiko: #dfa3c0;
-  --madoromi-botan: #f48ad3;
-  --madoromi-fuji: #ddb3ff;
-  --madoromi-kikyo: #b8b4ff;
+  --madoromi-botan: #cf87b5;
+  --madoromi-fuji: #bbb8ff;
+  --madoromi-kikyo: #99b2f5;
   --madoromi-beni: #ff8b79;
-  --madoromi-akane: #ffa2b5;
-  --madoromi-kaki: #ffb166;
+  --madoromi-akane: #ff9db0;
+  --madoromi-kaki: #ffb66d;
   --madoromi-yamabuki: #eab00a;
-  --madoromi-wakaba: #b9d740;
-  --madoromi-tokiwa: #6fd0ae;
-  --madoromi-sora: #6ccff8;
-  --madoromi-ruri: #4ec0ed;
-  --madoromi-ai: #8da8f0;
+  --madoromi-wakaba: #c1dd4a;
+  --madoromi-tokiwa: #81d9ba;
+  --madoromi-sora: #88d9eb;
+  --madoromi-ruri: #66ccf6;
+  --madoromi-ai: #829eeb;
 }

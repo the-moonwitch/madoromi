@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",
-    "@fontsource/m-plus-1-code": "^5.3.1",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@fontsource/line-seed-jp": "^5.3.2",
     "solid-js": "^1.9.17",
     "three": "^0.186.1"
   },

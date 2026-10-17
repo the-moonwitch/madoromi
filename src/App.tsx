@@ -1,9 +1,10 @@
-import { createEffect, createMemo, createSignal, lazy, onMount, Show, Suspense } from "solid-js";
+import { createEffect, createMemo, createSignal, For, lazy, onMount, Show, Suspense } from "solid-js";
 import { Chart2D } from "./components/Chart2D";
 import { HueHistogram } from "./components/HueHistogram";
 import { Palette, type Sprite } from "./components/Palette";
 import { Ramp1D } from "./components/Ramp1D";
 import { WhenNear } from "./components/WhenNear";
+import { PAGES } from "./components/palettes/pages";
 import { analyze, combineScans, defaultAnalysisOptions, type Analysis, type Cloud } from "./core/analyze";
 import { oklabToHex } from "./core/color";
 import { viewOf, type InkView } from "./core/inkview";
@@ -170,13 +171,20 @@ export function App() {
           </a>
         </h1>
         <nav>
-          <a class="link" classList={{ on: !palettes() }} href="#" onClick={(e) => (e.preventDefault(), go(""))}>
-            inks
-          </a>
-          <a class="link" classList={{ on: palettes() }} href={`#${PALETTES}`} onClick={(e) => (e.preventDefault(), go(PALETTES))}>
-            palettes
-          </a>
+          <For each={[{ id: "", name: "inks" }, ...PAGES]}>
+            {(p) => (
+              <a
+                class="link"
+                classList={{ on: p.id ? selected() === p.id : !palettes() }}
+                href={`#${p.id}`}
+                onClick={(e) => (e.preventDefault(), go(p.id))}
+              >
+                {p.name}
+              </a>
+            )}
+          </For>
         </nav>
+        <div id="masthead-tools" />
       </header>
 
       <Show when={palettes()}>

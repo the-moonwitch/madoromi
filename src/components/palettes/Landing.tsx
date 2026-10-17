@@ -32,7 +32,7 @@ export function Landing(props: { flavour: Flavour; family: Flavour[]; go: (page:
 
       <section class="m-demo">
         <EditorDemo />
-        <div class="m-demo-side">
+        <div class="m-demo-row">
           <TerminalDemo />
           <InterfaceDemo />
         </div>

@@ -2,15 +2,15 @@
 [colors]
 foreground = "#3b545e"
 background = "#e9f4f8"
-cursor_bg = "#a26480"
+cursor_bg = "#aa6e89"
 cursor_fg = "#e9f4f8"
-cursor_border = "#a26480"
+cursor_border = "#aa6e89"
 selection_fg = "#3b545e"
 selection_bg = "#9fb5be"
 scrollbar_thumb = "#aec5ce"
 split = "#aec5ce"
-ansi = ["#4e6872", "#aa3944", "#558034", "#bda343", "#1a52bb", "#ad5698", "#048478", "#9fb5be"]
-brights = ["#57717a", "#aa3944", "#456d36", "#ad8f3a", "#1b40a1", "#9b4187", "#106f6a", "#aec5ce"]
+ansi = ["#4e6872", "#9e3c32", "#618c32", "#e2900b", "#526ccb", "#ad5698", "#028e7f", "#9fb5be"]
+brights = ["#57717a", "#9e3c32", "#4f7935", "#e2900b", "#4259ba", "#9b4187", "#087971", "#aec5ce"]
 
 [metadata]
 name = "madoromi natsu-hiru"

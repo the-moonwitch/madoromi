@@ -113,7 +113,7 @@ export const NEUTRALS: Neutral[] = [
 
 /** Accents' lightness before contrast, and the contrast they must reach against the paper. */
 const ACCENT_L: Record<Mode, number> = { hiru: 0.54, yoru: 0.76 };
-export const ACCENT_CONTRAST: Record<Mode, number> = { hiru: 4, yoru: 6 };
+export const ACCENT_CONTRAST: Record<Mode, number> = { hiru: 3.5, yoru: 6 };
 
 /**
  * What makes a flavour's accents sit together, per mode; the knobs to turn for a calmer or a
@@ -127,22 +127,25 @@ export const ACCENT_CONTRAST: Record<Mode, number> = { hiru: 4, yoru: 6 };
  *   reads as neon (colours on the gamut's edge do).
  */
 export const HARMONY: Record<Mode, { apparent: number; chroma: number; glow: number; gamut: number }> = {
-  hiru: { apparent: 0.6, chroma: 0.13, glow: 0.15, gamut: 0.85 },
+  hiru: { apparent: 0.6, chroma: 0.14, glow: 0.15, gamut: 0.85 },
   yoru: { apparent: 0.78, chroma: 0.12, glow: 0.06, gamut: 0.85 },
 };
 /**
- * Each season's mood, as offsets to HARMONY: spring lighter and softer, summer clear, autumn deep,
- * winter muted. The same ink read at another strength is another colour, so the seasons differ
+ * Each season's mood, as offsets to HARMONY: spring lighter and softer, summer clear, autumn deep
+ * and quiet, winter muted. The same ink read at another strength is another colour, so the seasons differ
  * even where they share inks.
  */
 export const MOODS: Record<Season, { apparent: number; chroma: number }> = {
   haru: { apparent: 0.03, chroma: -0.015 },
   natsu: { apparent: 0.01, chroma: 0.015 },
-  aki: { apparent: -0.035, chroma: 0.01 },
+  aki: { apparent: -0.035, chroma: -0.015 },
   fuyu: { apparent: 0, chroma: -0.025 },
 };
-/** How much each way of straying costs, per unit (hue in degrees, the rest as fractions). */
-const COST = { hue: 1 / 8, hueFar: 1 / 2, chroma: 40, shortfall: 60, apparent: 30, glow: 30, gamut: 25, reuse: 0.6, season: 4, echo: 1.5 };
+/**
+ * How much each way of straying costs, per unit (hue in degrees, the rest as fractions). Chroma
+ * past the flavour's costs `loud`, short of it `chroma`: a loud accent spoils a flavour more.
+ */
+export const COST = { hue: 1 / 8, hueFar: 1 / 2, chroma: 50, loud: 150, shortfall: 300, apparent: 30, glow: 30, gamut: 25, reuse: 0.6, season: 4, echo: 1.5 };
 /** No accent looks lighter than its target by more than this (in L**): the ones that glare. */
 const APPARENT_BAND = 0.06;
 /** Hue strays up to this many degrees cost only `hue`; past it, `hueFar` too. */
@@ -285,7 +288,7 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
       const score =
         hd * COST.hue +
         Math.max(0, hd - HUE_EASY) * COST.hueFar +
-        (a.vivid ? Math.abs(c.C - harmony.chroma) * COST.chroma + Math.max(0, a.minChroma - c.C) * COST.shortfall : Math.abs(c.C - a.chroma![mode]) * COST.shortfall) +
+        (a.vivid ? Math.max(0, harmony.chroma - c.C) * COST.chroma + Math.max(0, c.C - harmony.chroma) * COST.loud + Math.max(0, a.minChroma - c.C) * COST.shortfall : Math.abs(c.C - a.chroma![mode]) * COST.shortfall) +
         Math.abs(c.apparent - apparent) * COST.apparent +
         Math.max(0, c.glow - harmony.glow) * COST.glow +
         Math.max(0, c.gamut - harmony.gamut) * COST.gamut +

@@ -1,4 +1,5 @@
 import { createEffect, createMemo, For, Match, onCleanup, Show, Switch } from "solid-js";
+import { Portal } from "solid-js/web";
 import { ACCENTS, MODES, NEUTRALS, SEASONS, buildFamily, type Flavour } from "../../core/palette";
 import type { Ramp } from "../../core/summary";
 import type { Sprite } from "../Palette";
@@ -8,13 +9,6 @@ import { Landing } from "./Landing";
 import { Ports } from "./Ports";
 import { choose, flavourChoice, flavourId } from "./store";
 import "./palettes.css";
-
-export const PAGES = [
-  { id: "palettes", name: "about" },
-  { id: "palettes/colours", name: "colours" },
-  { id: "palettes/guide", name: "guide" },
-  { id: "palettes/ports", name: "ports" },
-];
 
 export interface SiteProps {
   page: string;
@@ -39,21 +33,18 @@ export function Site(props: SiteProps) {
 
   return (
     <div class="madoromi">
-      <nav class="m-nav">
-        <For each={PAGES}>
-          {(p) => (
-            <a class="link" classList={{ on: props.page === p.id }} href={`#${p.id}`} onClick={(e) => (e.preventDefault(), props.go(p.id))}>
-              {p.name}
-            </a>
-          )}
-        </For>
-        <Picker family={family()} />
-      </nav>
+      <Show when={document.getElementById("masthead-tools")}>
+        {(at) => (
+          <Portal mount={at()}>
+            <Picker family={family()} />
+          </Portal>
+        )}
+      </Show>
       <Show when={flavour()}>
         {(f) => (
           <Switch>
             <Match when={props.page === "palettes/colours"}>
-              <Colours flavour={f()} sprite={props.sprite} />
+              <Colours flavour={f()} family={family()} sprite={props.sprite} go={props.go} />
             </Match>
             <Match when={props.page === "palettes/guide"}>
               <Guide flavour={f()} />

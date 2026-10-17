@@ -7,8 +7,9 @@
   --hair: #eeede9;
   --serif: "Cormorant Garamond", Georgia, serif;
   --kanji: "Yuji Syuku", "Hiragino Mincho ProN", "Yu Mincho", serif;
-  /* The palettes' specimens and their code, kanji and all. */
-  --mono: "M PLUS 1 Code", ui-monospace, "SF Mono", Menlo, monospace;
+  /* Navigation and the palettes' pages; code. */
+  --sans: "LINE Seed JP", system-ui, sans-serif;
+  --mono: "JetBrains Mono", "LINE Seed JP", ui-monospace, "SF Mono", Menlo, monospace;
   color-scheme: light;
   font-family: var(--serif);
   font-weight: 500;
@@ -167,4 +168,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 }
 
 /* ——— the palettes' pages are styled in components/palettes/palettes.css ——— */
-.masthead nav { margin-left: auto; display: flex; gap: 17px; font-size: 17px; }
+.masthead { flex-wrap: wrap; row-gap: 12px; }
+.masthead nav { margin-left: auto; display: flex; flex-wrap: wrap; gap: 6px 19px; font-family: var(--sans); font-size: 14px; }
+#masthead-tools:empty { display: none; }
+#masthead-tools { display: flex; }
+.masthead nav .link { font-variant: normal; letter-spacing: 0.01em; }

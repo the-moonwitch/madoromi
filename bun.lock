@@ -6,7 +6,8 @@
       "name": "iroshizuku",
       "dependencies": {
         "@fontsource/cormorant-garamond": "^5.3.0",
-        "@fontsource/m-plus-1-code": "^5.3.1",
+        "@fontsource/jetbrains-mono": "^5.3.0",
+        "@fontsource/line-seed-jp": "^5.3.2",
         "solid-js": "^1.9.17",
         "three": "^0.186.1",
       },
@@ -64,7 +65,9 @@
 
     "@fontsource/cormorant-garamond": ["@fontsource/cormorant-garamond@5.3.0", "", {}, "sha512-weuGsCirGVWBWqpt6YUp0yLThTe4G8YO45noq8wxeJCRvEpq5lFrxNMFSTxcyOyV5k5otzJ8guDzYegdYlcLMQ=="],
 
-    "@fontsource/m-plus-1-code": ["@fontsource/m-plus-1-code@5.3.1", "", {}, "sha512-3ecDjm3buUu0tf8Fcb2VPe3PQDCDNlC75ATfAdmr638Vo/izd553DkkZbrP5DFwwXszXlzPHfhNjoCfk1MAJww=="],
+    "@fontsource/jetbrains-mono": ["@fontsource/jetbrains-mono@5.3.0", "", {}, "sha512-fqDfB5I9f1p1TV486aUgB9t8zP84P0O1FtQR5Ol9vjwPy+S+EIGlVYm1cvj2W5shcZMTg2nZFdVMoH5wFu8a1A=="],
+
+    "@fontsource/line-seed-jp": ["@fontsource/line-seed-jp@5.3.2", "", {}, "sha512-ng/gMt1yI9EAU0TlBcDtBuQAy8fB0FAvjxW3JY9NnYSN3CJgqkciMcEAldt/N0yUC4C4Oai4oeLzU9PYqyeghQ=="],
 
     "@fontsource/yuji-syuku": ["@fontsource/yuji-syuku@5.3.1", "", {}, "sha512-ELjsWAESeJykf71gnjkcgL+UmV9K3dSAis/oQhFdwpGBL8wMAvXH89BypDFNELw1U/MnpfPj9x2Wvy/6dWVM5g=="],
 

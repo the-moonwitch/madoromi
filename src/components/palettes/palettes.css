@@ -1,14 +1,16 @@
 /* The palettes' pages: everything in the chosen flavour, through --paper/--ink and --m-<slot>. */
 html { transition: background-color 0.25s, color 0.25s; }
-.madoromi { display: flex; flex-direction: column; gap: 37px; animation: rise 260ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.madoromi { display: flex; flex-direction: column; gap: 37px; font-family: var(--sans); font-size: 14px; line-height: 1.6; animation: rise 260ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 .madoromi a { color: var(--m-sora); }
 .madoromi code, .madoromi pre, .m-value, .m-file { font-family: var(--mono); }
+/* Kanji read in the body's face; the brush hand is for the big, decorative ones. */
+.madoromi .kanji { font-family: var(--sans); font-weight: 400; }
+.madoromi .deco.kanji, .madoromi h3 > .kanji, .m-family .kanji, .picker .kanji { font-family: var(--kanji); }
+/* The serif is for the big headlines only. */
+.m-hero h2, .m-title h2 { font-family: var(--serif); }
 
 /* ——— navigation and the flavour picker ——— */
-.m-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 19px; font-size: 17px; }
-.m-nav .link { color: var(--dim); }
-.m-nav .link.on, .m-nav .link:hover { color: var(--ink); }
-.picker { margin-left: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-family: var(--mono); font-size: 12px; }
+.picker { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-family: var(--sans); font-size: 12px; }
 .picker button { display: flex; align-items: center; gap: 5px; padding: 4px 9px 4px 7px; border-radius: 99px; box-shadow: 0 0 0 1px var(--m-nijimi1); color: var(--dim); }
 .picker button .kanji { font-size: 15px; line-height: 1; }
 .picker button.on { box-shadow: 0 0 0 2px var(--m-fuji); color: var(--ink); }
@@ -18,25 +20,49 @@ html { transition: background-color 0.25s, color 0.25s; }
 /* ——— landing ——— */
 .m-hero { display: flex; align-items: center; gap: 25px; padding: 12px 0 6px; }
 .m-hero > .kanji { font-size: 109px; line-height: 0.9; color: var(--m-fuji); white-space: nowrap; }
-.m-hero h2 { font-size: 41px; line-height: 1.05; font-weight: 600; max-width: 14em; }
-.m-hero p { margin: 6px 0 14px; font-size: 19px; font-style: italic; color: var(--dim); }
+.m-hero h2 { font-size: 34px; line-height: 1.1; font-weight: 600; }
+.m-hero p { margin: 8px 0 16px; font-size: 15px; color: var(--dim); }
 .m-ctas { display: flex; flex-wrap: wrap; gap: 9px; }
 .madoromi .m-cta { display: inline-block; padding: 5px 14px 6px; border-radius: 99px; font-family: var(--mono); font-size: 13px; background: var(--m-nijimi0); color: var(--ink); cursor: pointer; }
 .madoromi .m-cta:first-child { background: var(--m-fuji); color: var(--m-kami); }
 .madoromi .m-cta:hover { box-shadow: 0 0 0 2px var(--m-nijimi2); }
 
-.m-demo { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 17px; align-items: start; }
-.m-demo-side { display: flex; flex-direction: column; gap: 17px; min-width: 0; }
-.win { margin: 0; border-radius: 6px; overflow: hidden; box-shadow: 0 0 0 1px var(--m-nijimi0), 0 12px 30px -18px rgba(0, 0, 0, 0.35); font: 12px/1.6 var(--mono); color: var(--m-sumi); background: var(--m-kami); min-width: 0; }
+.m-demo { display: flex; flex-direction: column; gap: 17px; }
+.m-demo-row { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 17px; align-items: start; }
+.win { margin: 0; border-radius: 6px; overflow: hidden; font-size: 12.5px; box-shadow: 0 0 0 1px var(--m-nijimi0), 0 12px 30px -18px rgba(0, 0, 0, 0.35); font: 12px/1.6 var(--mono); color: var(--m-sumi); background: var(--m-kami); min-width: 0; }
 .win pre { margin: 0; font: inherit; }
 
 .editor { display: flex; flex-direction: column; }
 .win-tabs { display: flex; background: var(--m-chitsu); }
 .win-tabs .tab { padding: 6px 14px; color: var(--m-kasure2); border-right: 1px solid var(--m-chitsu); background: var(--m-hyoshi); }
 .win-tabs .tab.on { background: var(--m-kami); color: var(--m-sumi); box-shadow: inset 0 2px 0 var(--m-fuji); }
-.win-body { display: flex; padding: 10px 0; overflow-x: auto; }
-.gutter { list-style: none; margin: 0; padding: 0 10px 0 14px; text-align: right; color: var(--m-nijimi2); user-select: none; }
+.win-tabs { align-items: stretch; }
+.win-tabs .spacer { flex: 1; }
+.langs { display: flex; align-items: center; gap: 2px; padding: 0 8px; }
+.langs button { font: inherit; font-size: 11px; padding: 2px 8px; border-radius: 4px; color: var(--m-kasure2); }
+.langs button.on { background: var(--m-nijimi0); color: var(--m-sumi); }
+.win-main { display: grid; grid-template-columns: 160px minmax(0, 1fr); }
+.tree { list-style: none; margin: 0; padding: 8px 0; background: var(--m-hyoshi); color: var(--m-usuzumi0); font-size: 11.5px; border-right: 1px solid var(--m-chitsu); white-space: nowrap; overflow: hidden; }
+.tree li { position: relative; padding-right: 8px; }
+.tree li.on { background: var(--m-nijimi0); color: var(--m-sumi); }
+.tree .twisty { display: inline-block; width: 12px; color: var(--m-kasure1); }
+.tree .status { position: absolute; right: 8px; }
+.win-body { display: flex; padding: 10px 0 40px; overflow-x: auto; min-width: 0; }
+.gutter { list-style: none; margin: 0; padding: 0 6px 0 12px; text-align: right; color: var(--m-nijimi2); user-select: none; }
+.gutter li { position: relative; padding-right: 8px; }
 .gutter li.on { color: var(--m-fuji); }
+.gutter .sign { position: absolute; right: 0; top: 0.2em; bottom: 0.2em; width: 3px; border-radius: 1px; }
+.gutter .sign.added { background: var(--m-wakaba); }
+.gutter .sign.modified { background: var(--m-yamabuki); }
+.gutter .sign.deleted { top: auto; bottom: -2px; height: 0; width: 7px; border: 4px solid transparent; border-left-color: var(--m-beni); background: none; }
+.editor .popup { position: absolute; top: 1.6em; z-index: 2; display: flex; flex-direction: column; padding: 4px 0; border-radius: 4px; background: var(--m-hyoshi); box-shadow: 0 0 0 1px var(--m-nijimi1), 0 8px 20px -10px rgba(0, 0, 0, 0.4); white-space: nowrap; font-size: 11.5px; }
+.editor .completion .item { padding: 0 12px 0 8px; color: var(--m-usuzumi1); }
+.editor .completion .item.on { background: var(--m-nijimi0); color: var(--m-sumi); }
+.editor .completion i { display: inline-block; width: 16px; font-style: normal; }
+.editor .completion b { color: var(--m-fuji); font-weight: 700; }
+.editor .hover { padding: 5px 10px; gap: 2px; z-index: 1; }
+.editor .completion { z-index: 3; }
+.editor .hover .doc { color: var(--m-usuzumi0); font-family: var(--sans); }
 .editor .code { flex: 1; min-width: max-content; padding-right: 14px; }
 .editor .line { position: relative; white-space: pre; padding-left: 4px; }
 .editor .line.cursor { background: color-mix(in srgb, var(--m-nijimi0) 45%, transparent); }
@@ -47,7 +73,7 @@ html { transition: background-color 0.25s, color 0.25s; }
 .editor .virtual { margin-left: 14px; padding: 0 6px; border-radius: 3px; font-size: 11px; }
 .editor .virtual.error { color: var(--m-beni); background: color-mix(in srgb, var(--m-beni) 12%, transparent); }
 .editor .virtual.warning { color: var(--m-yamabuki); background: color-mix(in srgb, var(--m-yamabuki) 12%, transparent); }
-.win-status { display: flex; gap: 12px; align-items: center; padding: 3px 12px 3px 0; background: var(--m-chitsu); color: var(--m-usuzumi1); }
+.win-status { display: flex; gap: 12px; align-items: center; padding: 3px 12px 3px 0; background: var(--m-chitsu); color: var(--m-usuzumi1); white-space: nowrap; overflow: hidden; }
 .win-status .mode { padding: 0 10px; background: var(--m-fuji); color: var(--m-kami); font-weight: 700; }
 .win-status .spacer { flex: 1; }
 
@@ -69,9 +95,9 @@ html { transition: background-color 0.25s, color 0.25s; }
 .ui-input input:focus { border-color: var(--m-fuji); }
 
 .m-about { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 25px 44px; }
-.m-about h3, .m-family h3, .m-page h3 { font-size: 22px; font-weight: 600; display: flex; align-items: baseline; gap: 9px; margin: 0 0 6px; }
+.m-about h3, .m-family h3, .m-page h3 { font-size: 16px; font-weight: 700; display: flex; align-items: baseline; gap: 9px; margin: 0 0 6px; }
 .m-about h3 .kanji, .m-family h3 .kanji, .m-page h3 .kanji { font-size: 22px; color: var(--m-fuji); }
-.m-about p { margin: 0; font-size: 17px; line-height: 1.5; }
+.m-about p { margin: 0; font-size: 14px; line-height: 1.75; }
 
 .m-family ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
 .m-family button { width: 100%; display: grid; grid-template-columns: auto 1fr; grid-template-areas: "kanji name" "dots dots" "ladder ladder"; align-items: center; gap: 6px 9px; padding: 11px 12px 12px; border-radius: 6px; box-shadow: 0 0 0 1px var(--m-nijimi0); text-align: left; }
@@ -88,52 +114,65 @@ html { transition: background-color 0.25s, color 0.25s; }
 .m-title { display: flex; align-items: center; gap: 19px; }
 .m-title > .kanji { font-size: 62px; line-height: 1; color: var(--m-fuji); }
 .m-title h2 { font-size: 37px; line-height: 1; font-weight: 600; }
-.m-title p { margin: 6px 0 0; font-size: 17px; color: var(--dim); }
+.m-title p { margin: 8px 0 0; font-size: 14px; color: var(--dim); }
 .m-formats { display: flex; flex-wrap: wrap; gap: 17px; font-family: var(--mono); font-size: 13px; }
-.m-formats button:last-child { margin-left: auto; }
+.m-copyall { margin-left: auto; display: flex; gap: 17px; }
+.m-matrix-wrap { overflow-x: auto; margin: 0 -4px; padding: 0 4px 4px; }
+.m-matrix { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 720px; font-size: 12px; }
+.m-matrix th { text-align: left; font-weight: 400; white-space: nowrap; padding: 0 10px 0 0; color: var(--dim); }
+.m-matrix thead th { padding: 8px 6px; text-align: center; font-family: var(--mono); font-size: 11px; border-radius: 6px 6px 0 0; }
+.m-matrix thead th .kanji { display: block; font-size: 17px; }
+.m-matrix thead th:first-child { background: none; }
+.m-matrix td { padding: 2px 6px; }
+.m-matrix tbody tr:last-child td { border-radius: 0 0 6px 6px; padding-bottom: 6px; }
+.m-matrix td button { display: block; width: 100%; height: 20px; border-radius: 4px; font-size: 11px; color: #fff; text-shadow: 0 0 2px #000; }
+.m-matrix .on { box-shadow: inset 2px 0 0 var(--m-fuji), inset -2px 0 0 var(--m-fuji); }
+.m-matrix thead .on { box-shadow: inset 2px 2px 0 var(--m-fuji), inset -2px 0 0 var(--m-fuji); }
+.m-matrix tbody tr:last-child .on { box-shadow: inset 2px -2px 0 var(--m-fuji), inset -2px 0 0 var(--m-fuji); }
+.m-ink a { color: inherit; }
+.m-ink a:hover { color: var(--m-sora); }
 .m-table { width: 100%; border-collapse: collapse; }
 .m-table th { text-align: left; font-weight: 600; font-size: 13px; color: var(--dim); padding: 14px 8px 6px; font-family: var(--mono); }
 .m-table td { padding: 6px 8px; border-top: 1px solid var(--m-nijimi0); vertical-align: middle; }
 .m-swatch { display: inline-block; width: 26px; height: 26px; border-radius: 50%; box-shadow: 0 0 0 1px var(--m-nijimi0); vertical-align: middle; }
-.m-name { font-size: 17px; white-space: nowrap; }
+.m-name { font-size: 14px; white-space: nowrap; }
 .m-name b { font-weight: 700; }
-.m-name em { color: var(--dim); font-size: 15px; }
+.m-name em { color: var(--dim); font-size: 12px; font-style: normal; margin-left: 4px; }
 .m-value { font-size: 13px; color: var(--ink); padding: 2px 6px; border-radius: 3px; }
 .m-value:hover { background: var(--m-nijimi0); }
-.m-ink { display: flex; align-items: center; gap: 7px; font-size: 16px; white-space: nowrap; }
+.m-ink { display: flex; align-items: center; gap: 7px; font-size: 13px; white-space: nowrap; }
 .m-ink .stroke { width: 34px; height: 34px; flex: none; }
 .m-at { color: var(--dim); font-family: var(--mono); font-size: 12px; }
 
 .m-toc { display: flex; flex-wrap: wrap; gap: 6px 17px; font-family: var(--mono); font-size: 13px; }
 .m-guide section { scroll-margin-top: 20px; }
-.m-use { font-size: 17px; width: 42%; }
+.m-use { font-size: 14px; width: 42%; }
 .m-chips { display: flex; flex-wrap: wrap; gap: 6px 14px; }
-.m-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 16px; white-space: nowrap; }
+.m-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; white-space: nowrap; }
 .m-chip .m-swatch { width: 18px; height: 18px; }
 .m-chip b { font-weight: 600; }
-.m-note { color: var(--dim); font-size: 15px; font-style: italic; }
+.m-note { color: var(--dim); font-size: 12px; }
 .m-guide .m-table td.m-chips { border-top: 1px solid var(--m-nijimi0); }
 
-.m-ports section h3 { font-family: var(--serif); }
 .m-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
 .m-card { padding: 14px 17px 16px; border-radius: 6px; background: var(--m-hyoshi); box-shadow: 0 0 0 1px var(--m-nijimi0); display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.m-card h4 { margin: 0; font-size: 21px; font-weight: 600; }
-.m-card ol { margin: 0; padding-left: 20px; font-size: 16px; line-height: 1.5; }
+.m-card h4 { margin: 0; font-size: 16px; font-weight: 700; }
+.m-card ol { margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.7; }
 .m-card code { font-size: 12px; padding: 1px 5px; border-radius: 3px; background: var(--m-nijimi0); overflow-wrap: anywhere; }
 .m-card-actions { display: flex; align-items: center; gap: 14px; margin-top: auto; }
 .m-card-actions .link { font-family: var(--mono); font-size: 12px; }
 .m-file { margin: 0; max-height: 260px; overflow: auto; padding: 10px 12px; border-radius: 4px; background: var(--m-kami); font-size: 11px; line-height: 1.5; }
 
 @media (max-width: 1100px) {
-  .m-demo { grid-template-columns: minmax(0, 1fr); }
+  .m-demo-row { grid-template-columns: minmax(0, 1fr); }
   .m-family ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 700px) {
-  .picker { margin-left: 0; }
+  .win-main { grid-template-columns: minmax(0, 1fr); }
+  .tree { display: none; }
   .m-hero { flex-direction: column; align-items: flex-start; gap: 8px; }
   .m-hero > .kanji { font-size: 62px; }
   .m-hero h2 { font-size: 29px; }
-  .m-hero p { font-size: 17px; }
   .m-about { grid-template-columns: minmax(0, 1fr); }
   .m-cards { grid-template-columns: minmax(0, 1fr); }
   .m-table td:nth-child(4), .m-table th:nth-child(4) { display: none; }

@@ -35,8 +35,11 @@ function format(f: Flavour, key: string, as: Format): string {
 
 const INK = new Map(inks.map((i) => [i.id, i]));
 
-/** Every colour of a flavour in the format chosen, each with the ink it is. */
-export function Colours(props: { flavour: Flavour; sprite: (id: string) => Sprite | undefined }) {
+/**
+ * Every colour of every flavour side by side, then the chosen flavour's in detail: each in the
+ * format chosen, with the ink it is.
+ */
+export function Colours(props: { flavour: Flavour; family: Flavour[]; sprite: (id: string) => Sprite | undefined; go: (page: string) => void }) {
   const [as, setAs] = createSignal<Format>("hex");
   const [copied, setCopied] = createSignal("");
   const copy = (key: string, text: string) =>
@@ -45,6 +48,7 @@ export function Colours(props: { flavour: Flavour; sprite: (id: string) => Sprit
       setTimeout(() => copied() === key && setCopied(""), 1200);
     });
   const css = () => [...ACCENTS, ...NEUTRALS].map((s) => `--madoromi-${s.key}: ${format(props.flavour, s.key, as())};`).join("\n");
+  const json = () => JSON.stringify(Object.fromEntries([...ACCENTS, ...NEUTRALS].map((s) => [s.key, format(props.flavour, s.key, as())])), null, 2);
   const season = () => SEASONS.find((s) => s.id === props.flavour.season)!;
   const mode = () => MODES.find((m) => m.id === props.flavour.mode)!;
 
@@ -82,7 +86,10 @@ export function Colours(props: { flavour: Flavour; sprite: (id: string) => Sprit
                   />
                 )}
               </Show>
-              {c().ink} <span class="kanji">{ink()?.kanji}</span> <span class="m-at">at {c().L.toFixed(2)}</span>
+              <a href={`#${c().ink}`} onClick={(e) => (e.preventDefault(), props.go(c().ink))}>
+                {c().ink} <span class="kanji">{ink()?.kanji}</span>
+              </a>{" "}
+              <span class="m-at">at {c().L.toFixed(2)}</span>
             </td>
           </tr>
         );
@@ -93,11 +100,11 @@ export function Colours(props: { flavour: Flavour; sprite: (id: string) => Sprit
   return (
     <main class="m-page m-colours">
       <header class="m-title">
-        <span class="deco kanji">{season().kanji + mode().kanji}</span>
+        <span class="deco kanji">色</span>
         <div>
-          <h2>{props.flavour.id}</h2>
+          <h2>colours</h2>
           <p>
-            {season().english} {mode().english}: every colour, and the ink it is. Click a value to copy it.
+            Every flavour's colours, then {props.flavour.id}'s with the ink each one is. Click a colour to copy it.
           </p>
         </div>
       </header>
@@ -109,10 +116,61 @@ export function Colours(props: { flavour: Flavour; sprite: (id: string) => Sprit
             </button>
           )}
         </For>
-        <button class="link" onClick={() => copy("all", css())}>
-          {copied() === "all" ? "copied" : "copy as css"}
-        </button>
+        <span class="m-copyall">
+          <button class="link" onClick={() => copy("css", css())}>
+            {copied() === "css" ? "copied" : "copy as css"}
+          </button>
+          <button class="link" onClick={() => copy("json", json())}>
+            {copied() === "json" ? "copied" : "copy as json"}
+          </button>
+        </span>
       </div>
+
+      <div class="m-matrix-wrap">
+        <table class="m-matrix">
+          <thead>
+            <tr>
+              <th />
+              <For each={props.family}>
+                {(f) => (
+                  <th classList={{ on: f.id === props.flavour.id }} style={{ background: f.colours.kami.hex, color: f.colours.sumi.hex }}>
+                    <span class="kanji">{SEASONS.find((x) => x.id === f.season)!.kanji + MODES.find((x) => x.id === f.mode)!.kanji}</span>
+                    {f.id}
+                  </th>
+                )}
+              </For>
+            </tr>
+          </thead>
+          <tbody>
+            <For each={[...ACCENTS, ...NEUTRALS]}>
+              {(sl) => (
+                <tr>
+                  <th>
+                    {sl.name} <span class="kanji">{sl.kanji}</span>
+                  </th>
+                  <For each={props.family}>
+                    {(f) => (
+                      <td classList={{ on: f.id === props.flavour.id }} style={{ background: f.colours.kami.hex }}>
+                        <button
+                          style={{ background: f.colours[sl.key].hex }}
+                          title={`${f.id} ${sl.name}: ${format(f, sl.key, as())} (${f.colours[sl.key].ink})`}
+                          onClick={() => copy(`${f.id}:${sl.key}`, format(f, sl.key, as()))}
+                        >
+                          {copied() === `${f.id}:${sl.key}` ? "✓" : ""}
+                        </button>
+                      </td>
+                    )}
+                  </For>
+                </tr>
+              )}
+            </For>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>
+        <span class="kanji">{season().kanji + mode().kanji}</span> {props.flavour.id}
+      </h3>
       <table class="m-table">
         <thead>
           <tr>
