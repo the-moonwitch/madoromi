@@ -1,6 +1,7 @@
 // The madoromi palettes: four seasons, each with a light (hiru, day) and a dark (yoru, night)
-// flavour. Every colour in them is one of the inks at some dilution: a point on that ink's ramp
-// curve, read at the lightness the colour needs.
+// flavour. Every accent is one of the inks at some dilution: a point on that ink's ramp curve,
+// read at the lightness the colour needs. The neutrals are greys in the cast of the season's grey
+// ink.
 
 import { apparentLightness, contrast, maxChroma, oklabToHex, oklabToOklch, toSrgbGamut, type Vec3 } from "./color";
 import type { InkView } from "./inkview";
@@ -126,15 +127,24 @@ const ACCENT_CONTRAST: Record<Mode, number> = { hiru: 4, yoru: 6 };
  *   reads as neon (colours on the gamut's edge do).
  */
 export const HARMONY: Record<Mode, { apparent: number; chroma: number; glow: number; gamut: number }> = {
-  hiru: { apparent: 0.6, chroma: 0.14, glow: 0.15, gamut: 0.9 },
+  hiru: { apparent: 0.6, chroma: 0.13, glow: 0.15, gamut: 0.85 },
   yoru: { apparent: 0.78, chroma: 0.12, glow: 0.06, gamut: 0.85 },
 };
+/**
+ * Each season's mood, as offsets to HARMONY: spring lighter and softer, summer clear, autumn deep,
+ * winter muted. The same ink read at another strength is another colour, so the seasons differ
+ * even where they share inks.
+ */
+export const MOODS: Record<Season, { apparent: number; chroma: number }> = {
+  haru: { apparent: 0.03, chroma: -0.015 },
+  natsu: { apparent: 0.01, chroma: 0.015 },
+  aki: { apparent: -0.035, chroma: 0.01 },
+  fuyu: { apparent: 0, chroma: -0.025 },
+};
 /** How much each way of straying costs, per unit (hue in degrees, the rest as fractions). */
-const COST = { hue: 1 / 8, hueFar: 1 / 2, chroma: 40, shortfall: 60, apparent: 30, glow: 30, gamut: 15, reuse: 0.6, season: 3 };
+const COST = { hue: 1 / 8, hueFar: 1 / 2, chroma: 40, shortfall: 60, apparent: 30, glow: 30, gamut: 25, reuse: 0.6, season: 4, echo: 1.5 };
 /** No accent looks lighter than its target by more than this (in L**): the ones that glare. */
 const APPARENT_BAND = 0.06;
-/** A season's own ink is preferred up to this much more chroma than the flavour's. */
-const SEASON_CHROMA_SLACK = 0.05;
 /** Hue strays up to this many degrees cost only `hue`; past it, `hueFar` too. */
 const HUE_EASY = 15;
 /** How far from its lightness an accent may be read, either way. */
@@ -144,10 +154,12 @@ const MIN_DELTA = 0.05;
 /** How far an accent's hue may stray from its name's. */
 const MAX_HUE_SHIFT = 40;
 const accentContrast = (a: Accent, mode: Mode) => a.contrast?.[mode] ?? ACCENT_CONTRAST[mode];
-/** The most chroma the neutrals take from their grey ink. */
-const GREY_CHROMA = { text: 0.055, rest: 0.04 };
-/** The papers (kami, hyōshi, chitsu) take less: at most this chroma, and this share of sRGB's. */
-const PAPER = { chroma: 0.025, gamut: 0.5 };
+/**
+ * The neutrals' chroma, the same in every season so that only the cast differs: the papers
+ * (kami, hyōshi, chitsu), the ladder between, and the text. Each takes at most this share of
+ * what sRGB can show there.
+ */
+const NEUTRAL_CHROMA = { paper: { hiru: 0.016, yoru: 0.022 } as Record<Mode, number>, ladder: 0.028, text: 0.034, gamut: 0.5 };
 const PAPERS = ["kami", "hyoshi", "chitsu"];
 /** The text tiers' minimum contrast against the paper. */
 const TEXT_CONTRAST: Record<string, number> = { sumi: 7, usuzumi0: 4.5, kasure2: 3 };
@@ -155,7 +167,7 @@ const TEXT_CONTRAST: Record<string, number> = { sumi: 7, usuzumi0: 4.5, kasure2:
 export interface Swatch {
   lab: Vec3;
   hex: string;
-  /** The ink it is, and the lightness it's read at along that ink's ramp. */
+  /** The ink it is (for a neutral, the ink whose cast it has), and its lightness. */
   ink: string;
   L: number;
 }
@@ -202,40 +214,26 @@ function castOf(v: Curve): number {
   return (Math.atan2(b, a) * 180) / Math.PI;
 }
 
-/**
- * A grey ink's colour at a lightness, in its cast and kept nearly neutral: as much chroma as the
- * ink has there, up to `cap`. Past the ends of its ramp the chroma tapers away.
- */
-function greyAt(v: Curve, L: number, cast: number, cap: number): Vec3 {
-  const lab = v.curve.lab;
-  const n = lab.length / 3;
-  let c = colourAt(v, L);
-  let taper = 1;
-  if (!c) {
-    const e = L < lab[0] ? 0 : n - 1;
-    c = [L, lab[e * 3 + 1], lab[e * 3 + 2]];
-    taper = Math.max(0, 1 - Math.abs(L - lab[e * 3]) * 2);
-  }
-  const [, C] = oklabToOklch(c);
-  const k = Math.min(C, cap) * taper;
-  return [L, k * Math.cos((cast * Math.PI) / 180), k * Math.sin((cast * Math.PI) / 180)];
-}
-
 const hueDistance = (a: number, b: number) => Math.abs(((a - b + 540) % 360) - 180);
 const deltaE = (a: Vec3, b: Vec3) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 
-/** Builds one flavour from every ink's view. */
-export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mode): Flavour {
+/**
+ * Builds one flavour from every ink's view. `echoes` holds, per accent, the inks other seasons of
+ * this mode already used for it; reusing one costs a little, so the seasons differ where they can.
+ */
+export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mode, echoes = new Map<string, Set<string>>()): Flavour {
   const s = SEASONS.find((x) => x.id === season)!;
   const grey = views.get(s.grey)!;
   const cast = castOf(grey);
   const colours: Record<string, Swatch> = {};
 
-  // --- Neutrals: the season's grey ink at each tier's lightness.
-  const neutralAt = (L: number, cap: number) => greyAt(grey, L, cast, cap);
-  const capOf = (n: Neutral, L: number) =>
-    PAPERS.includes(n.key) ? Math.min(PAPER.chroma, PAPER.gamut * maxChroma(L, cast)) : n.text ? GREY_CHROMA.text : GREY_CHROMA.rest;
-  for (const n of NEUTRALS) colours[n.key] = swatch(neutralAt(n.L[mode], capOf(n, n.L[mode])), s.grey, n.L[mode]);
+  // --- Neutrals: each tier's lightness, in the season's grey ink's cast.
+  const neutralAt = (n: Neutral, L: number): Vec3 => {
+    const want = PAPERS.includes(n.key) ? NEUTRAL_CHROMA.paper[mode] : n.text ? NEUTRAL_CHROMA.text : NEUTRAL_CHROMA.ladder;
+    const C = Math.min(want, NEUTRAL_CHROMA.gamut * maxChroma(L, cast));
+    return [L, C * Math.cos((cast * Math.PI) / 180), C * Math.sin((cast * Math.PI) / 180)];
+  };
+  for (const n of NEUTRALS) colours[n.key] = swatch(neutralAt(n, n.L[mode]), s.grey, n.L[mode]);
   const paper = colours.kami.lab;
   // Text tiers move away from the paper until they're legible enough.
   for (const [key, min] of Object.entries(TEXT_CONTRAST)) {
@@ -243,7 +241,7 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
     let L = n.L[mode];
     while (contrast(colours[key].lab, paper) < min && L > 0.02 && L < 0.98) {
       L += mode === "yoru" ? 0.01 : -0.01;
-      colours[key] = swatch(neutralAt(L, capOf(n, L)), s.grey, L);
+      colours[key] = swatch(neutralAt(n, L), s.grey, L);
     }
   }
 
@@ -271,7 +269,8 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
   const near = (key: string) => candidates.get(key)!.filter((c) => hueDistance(c.h, ACCENTS.find((a) => a.key === key)!.hue) < 20 && c.C > 0.05).length;
   const pale = (key: string) => (ACCENTS.find((a) => a.key === key)!.vivid ? 1 : 0);
   const order = ACCENTS.map((a) => a.key).sort((x, y) => pale(x) - pale(y) || near(x) - near(y));
-  const harmony = HARMONY[mode];
+  const mood = MOODS[season];
+  const harmony = { ...HARMONY[mode], apparent: HARMONY[mode].apparent + mood.apparent, chroma: HARMONY[mode].chroma + mood.chroma };
   const used = new Map<string, number>();
   const chosen: Vec3[] = [];
   for (const key of order) {
@@ -291,8 +290,9 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
         Math.max(0, c.glow - harmony.glow) * COST.glow +
         Math.max(0, c.gamut - harmony.gamut) * COST.gamut +
         (used.get(c.ink) ?? 0) * COST.reuse -
-        // The season's own inks, where they're as colourful as the flavour wants.
-        (s.inks.includes(c.ink) && (!a.vivid || (c.C >= a.minChroma && c.C <= harmony.chroma + SEASON_CHROMA_SLACK)) ? COST.season : 0);
+        (echoes.get(key)?.has(c.ink) ? COST.echo : 0) -
+        // The season's own inks, where they're colourful enough for the accent.
+        (s.inks.includes(c.ink) && (!a.vivid || c.C >= a.minChroma) ? COST.season : 0);
       if (!best || score < best.score) best = { ...c, score };
     }
     if (!best) throw new Error(`no ink fits ${key} in ${season}-${mode}`);
@@ -317,7 +317,15 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
 }
 
 export function buildFamily(views: Map<string, Curve>): Flavour[] {
-  return SEASONS.flatMap((s) => MODES.map((m) => buildFlavour(views, s.id, m.id)));
+  const echoes = new Map(MODES.map((m) => [m.id, new Map<string, Set<string>>()]));
+  return SEASONS.flatMap((s) =>
+    MODES.map((m) => {
+      const f = buildFlavour(views, s.id, m.id, echoes.get(m.id));
+      const seen = echoes.get(m.id)!;
+      for (const a of ACCENTS) seen.set(a.key, (seen.get(a.key) ?? new Set()).add(f.colours[a.key].ink));
+      return f;
+    }),
+  );
 }
 
 export interface Check {

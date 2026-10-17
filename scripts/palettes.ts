@@ -52,7 +52,7 @@ const swatchJSON = (f: Flavour, key: string) => {
 };
 const tokens = {
   name: "madoromi",
-  about: "Every colour is one of Pilot's iroshizuku inks, diluted: `ink` is the ink and `at` the lightness along its ramp.",
+  about: "Every accent is one of Pilot's iroshizuku inks, diluted: `ink` is the ink and `at` the lightness along its ramp. Neutrals are greys in the cast of the season's grey ink.",
   seasons: SEASONS.map(({ id, kanji, english, grey }) => ({ id, kanji, english, grey })),
   modes: MODES,
   accents: ACCENTS.map(({ key, name, kanji, english }) => ({ key, name, kanji, english })),

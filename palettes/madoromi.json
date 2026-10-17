@@ -1,6 +1,6 @@
 {
   "name": "madoromi",
-  "about": "Every colour is one of Pilot's iroshizuku inks, diluted: `ink` is the ink and `at` the lightness along its ramp.",
+  "about": "Every accent is one of Pilot's iroshizuku inks, diluted: `ink` is the ink and `at` the lightness along its ramp. Neutrals are greys in the cast of the season's grey ink.",
   "seasons": [
     {
       "id": "haru",
@@ -278,24 +278,24 @@
           "at": 0.53
         },
         "fuji": {
-          "hex": "#6223b4",
+          "hex": "#6c2ac1",
           "oklch": [
-            0.44,
-            0.2072,
-            296.01
+            0.47,
+            0.2145,
+            297.04
           ],
           "ink": "murasaki-shikibu",
-          "at": 0.44
+          "at": 0.47
         },
         "kikyo": {
-          "hex": "#4259ba",
+          "hex": "#4a63c3",
           "oklch": [
-            0.5,
-            0.1542,
-            269.84
+            0.53,
+            0.1522,
+            269.67
           ],
           "ink": "shin-kai",
-          "at": 0.5
+          "at": 0.53
         },
         "beni": {
           "hex": "#aa3944",
@@ -328,14 +328,14 @@
           "at": 0.69
         },
         "yamabuki": {
-          "hex": "#e2900b",
+          "hex": "#baa041",
           "oklch": [
-            0.72,
-            0.1549,
-            69.06
+            0.71,
+            0.1173,
+            93.35
           ],
-          "ink": "daikokuten",
-          "at": 0.72
+          "ink": "ina-ho",
+          "at": 0.71
         },
         "wakaba": {
           "hex": "#558034",
@@ -378,100 +378,100 @@
           "at": 0.53
         },
         "ai": {
-          "hex": "#1a4cb2",
+          "hex": "#1955bf",
           "oklch": [
-            0.45,
-            0.1716,
-            262.42
+            0.48,
+            0.1775,
+            260.93
           ],
           "ink": "ama-iro",
-          "at": 0.45
+          "at": 0.48
         },
         "sumi": {
-          "hex": "#574a5c",
+          "hex": "#584a5c",
           "oklch": [
             0.43,
-            0.0328,
+            0.034,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.43
         },
         "usuzumi1": {
-          "hex": "#6c5d71",
+          "hex": "#6b5d70",
           "oklch": [
             0.5,
-            0.0361,
+            0.034,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.5
         },
         "usuzumi0": {
-          "hex": "#78687d",
+          "hex": "#77697c",
           "oklch": [
             0.54,
-            0.0377,
+            0.034,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.54
         },
         "kasure2": {
-          "hex": "#897a8f",
+          "hex": "#877b8c",
           "oklch": [
             0.6,
-            0.0364,
+            0.028,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.6
         },
         "kasure1": {
-          "hex": "#9b8ca0",
+          "hex": "#998d9e",
           "oklch": [
             0.66,
-            0.0333,
+            0.028,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.66
         },
         "kasure0": {
-          "hex": "#a99cae",
+          "hex": "#a99cad",
           "oklch": [
             0.71,
-            0.0299,
+            0.028,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.71
         },
         "nijimi2": {
-          "hex": "#b8acbc",
+          "hex": "#b8acbd",
           "oklch": [
             0.76,
-            0.0264,
+            0.028,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.76
         },
         "nijimi1": {
-          "hex": "#c7bdcb",
+          "hex": "#c8bccd",
           "oklch": [
             0.81,
-            0.023,
+            0.028,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.81
         },
         "nijimi0": {
-          "hex": "#d6cdda",
+          "hex": "#d9ccdd",
           "oklch": [
             0.86,
-            0.0201,
+            0.028,
             317.02
           ],
           "ink": "kiri-same",
@@ -481,27 +481,27 @@
           "hex": "#f6eff8",
           "oklch": [
             0.96,
-            0.014,
+            0.0144,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.96
         },
         "hyoshi": {
-          "hex": "#ede4f0",
+          "hex": "#ece5ef",
           "oklch": [
             0.93,
-            0.0185,
+            0.016,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.93
         },
         "chitsu": {
-          "hex": "#e3dae6",
+          "hex": "#e2dbe5",
           "oklch": [
             0.9,
-            0.0187,
+            0.016,
             317.02
           ],
           "ink": "kiri-same",
@@ -509,22 +509,22 @@
         }
       },
       "ansi": [
-        "#6c5d71",
+        "#6b5d70",
         "#aa3944",
         "#558034",
-        "#e2900b",
-        "#1a4cb2",
+        "#baa041",
+        "#1955bf",
         "#a9378a",
         "#008758",
-        "#b8acbc",
-        "#78687d",
+        "#b8acbd",
+        "#77697c",
         "#aa3944",
         "#456d36",
-        "#e2900b",
-        "#1a4cb2",
+        "#aa8b39",
+        "#1b43a5",
         "#a9378a",
         "#007346",
-        "#c7bdcb"
+        "#c8bccd"
       ]
     },
     "haru-yoru": {
@@ -533,260 +533,260 @@
       "dark": true,
       "colours": {
         "sakura": {
-          "hex": "#f9b3d1",
+          "hex": "#f8b8d4",
           "oklch": [
-            0.84,
-            0.0889,
-            351.97
+            0.85,
+            0.0811,
+            351.17
           ],
           "ink": "tsutsuji",
-          "at": 0.84
+          "at": 0.85
         },
         "nadeshiko": {
-          "hex": "#e1a7c2",
+          "hex": "#dd9fbf",
           "oklch": [
-            0.79,
-            0.0762,
-            349.76
+            0.77,
+            0.0843,
+            346.54
           ],
           "ink": "edo-murasaki",
-          "at": 0.79
+          "at": 0.77
         },
         "botan": {
-          "hex": "#f48ad3",
+          "hex": "#f68fd6",
           "oklch": [
-            0.77,
-            0.1555,
-            339.97
+            0.78,
+            0.1506,
+            339.9
           ],
           "ink": "yama-budo",
-          "at": 0.77
+          "at": 0.78
         },
         "fuji": {
-          "hex": "#d8aaff",
-          "oklch": [
-            0.81,
-            0.1254,
-            308.38
-          ],
-          "ink": "murasaki-shikibu",
-          "at": 0.81
-        },
-        "kikyo": {
-          "hex": "#aea8ff",
-          "oklch": [
-            0.77,
-            0.1231,
-            286.19
-          ],
-          "ink": "jurojin",
-          "at": 0.77
-        },
-        "beni": {
-          "hex": "#ff8193",
-          "oklch": [
-            0.75,
-            0.1539,
-            12.21
-          ],
-          "ink": "benzaiten",
-          "at": 0.75
-        },
-        "akane": {
-          "hex": "#ff9db0",
-          "oklch": [
-            0.8,
-            0.1189,
-            7.64
-          ],
-          "ink": "benzaiten",
-          "at": 0.8
-        },
-        "kaki": {
-          "hex": "#ffb166",
-          "oklch": [
-            0.82,
-            0.129,
-            62.94
-          ],
-          "ink": "yu-yake",
-          "at": 0.82
-        },
-        "yamabuki": {
-          "hex": "#dac86e",
+          "hex": "#ddb3ff",
           "oklch": [
             0.83,
-            0.1136,
-            98.51
+            0.1124,
+            309.06
           ],
-          "ink": "ina-ho",
+          "ink": "murasaki-shikibu",
           "at": 0.83
         },
-        "wakaba": {
-          "hex": "#c6e050",
+        "kikyo": {
+          "hex": "#b8b4ff",
           "oklch": [
-            0.86,
-            0.1687,
-            118.94
+            0.8,
+            0.1059,
+            286.4
           ],
-          "ink": "chiku-rin",
-          "at": 0.86
+          "ink": "jurojin",
+          "at": 0.8
         },
-        "tokiwa": {
-          "hex": "#6fd0ae",
+        "beni": {
+          "hex": "#ff8799",
           "oklch": [
-            0.79,
-            0.1053,
-            168.61
+            0.76,
+            0.1465,
+            11.45
           ],
-          "ink": "shin-ryoku",
-          "at": 0.79
+          "ink": "benzaiten",
+          "at": 0.76
         },
-        "sora": {
-          "hex": "#56d3f2",
+        "akane": {
+          "hex": "#fba1c7",
           "oklch": [
             0.81,
-            0.1176,
-            216.98
+            0.1155,
+            353.08
           ],
-          "ink": "ku-jaku",
+          "ink": "tsutsuji",
           "at": 0.81
         },
-        "ruri": {
-          "hex": "#2abbff",
+        "kaki": {
+          "hex": "#ffb66d",
           "oklch": [
-            0.75,
-            0.1503,
-            235.43
+            0.83,
+            0.1236,
+            64.5
+          ],
+          "ink": "yu-yake",
+          "at": 0.83
+        },
+        "yamabuki": {
+          "hex": "#e2d37f",
+          "oklch": [
+            0.86,
+            0.1058,
+            99.12
+          ],
+          "ink": "ina-ho",
+          "at": 0.86
+        },
+        "wakaba": {
+          "hex": "#c1dd4a",
+          "oklch": [
+            0.85,
+            0.171,
+            119.35
+          ],
+          "ink": "chiku-rin",
+          "at": 0.85
+        },
+        "tokiwa": {
+          "hex": "#81d9ba",
+          "oklch": [
+            0.82,
+            0.0965,
+            169.4
+          ],
+          "ink": "shin-ryoku",
+          "at": 0.82
+        },
+        "sora": {
+          "hex": "#7bddff",
+          "oklch": [
+            0.85,
+            0.104,
+            222.62
           ],
           "ink": "ama-iro",
-          "at": 0.75
+          "at": 0.85
+        },
+        "ruri": {
+          "hex": "#66ccf6",
+          "oklch": [
+            0.8,
+            0.1113,
+            227.44
+          ],
+          "ink": "rikka",
+          "at": 0.8
         },
         "ai": {
-          "hex": "#89a5ef",
+          "hex": "#95aff3",
           "oklch": [
-            0.73,
-            0.112,
-            268.03
+            0.76,
+            0.103,
+            267.83
           ],
           "ink": "shin-kai",
-          "at": 0.73
+          "at": 0.76
         },
         "sumi": {
-          "hex": "#ddd4e0",
+          "hex": "#e1d1e7",
           "oklch": [
             0.88,
-            0.0193,
+            0.034,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.88
         },
         "usuzumi1": {
-          "hex": "#cac0ce",
+          "hex": "#cdbed3",
           "oklch": [
             0.82,
-            0.0223,
+            0.034,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.82
         },
         "usuzumi0": {
-          "hex": "#b5a9ba",
+          "hex": "#b7a8bd",
           "oklch": [
             0.75,
-            0.0271,
+            0.034,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.75
         },
         "kasure2": {
-          "hex": "#a193a6",
+          "hex": "#9f93a4",
           "oklch": [
             0.68,
-            0.032,
+            0.028,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.68
         },
         "kasure1": {
-          "hex": "#8c7d92",
+          "hex": "#8a7e8f",
           "oklch": [
             0.61,
-            0.036,
+            0.028,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.61
         },
         "kasure0": {
-          "hex": "#78687d",
+          "hex": "#756a7a",
           "oklch": [
             0.54,
-            0.0377,
+            0.028,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.54
         },
         "nijimi2": {
-          "hex": "#635568",
+          "hex": "#615665",
           "oklch": [
             0.47,
-            0.0339,
+            0.028,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.47
         },
         "nijimi1": {
-          "hex": "#504254",
+          "hex": "#4e4352",
           "oklch": [
             0.4,
-            0.0352,
+            0.028,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.4
         },
         "nijimi0": {
-          "hex": "#3b2d40",
+          "hex": "#392e3c",
           "oklch": [
             0.32,
-            0.0381,
+            0.028,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.32
         },
         "kami": {
-          "hex": "#231c26",
+          "hex": "#241c26",
           "oklch": [
             0.24,
-            0.0198,
+            0.022,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.24
         },
         "hyoshi": {
-          "hex": "#1c161e",
+          "hex": "#1c151f",
           "oklch": [
             0.21,
-            0.0183,
+            0.022,
             317.02
           ],
           "ink": "kiri-same",
           "at": 0.21
         },
         "chitsu": {
-          "hex": "#150f17",
+          "hex": "#160f18",
           "oklch": [
             0.18,
-            0.0168,
+            0.022,
             317.02
           ],
           "ink": "kiri-same",
@@ -794,22 +794,22 @@
         }
       },
       "ansi": [
-        "#504254",
-        "#ff8193",
-        "#c6e050",
-        "#dac86e",
-        "#89a5ef",
-        "#f48ad3",
-        "#6fd0ae",
-        "#cac0ce",
-        "#635568",
-        "#ffa2b5",
-        "#e0f07b",
-        "#eadd92",
-        "#a0b9f8",
-        "#fda7e2",
-        "#92e1c5",
-        "#b5a9ba"
+        "#4e4352",
+        "#ff8799",
+        "#c1dd4a",
+        "#e2d37f",
+        "#95aff3",
+        "#f68fd6",
+        "#81d9ba",
+        "#cdbed3",
+        "#615665",
+        "#ffa7bb",
+        "#dcee73",
+        "#f1e7a5",
+        "#acc3fc",
+        "#ffabe4",
+        "#a3e9d1",
+        "#b7a8bd"
       ]
     },
     "natsu-hiru": {
@@ -838,34 +838,34 @@
           "at": 0.59
         },
         "botan": {
-          "hex": "#aa5296",
+          "hex": "#ad5698",
           "oklch": [
-            0.57,
-            0.1421,
-            336.9
+            0.58,
+            0.1405,
+            336.96
           ],
           "ink": "edo-murasaki",
-          "at": 0.57
+          "at": 0.58
         },
         "fuji": {
-          "hex": "#6223b4",
+          "hex": "#6526b9",
           "oklch": [
-            0.44,
-            0.2072,
-            296.01
+            0.45,
+            0.2098,
+            296.32
           ],
           "ink": "murasaki-shikibu",
-          "at": 0.44
+          "at": 0.45
         },
         "kikyo": {
-          "hex": "#4259ba",
+          "hex": "#455cbd",
           "oklch": [
-            0.5,
-            0.1542,
-            269.84
+            0.51,
+            0.1537,
+            269.78
           ],
           "ink": "shin-kai",
-          "at": 0.5
+          "at": 0.51
         },
         "beni": {
           "hex": "#aa3944",
@@ -878,33 +878,33 @@
           "at": 0.51
         },
         "akane": {
-          "hex": "#db2d64",
+          "hex": "#c13461",
           "oklch": [
-            0.59,
-            0.2083,
-            8.7
+            0.55,
+            0.1784,
+            6.23
           ],
-          "ink": "bishamonten",
-          "at": 0.59
+          "ink": "tsutsuji",
+          "at": 0.55
         },
         "kaki": {
-          "hex": "#ff6111",
+          "hex": "#ff5f36",
           "oklch": [
             0.69,
-            0.2062,
-            41.2
+            0.2024,
+            35.22
           ],
-          "ink": "to-ro",
+          "ink": "yu-yake",
           "at": 0.69
         },
         "yamabuki": {
-          "hex": "#e2900b",
+          "hex": "#bda343",
           "oklch": [
             0.72,
-            0.1549,
-            69.06
+            0.1185,
+            94
           ],
-          "ink": "daikokuten",
+          "ink": "ina-ho",
           "at": 0.72
         },
         "wakaba": {
@@ -948,130 +948,130 @@
           "at": 0.53
         },
         "ai": {
-          "hex": "#4f69c8",
+          "hex": "#1a52bb",
           "oklch": [
-            0.55,
-            0.1502,
-            269.53
+            0.47,
+            0.1756,
+            261.43
           ],
-          "ink": "shin-kai",
-          "at": 0.55
+          "ink": "ama-iro",
+          "at": 0.47
         },
         "sumi": {
-          "hex": "#41535a",
+          "hex": "#3b545e",
           "oklch": [
             0.43,
-            0.0249,
+            0.034,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.43
         },
         "usuzumi1": {
-          "hex": "#52676f",
+          "hex": "#4e6872",
           "oklch": [
             0.5,
-            0.029,
+            0.034,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.5
         },
         "usuzumi0": {
-          "hex": "#5a7078",
+          "hex": "#57717a",
           "oklch": [
             0.53,
-            0.0297,
+            0.034,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.53
         },
         "kasure2": {
-          "hex": "#6d858e",
+          "hex": "#6f848d",
           "oklch": [
             0.6,
-            0.0306,
+            0.028,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.6
         },
         "kasure1": {
-          "hex": "#80979f",
+          "hex": "#80969f",
           "oklch": [
             0.66,
-            0.0292,
+            0.028,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.66
         },
         "kasure0": {
-          "hex": "#90a6ae",
+          "hex": "#8fa6ae",
           "oklch": [
             0.71,
-            0.0272,
+            0.028,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.71
         },
         "nijimi2": {
-          "hex": "#a1b5bd",
+          "hex": "#9fb5be",
           "oklch": [
             0.76,
-            0.0244,
+            0.028,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.76
         },
         "nijimi1": {
-          "hex": "#b3c4cb",
+          "hex": "#aec5ce",
           "oklch": [
             0.81,
-            0.021,
+            0.028,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.81
         },
         "nijimi0": {
-          "hex": "#c5d4d9",
+          "hex": "#bed6df",
           "oklch": [
             0.86,
-            0.0175,
+            0.028,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.86
         },
         "kami": {
-          "hex": "#eaf4f8",
+          "hex": "#e9f4f8",
           "oklch": [
             0.96,
-            0.0121,
+            0.0132,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.96
         },
         "hyoshi": {
-          "hex": "#dfeaee",
+          "hex": "#ddeaf0",
           "oklch": [
             0.93,
-            0.0133,
+            0.016,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.93
         },
         "chitsu": {
-          "hex": "#d4e0e5",
+          "hex": "#d3e1e6",
           "oklch": [
             0.9,
-            0.0149,
+            0.016,
             222.98
           ],
           "ink": "fukagawa-nezu",
@@ -1079,22 +1079,22 @@
         }
       },
       "ansi": [
-        "#52676f",
+        "#4e6872",
         "#aa3944",
         "#558034",
-        "#e2900b",
-        "#4f69c8",
-        "#aa5296",
+        "#bda343",
+        "#1a52bb",
+        "#ad5698",
         "#048478",
-        "#a1b5bd",
-        "#5a7078",
+        "#9fb5be",
+        "#57717a",
         "#aa3944",
         "#456d36",
-        "#e2900b",
-        "#3f56b7",
-        "#983e84",
+        "#ad8f3a",
+        "#1b40a1",
+        "#9b4187",
         "#106f6a",
-        "#b3c4cb"
+        "#aec5ce"
       ]
     },
     "natsu-yoru": {
@@ -1103,104 +1103,104 @@
       "dark": true,
       "colours": {
         "sakura": {
-          "hex": "#f9b3d1",
+          "hex": "#f8b8d4",
           "oklch": [
-            0.84,
-            0.0889,
-            351.97
+            0.85,
+            0.0811,
+            351.17
           ],
           "ink": "tsutsuji",
-          "at": 0.84
+          "at": 0.85
         },
         "nadeshiko": {
-          "hex": "#e1a7c2",
-          "oklch": [
-            0.79,
-            0.0762,
-            349.76
-          ],
-          "ink": "edo-murasaki",
-          "at": 0.79
-        },
-        "botan": {
-          "hex": "#f48ad3",
+          "hex": "#dd9fbf",
           "oklch": [
             0.77,
-            0.1555,
-            339.97
+            0.0843,
+            346.54
           ],
-          "ink": "yama-budo",
+          "ink": "edo-murasaki",
           "at": 0.77
         },
-        "fuji": {
-          "hex": "#d8aaff",
+        "botan": {
+          "hex": "#f68fd6",
           "oklch": [
-            0.81,
-            0.1254,
-            308.38
+            0.78,
+            0.1506,
+            339.9
+          ],
+          "ink": "yama-budo",
+          "at": 0.78
+        },
+        "fuji": {
+          "hex": "#d3a1ff",
+          "oklch": [
+            0.79,
+            0.1385,
+            307.74
           ],
           "ink": "murasaki-shikibu",
-          "at": 0.81
+          "at": 0.79
         },
         "kikyo": {
-          "hex": "#9ea9ff",
+          "hex": "#a2adff",
           "oklch": [
-            0.76,
-            0.1239,
-            277.25
+            0.77,
+            0.1184,
+            277.57
           ],
           "ink": "ajisai",
-          "at": 0.76
+          "at": 0.77
         },
         "beni": {
-          "hex": "#ff8b79",
+          "hex": "#ff8799",
           "oklch": [
             0.76,
-            0.1437,
-            30.07
+            0.1465,
+            11.45
           ],
-          "ink": "fuyu-gaki",
+          "ink": "benzaiten",
           "at": 0.76
         },
         "akane": {
-          "hex": "#ff9db0",
+          "hex": "#fba1c7",
           "oklch": [
-            0.8,
-            0.1189,
-            7.64
+            0.81,
+            0.1155,
+            353.08
           ],
-          "ink": "benzaiten",
-          "at": 0.8
+          "ink": "tsutsuji",
+          "at": 0.81
         },
         "kaki": {
-          "hex": "#ffb166",
+          "hex": "#ffac60",
           "oklch": [
-            0.82,
-            0.129,
-            62.94
+            0.81,
+            0.1345,
+            61.36
           ],
           "ink": "yu-yake",
-          "at": 0.82
+          "at": 0.81
         },
         "yamabuki": {
-          "hex": "#dac86e",
+          "hex": "#ddcc73",
           "oklch": [
-            0.83,
-            0.1136,
-            98.51
+            0.84,
+            0.1113,
+            98.74
           ],
           "ink": "ina-ho",
-          "at": 0.83
+          "at": 0.84
         },
         "wakaba": {
-          "hex": "#b5d43b",
+          "hex": "#b9d740",
           "oklch": [
-            0.82,
-            0.1746,
-            120.41
+            0.83,
+            0.1739,
+            120.07
           ],
           "ink": "chiku-rin",
-          "at": 0.82
+          "at": 0.83
         },
         "tokiwa": {
           "hex": "#5eccc5",
@@ -1213,14 +1213,14 @@
           "at": 0.78
         },
         "sora": {
-          "hex": "#56d3f2",
+          "hex": "#5cd7f5",
           "oklch": [
-            0.81,
-            0.1176,
-            216.98
+            0.82,
+            0.116,
+            216.7
           ],
           "ink": "ku-jaku",
-          "at": 0.81
+          "at": 0.82
         },
         "ruri": {
           "hex": "#58bfff",
@@ -1243,30 +1243,30 @@
           "at": 0.7
         },
         "sumi": {
-          "hex": "#cddadf",
+          "hex": "#c0dde8",
           "oklch": [
             0.88,
-            0.0162,
+            0.034,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.88
         },
         "usuzumi1": {
-          "hex": "#b7c7ce",
+          "hex": "#adcad4",
           "oklch": [
             0.82,
-            0.0203,
+            0.034,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.82
         },
         "usuzumi0": {
-          "hex": "#9eb2ba",
+          "hex": "#97b3be",
           "oklch": [
             0.75,
-            0.0251,
+            0.034,
             222.98
           ],
           "ink": "fukagawa-nezu",
@@ -1276,87 +1276,87 @@
           "hex": "#869da5",
           "oklch": [
             0.68,
-            0.0284,
+            0.028,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.68
         },
         "kasure1": {
-          "hex": "#708891",
+          "hex": "#728790",
           "oklch": [
             0.61,
-            0.0305,
+            0.028,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.61
         },
         "kasure0": {
-          "hex": "#5c737b",
+          "hex": "#5d737b",
           "oklch": [
             0.54,
-            0.0299,
+            0.028,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.54
         },
         "nijimi2": {
-          "hex": "#4a5e66",
+          "hex": "#4a5f66",
           "oklch": [
             0.47,
-            0.0272,
+            0.028,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.47
         },
         "nijimi1": {
-          "hex": "#3a4b51",
+          "hex": "#374b53",
           "oklch": [
             0.4,
-            0.0231,
+            0.028,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.4
         },
         "nijimi0": {
-          "hex": "#29353a",
+          "hex": "#23363d",
           "oklch": [
             0.32,
-            0.0185,
+            0.028,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.32
         },
         "kami": {
-          "hex": "#1a2023",
+          "hex": "#132227",
           "oklch": [
             0.24,
-            0.0106,
+            0.022,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.24
         },
         "hyoshi": {
-          "hex": "#14191b",
+          "hex": "#0e1a1f",
           "oklch": [
             0.21,
-            0.0081,
+            0.0198,
             222.98
           ],
           "ink": "fukagawa-nezu",
           "at": 0.21
         },
         "chitsu": {
-          "hex": "#0f1214",
+          "hex": "#091317",
           "oklch": [
             0.18,
-            0.006,
+            0.0171,
             222.98
           ],
           "ink": "fukagawa-nezu",
@@ -1364,22 +1364,22 @@
         }
       },
       "ansi": [
-        "#3a4b51",
-        "#ff8b79",
-        "#b5d43b",
-        "#dac86e",
+        "#374b53",
+        "#ff8799",
+        "#b9d740",
+        "#ddcc73",
         "#7f9bea",
-        "#f48ad3",
+        "#f68fd6",
         "#5eccc5",
-        "#b7c7ce",
-        "#4a5e66",
-        "#ffaba3",
-        "#cee65d",
-        "#eadd92",
+        "#adcad4",
+        "#4a5f66",
+        "#ffa7bb",
+        "#d3e864",
+        "#ece098",
         "#95aff3",
-        "#fda7e2",
+        "#ffabe4",
         "#87dcd8",
-        "#9eb2ba"
+        "#97b3be"
       ]
     },
     "aki-hiru": {
@@ -1398,44 +1398,44 @@
           "at": 0.57
         },
         "nadeshiko": {
-          "hex": "#c8428f",
+          "hex": "#c3408e",
           "oklch": [
-            0.59,
-            0.1858,
-            348.88
+            0.58,
+            0.1841,
+            347.67
           ],
           "ink": "hana-ikada",
-          "at": 0.59
+          "at": 0.58
         },
         "botan": {
-          "hex": "#aa5296",
+          "hex": "#9e458a",
           "oklch": [
-            0.57,
-            0.1421,
-            336.9
+            0.53,
+            0.1466,
+            336.96
           ],
           "ink": "edo-murasaki",
-          "at": 0.57
+          "at": 0.53
         },
         "fuji": {
-          "hex": "#6223b4",
+          "hex": "#551aa2",
           "oklch": [
-            0.44,
-            0.2072,
-            296.01
+            0.4,
+            0.1957,
+            295.16
           ],
           "ink": "murasaki-shikibu",
-          "at": 0.44
+          "at": 0.4
         },
         "kikyo": {
-          "hex": "#4259ba",
+          "hex": "#364aaa",
           "oklch": [
-            0.5,
-            0.1542,
-            269.84
+            0.45,
+            0.1548,
+            270.36
           ],
           "ink": "shin-kai",
-          "at": 0.5
+          "at": 0.45
         },
         "beni": {
           "hex": "#aa3944",
@@ -1448,14 +1448,14 @@
           "at": 0.51
         },
         "akane": {
-          "hex": "#db2d64",
+          "hex": "#c13461",
           "oklch": [
-            0.59,
-            0.2083,
-            8.7
+            0.55,
+            0.1784,
+            6.23
           ],
-          "ink": "bishamonten",
-          "at": 0.59
+          "ink": "tsutsuji",
+          "at": 0.55
         },
         "kaki": {
           "hex": "#ff6111",
@@ -1468,13 +1468,13 @@
           "at": 0.69
         },
         "yamabuki": {
-          "hex": "#e2900b",
+          "hex": "#bda343",
           "oklch": [
             0.72,
-            0.1549,
-            69.06
+            0.1185,
+            94
           ],
-          "ink": "daikokuten",
+          "ink": "ina-ho",
           "at": 0.72
         },
         "wakaba": {
@@ -1518,130 +1518,130 @@
           "at": 0.53
         },
         "ai": {
-          "hex": "#4f69c8",
+          "hex": "#1b3d9c",
           "oklch": [
-            0.55,
-            0.1502,
-            269.53
+            0.4,
+            0.1599,
+            264.95
           ],
-          "ink": "shin-kai",
-          "at": 0.55
+          "ink": "ama-iro",
+          "at": 0.4
         },
         "sumi": {
-          "hex": "#65492f",
+          "hex": "#5d4c3c",
           "oklch": [
             0.43,
-            0.055,
+            0.034,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.43
         },
         "usuzumi1": {
-          "hex": "#7a5d42",
+          "hex": "#715f4f",
           "oklch": [
             0.5,
-            0.055,
+            0.034,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.5
         },
         "usuzumi0": {
-          "hex": "#86684d",
+          "hex": "#7d6b5a",
           "oklch": [
             0.54,
-            0.055,
+            0.034,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.54
         },
         "kasure2": {
-          "hex": "#927c68",
+          "hex": "#8d7d6f",
           "oklch": [
             0.6,
-            0.04,
+            0.028,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.6
         },
         "kasure1": {
-          "hex": "#a48d79",
+          "hex": "#9f8f81",
           "oklch": [
             0.66,
-            0.04,
+            0.028,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.66
         },
         "kasure0": {
-          "hex": "#b49d88",
+          "hex": "#ae9e90",
           "oklch": [
             0.71,
-            0.04,
+            0.028,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.71
         },
         "nijimi2": {
-          "hex": "#c4ac97",
+          "hex": "#beae9f",
           "oklch": [
             0.76,
-            0.04,
+            0.028,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.76
         },
         "nijimi1": {
-          "hex": "#d4bca7",
+          "hex": "#cebeaf",
           "oklch": [
             0.81,
-            0.0395,
+            0.028,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.81
         },
         "nijimi0": {
-          "hex": "#e2cdb9",
+          "hex": "#dfcebf",
           "oklch": [
             0.86,
-            0.0358,
+            0.028,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.86
         },
         "kami": {
-          "hex": "#f8f0ea",
+          "hex": "#f8f0e9",
           "oklch": [
             0.96,
-            0.0116,
+            0.0131,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.96
         },
         "hyoshi": {
-          "hex": "#f3e5d9",
+          "hex": "#f0e6dd",
           "oklch": [
             0.93,
-            0.0221,
+            0.016,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.93
         },
         "chitsu": {
-          "hex": "#eadbcd",
+          "hex": "#e6dcd3",
           "oklch": [
             0.9,
-            0.025,
+            0.016,
             63.83
           ],
           "ink": "yama-guri",
@@ -1649,22 +1649,22 @@
         }
       },
       "ansi": [
-        "#7a5d42",
+        "#715f4f",
         "#aa3944",
         "#558034",
-        "#e2900b",
-        "#4f69c8",
-        "#aa5296",
+        "#bda343",
+        "#1b3d9c",
+        "#9e458a",
         "#008758",
-        "#c4ac97",
-        "#86684d",
+        "#beae9f",
+        "#7d6b5a",
         "#aa3944",
         "#456d36",
-        "#e2900b",
-        "#3f56b7",
-        "#983e84",
+        "#ad8f3a",
+        "#1b3d9c",
+        "#8b3278",
         "#007346",
-        "#d4bca7"
+        "#cebeaf"
       ]
     },
     "aki-yoru": {
@@ -1683,44 +1683,44 @@
           "at": 0.85
         },
         "nadeshiko": {
-          "hex": "#fda7e2",
+          "hex": "#f998da",
           "oklch": [
-            0.83,
-            0.1254,
-            339.49
+            0.8,
+            0.1408,
+            339.76
           ],
           "ink": "yama-budo",
-          "at": 0.83
+          "at": 0.8
         },
         "botan": {
-          "hex": "#f48ad3",
+          "hex": "#f180ce",
           "oklch": [
-            0.77,
-            0.1555,
-            339.97
+            0.75,
+            0.165,
+            340.09
           ],
           "ink": "yama-budo",
-          "at": 0.77
+          "at": 0.75
         },
         "fuji": {
-          "hex": "#d8aaff",
+          "hex": "#c083fb",
           "oklch": [
-            0.81,
-            0.1254,
-            308.38
+            0.72,
+            0.1768,
+            305.63
           ],
           "ink": "murasaki-shikibu",
-          "at": 0.81
+          "at": 0.72
         },
         "kikyo": {
-          "hex": "#aea8ff",
+          "hex": "#aaa4ff",
           "oklch": [
-            0.77,
-            0.1231,
-            286.19
+            0.76,
+            0.1289,
+            286.1
           ],
           "ink": "jurojin",
-          "at": 0.77
+          "at": 0.76
         },
         "beni": {
           "hex": "#ff8b79",
@@ -1733,64 +1733,64 @@
           "at": 0.76
         },
         "akane": {
-          "hex": "#ff9cb5",
-          "oklch": [
-            0.8,
-            0.1216,
-            3.59
-          ],
-          "ink": "momiji",
-          "at": 0.8
-        },
-        "kaki": {
-          "hex": "#ffb166",
-          "oklch": [
-            0.82,
-            0.129,
-            62.94
-          ],
-          "ink": "yu-yake",
-          "at": 0.82
-        },
-        "yamabuki": {
-          "hex": "#ffc849",
-          "oklch": [
-            0.86,
-            0.1513,
-            84.41
-          ],
-          "ink": "to-ro",
-          "at": 0.86
-        },
-        "wakaba": {
-          "hex": "#b5d43b",
-          "oklch": [
-            0.82,
-            0.1746,
-            120.41
-          ],
-          "ink": "chiku-rin",
-          "at": 0.82
-        },
-        "tokiwa": {
-          "hex": "#6fd0ae",
+          "hex": "#ff96b1",
           "oklch": [
             0.79,
-            0.1053,
-            168.61
+            0.1285,
+            4.26
           ],
-          "ink": "shin-ryoku",
+          "ink": "momiji",
           "at": 0.79
         },
-        "sora": {
-          "hex": "#56d3f2",
+        "kaki": {
+          "hex": "#ff9200",
           "oklch": [
-            0.81,
-            0.1176,
-            216.98
+            0.76,
+            0.1764,
+            61.01
+          ],
+          "ink": "to-ro",
+          "at": 0.76
+        },
+        "yamabuki": {
+          "hex": "#d0bb5a",
+          "oklch": [
+            0.79,
+            0.1198,
+            97.38
+          ],
+          "ink": "ina-ho",
+          "at": 0.79
+        },
+        "wakaba": {
+          "hex": "#a6c830",
+          "oklch": [
+            0.78,
+            0.1732,
+            121.78
+          ],
+          "ink": "chiku-rin",
+          "at": 0.78
+        },
+        "tokiwa": {
+          "hex": "#58c59f",
+          "oklch": [
+            0.75,
+            0.1159,
+            167.5
+          ],
+          "ink": "shin-ryoku",
+          "at": 0.75
+        },
+        "sora": {
+          "hex": "#4acded",
+          "oklch": [
+            0.79,
+            0.1204,
+            217.5
           ],
           "ink": "ku-jaku",
-          "at": 0.81
+          "at": 0.79
         },
         "ruri": {
           "hex": "#5ea3d4",
@@ -1803,130 +1803,130 @@
           "at": 0.69
         },
         "ai": {
-          "hex": "#89a5ef",
+          "hex": "#7f9bea",
           "oklch": [
-            0.73,
-            0.112,
-            268.03
+            0.7,
+            0.1204,
+            268.25
           ],
           "ink": "shin-kai",
-          "at": 0.73
+          "at": 0.7
         },
         "sumi": {
           "hex": "#e8d3c1",
           "oklch": [
             0.88,
-            0.0343,
+            0.034,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.88
         },
         "usuzumi1": {
-          "hex": "#d7bfab",
+          "hex": "#d4c0ae",
           "oklch": [
             0.82,
-            0.0388,
+            0.034,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.82
         },
         "usuzumi0": {
-          "hex": "#c2a992",
+          "hex": "#beaa98",
           "oklch": [
             0.75,
-            0.044,
+            0.034,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.75
         },
         "kasure2": {
-          "hex": "#aa947f",
+          "hex": "#a59587",
           "oklch": [
             0.68,
-            0.04,
+            0.028,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.68
         },
         "kasure1": {
-          "hex": "#957f6b",
+          "hex": "#908072",
           "oklch": [
             0.61,
-            0.04,
+            0.028,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.61
         },
         "kasure0": {
-          "hex": "#806a57",
+          "hex": "#7b6c5e",
           "oklch": [
             0.54,
-            0.04,
+            0.028,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.54
         },
         "nijimi2": {
-          "hex": "#6b5643",
+          "hex": "#66584b",
           "oklch": [
             0.47,
-            0.04,
+            0.028,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.47
         },
         "nijimi1": {
-          "hex": "#574331",
+          "hex": "#534538",
           "oklch": [
             0.4,
-            0.04,
+            0.028,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.4
         },
         "nijimi0": {
-          "hex": "#412e1d",
+          "hex": "#3d3024",
           "oklch": [
             0.32,
-            0.04,
+            0.028,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.32
         },
         "kami": {
-          "hex": "#271d13",
+          "hex": "#271d14",
           "oklch": [
             0.24,
-            0.0242,
+            0.022,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.24
         },
         "hyoshi": {
-          "hex": "#1f160e",
+          "hex": "#20160e",
           "oklch": [
             0.21,
-            0.0219,
+            0.022,
             63.83
           ],
           "ink": "yama-guri",
           "at": 0.21
         },
         "chitsu": {
-          "hex": "#171009",
+          "hex": "#181008",
           "oklch": [
             0.18,
-            0.0177,
+            0.0209,
             63.83
           ],
           "ink": "yama-guri",
@@ -1934,22 +1934,22 @@
         }
       },
       "ansi": [
-        "#574331",
+        "#534538",
         "#ff8b79",
-        "#b5d43b",
-        "#ffc849",
-        "#89a5ef",
-        "#f48ad3",
-        "#6fd0ae",
-        "#d7bfab",
-        "#6b5643",
+        "#a6c830",
+        "#d0bb5a",
+        "#7f9bea",
+        "#f180ce",
+        "#58c59f",
+        "#d4c0ae",
+        "#66584b",
         "#ffaba3",
-        "#cee65d",
-        "#ffe387",
-        "#a0b9f8",
-        "#fda7e2",
-        "#92e1c5",
-        "#c2a992"
+        "#bdda45",
+        "#dfcf79",
+        "#95aff3",
+        "#fb9ddd",
+        "#7bd6b6",
+        "#beaa98"
       ]
     },
     "fuyu-hiru": {
@@ -1988,14 +1988,14 @@
           "at": 0.53
         },
         "fuji": {
-          "hex": "#6223b4",
+          "hex": "#68386b",
           "oklch": [
-            0.44,
-            0.2072,
-            296.01
+            0.42,
+            0.1008,
+            324.37
           ],
-          "ink": "murasaki-shikibu",
-          "at": 0.44
+          "ink": "rikka",
+          "at": 0.42
         },
         "kikyo": {
           "hex": "#4259ba",
@@ -2008,14 +2008,14 @@
           "at": 0.5
         },
         "beni": {
-          "hex": "#aa3944",
+          "hex": "#a43b3b",
           "oklch": [
-            0.51,
-            0.1468,
-            18.87
+            0.5,
+            0.1391,
+            23.42
           ],
           "ink": "tsutsuji",
-          "at": 0.51
+          "at": 0.5
         },
         "akane": {
           "hex": "#db2d64",
@@ -2028,23 +2028,23 @@
           "at": 0.59
         },
         "kaki": {
-          "hex": "#ff6111",
+          "hex": "#ff5e3f",
           "oklch": [
             0.69,
-            0.2062,
-            41.2
+            0.2012,
+            32.94
           ],
-          "ink": "to-ro",
+          "ink": "fuyu-gaki",
           "at": 0.69
         },
         "yamabuki": {
-          "hex": "#e2900b",
+          "hex": "#bda343",
           "oklch": [
             0.72,
-            0.1549,
-            69.06
+            0.1185,
+            94
           ],
-          "ink": "daikokuten",
+          "ink": "ina-ho",
           "at": 0.72
         },
         "wakaba": {
@@ -2068,110 +2068,110 @@
           "at": 0.55
         },
         "sora": {
-          "hex": "#1d7cb4",
+          "hex": "#0081a3",
           "oklch": [
             0.56,
-            0.1204,
-            241.11
+            0.1065,
+            225.32
           ],
-          "ink": "rikka",
+          "ink": "ku-jaku",
           "at": 0.56
         },
         "ruri": {
-          "hex": "#2369a7",
+          "hex": "#386fa5",
           "oklch": [
-            0.51,
-            0.1197,
-            249.28
+            0.53,
+            0.1038,
+            249.8
           ],
-          "ink": "tsuki-yo",
-          "at": 0.51
+          "ink": "rikka",
+          "at": 0.53
         },
         "ai": {
-          "hex": "#4f69c8",
+          "hex": "#1a4cb2",
           "oklch": [
-            0.55,
-            0.1502,
-            269.53
+            0.45,
+            0.1716,
+            262.42
           ],
-          "ink": "shin-kai",
-          "at": 0.55
+          "ink": "ama-iro",
+          "at": 0.45
         },
         "sumi": {
-          "hex": "#484d6d",
+          "hex": "#4a4e63",
           "oklch": [
             0.43,
-            0.0524,
+            0.034,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.43
         },
         "usuzumi1": {
-          "hex": "#5b6182",
+          "hex": "#5e6277",
           "oklch": [
             0.5,
-            0.0526,
+            0.034,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.5
         },
         "usuzumi0": {
-          "hex": "#666c8d",
+          "hex": "#696d83",
           "oklch": [
             0.54,
-            0.0515,
+            0.034,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.54
         },
         "kasure2": {
-          "hex": "#797f99",
+          "hex": "#7b7f91",
           "oklch": [
             0.6,
-            0.04,
+            0.028,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.6
         },
         "kasure1": {
-          "hex": "#8b91ab",
+          "hex": "#8d91a4",
           "oklch": [
             0.66,
-            0.04,
+            0.028,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.66
         },
         "kasure0": {
-          "hex": "#9aa0bb",
+          "hex": "#9ca0b3",
           "oklch": [
             0.71,
-            0.04,
+            0.028,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.71
         },
         "nijimi2": {
-          "hex": "#aab0c9",
+          "hex": "#acb0c3",
           "oklch": [
             0.76,
-            0.0374,
+            0.028,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.76
         },
         "nijimi1": {
-          "hex": "#bbc0d7",
+          "hex": "#bcc0d3",
           "oklch": [
             0.81,
-            0.0327,
+            0.028,
             276.1
           ],
           "ink": "fuyu-syogun",
@@ -2181,7 +2181,7 @@
           "hex": "#ccd0e4",
           "oklch": [
             0.86,
-            0.0275,
+            0.028,
             276.1
           ],
           "ink": "fuyu-syogun",
@@ -2191,27 +2191,27 @@
           "hex": "#f0f1f8",
           "oklch": [
             0.96,
-            0.0092,
+            0.0095,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.96
         },
         "hyoshi": {
-          "hex": "#e4e7f3",
+          "hex": "#e5e7f3",
           "oklch": [
             0.93,
-            0.0168,
+            0.016,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.93
         },
         "chitsu": {
-          "hex": "#d9ddee",
+          "hex": "#dbdde9",
           "oklch": [
             0.9,
-            0.0231,
+            0.016,
             276.1
           ],
           "ink": "fuyu-syogun",
@@ -2219,22 +2219,22 @@
         }
       },
       "ansi": [
-        "#5b6182",
-        "#aa3944",
+        "#5e6277",
+        "#a43b3b",
         "#558034",
-        "#e2900b",
-        "#4f69c8",
+        "#bda343",
+        "#1a4cb2",
         "#9e458a",
         "#008755",
-        "#aab0c9",
-        "#666c8d",
-        "#aa3944",
+        "#acb0c3",
+        "#696d83",
+        "#a43b3b",
         "#456d36",
-        "#e2900b",
-        "#3f56b7",
+        "#ad8f3a",
+        "#1a4cb2",
         "#8b3278",
         "#007348",
-        "#bbc0d7"
+        "#bcc0d3"
       ]
     },
     "fuyu-yoru": {
@@ -2243,14 +2243,14 @@
       "dark": true,
       "colours": {
         "sakura": {
-          "hex": "#ffb6cb",
+          "hex": "#e9b8c6",
           "oklch": [
-            0.85,
-            0.0883,
-            0.5
+            0.83,
+            0.06,
+            359.84
           ],
-          "ink": "benzaiten",
-          "at": 0.85
+          "ink": "edo-murasaki",
+          "at": 0.83
         },
         "nadeshiko": {
           "hex": "#dfa3c0",
@@ -2273,24 +2273,24 @@
           "at": 0.77
         },
         "fuji": {
-          "hex": "#aea8ff",
+          "hex": "#ddb3ff",
           "oklch": [
-            0.77,
-            0.1231,
-            286.19
+            0.83,
+            0.1124,
+            309.06
           ],
-          "ink": "jurojin",
-          "at": 0.77
+          "ink": "murasaki-shikibu",
+          "at": 0.83
         },
         "kikyo": {
-          "hex": "#9d95fe",
+          "hex": "#b8b4ff",
           "oklch": [
-            0.72,
-            0.1506,
-            285.68
+            0.8,
+            0.1059,
+            286.4
           ],
           "ink": "jurojin",
-          "at": 0.72
+          "at": 0.8
         },
         "beni": {
           "hex": "#ff8b79",
@@ -2303,14 +2303,14 @@
           "at": 0.76
         },
         "akane": {
-          "hex": "#ff9db0",
+          "hex": "#ffa2b5",
           "oklch": [
-            0.8,
-            0.1189,
-            7.64
+            0.81,
+            0.1124,
+            6.44
           ],
           "ink": "benzaiten",
-          "at": 0.8
+          "at": 0.81
         },
         "kaki": {
           "hex": "#ffb166",
@@ -2323,24 +2323,24 @@
           "at": 0.82
         },
         "yamabuki": {
-          "hex": "#ebb50a",
+          "hex": "#eab00a",
           "oklch": [
-            0.8,
-            0.1623,
-            86.9
+            0.79,
+            0.1605,
+            84.77
           ],
           "ink": "daikokuten",
-          "at": 0.8
+          "at": 0.79
         },
         "wakaba": {
-          "hex": "#b5d43b",
+          "hex": "#b9d740",
           "oklch": [
-            0.82,
-            0.1746,
-            120.41
+            0.83,
+            0.1739,
+            120.07
           ],
           "ink": "chiku-rin",
-          "at": 0.82
+          "at": 0.83
         },
         "tokiwa": {
           "hex": "#6fd0ae",
@@ -2373,130 +2373,130 @@
           "at": 0.76
         },
         "ai": {
-          "hex": "#89a5ef",
+          "hex": "#8da8f0",
           "oklch": [
-            0.73,
-            0.112,
-            268.03
+            0.74,
+            0.1091,
+            267.96
           ],
           "ink": "shin-kai",
-          "at": 0.73
+          "at": 0.74
         },
         "sumi": {
-          "hex": "#d3d6e9",
+          "hex": "#d2d6eb",
           "oklch": [
             0.88,
-            0.0253,
+            0.0294,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.88
         },
         "usuzumi1": {
-          "hex": "#bec3d9",
+          "hex": "#bec3db",
           "oklch": [
             0.82,
-            0.0317,
+            0.034,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.82
         },
         "usuzumi0": {
-          "hex": "#a7acc7",
+          "hex": "#a8adc4",
           "oklch": [
             0.75,
-            0.0382,
+            0.034,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.75
         },
         "kasure2": {
-          "hex": "#9197b2",
+          "hex": "#9397aa",
           "oklch": [
             0.68,
-            0.04,
+            0.028,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.68
         },
         "kasure1": {
-          "hex": "#7c829c",
+          "hex": "#7e8294",
           "oklch": [
             0.61,
-            0.04,
+            0.028,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.61
         },
         "kasure0": {
-          "hex": "#686d86",
+          "hex": "#6a6e7f",
           "oklch": [
             0.54,
-            0.04,
+            0.028,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.54
         },
         "nijimi2": {
-          "hex": "#545972",
+          "hex": "#565a6b",
           "oklch": [
             0.47,
-            0.04,
+            0.028,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.47
         },
         "nijimi1": {
-          "hex": "#42465d",
+          "hex": "#434757",
           "oklch": [
             0.4,
-            0.04,
+            0.028,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.4
         },
         "nijimi0": {
-          "hex": "#2d3147",
+          "hex": "#2f3241",
           "oklch": [
             0.32,
-            0.04,
+            0.028,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.32
         },
         "kami": {
-          "hex": "#1c1e2b",
+          "hex": "#1c1e2a",
           "oklch": [
             0.24,
-            0.025,
+            0.022,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.24
         },
         "hyoshi": {
-          "hex": "#151724",
+          "hex": "#151722",
           "oklch": [
             0.21,
-            0.025,
+            0.022,
             276.1
           ],
           "ink": "fuyu-syogun",
           "at": 0.21
         },
         "chitsu": {
-          "hex": "#0f111c",
+          "hex": "#0f111b",
           "oklch": [
             0.18,
-            0.0244,
+            0.022,
             276.1
           ],
           "ink": "fuyu-syogun",
@@ -2504,22 +2504,22 @@
         }
       },
       "ansi": [
-        "#42465d",
+        "#434757",
         "#ff8b79",
-        "#b5d43b",
-        "#ebb50a",
-        "#89a5ef",
+        "#b9d740",
+        "#eab00a",
+        "#8da8f0",
         "#f48ad3",
         "#6fd0ae",
-        "#bec3d9",
-        "#545972",
+        "#bec3db",
+        "#565a6b",
         "#ffaba3",
-        "#cee65d",
-        "#f1d003",
-        "#a0b9f8",
+        "#d3e864",
+        "#f0cc05",
+        "#a4bcf9",
         "#fda7e2",
         "#92e1c5",
-        "#a7acc7"
+        "#a8adc4"
       ]
     }
   }
