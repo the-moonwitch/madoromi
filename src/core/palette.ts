@@ -31,7 +31,7 @@ export const SEASONS: { id: Season; kanji: string; english: string; inks: string
     kanji: "秋",
     english: "autumn",
     inks: ["momiji", "kosumosu", "yama-budo", "yama-guri", "ina-ho", "murasaki-shikibu", "tsuki-yo", "to-ro", "fuyu-gaki", "kiri-same"],
-    grey: "take-sumi",
+    grey: "yama-guri",
   },
   {
     id: "fuyu",
@@ -111,8 +111,10 @@ export const NEUTRALS: Neutral[] = [
 ];
 
 /** Accents' lightness before contrast, and the contrast they must reach against the paper. */
-const ACCENT_L: Record<Mode, number> = { hiru: 0.53, yoru: 0.74 };
-const ACCENT_CONTRAST: Record<Mode, number> = { hiru: 4, yoru: 5.5 };
+const ACCENT_L: Record<Mode, number> = { hiru: 0.54, yoru: 0.76 };
+const ACCENT_CONTRAST: Record<Mode, number> = { hiru: 4, yoru: 6 };
+/** Accents past this chroma are harder to look at side by side, and lose out. */
+const SOFT_CHROMA: Record<Mode, number> = { hiru: 0.19, yoru: 0.15 };
 /** How far contrast may push an accent from its target lightness. */
 const ACCENT_REACH = 0.14;
 /** Accents in one flavour are at least this far apart (ΔE in oklab). */
@@ -205,7 +207,8 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
   const colours: Record<string, Swatch> = {};
 
   // --- Neutrals: the season's grey ink at each tier's lightness.
-  for (const n of NEUTRALS) colours[n.key] = swatch(greyAt(grey, n.L[mode], cast, n.text ? GREY_CHROMA.text : GREY_CHROMA.rest), s.grey, n.L[mode]);
+  const neutralAt = (L: number, cap: number) => greyAt(grey, L, cast, cap);
+  for (const n of NEUTRALS) colours[n.key] = swatch(neutralAt(n.L[mode], n.text ? GREY_CHROMA.text : GREY_CHROMA.rest), s.grey, n.L[mode]);
   const paper = colours.kami.lab;
   // Text tiers move away from the paper until they're legible enough.
   for (const [key, min] of Object.entries(TEXT_CONTRAST)) {
@@ -213,7 +216,7 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
     let L = n.L[mode];
     while (contrast(colours[key].lab, paper) < min && L > 0.02 && L < 0.98) {
       L += mode === "yoru" ? 0.01 : -0.01;
-      colours[key] = swatch(greyAt(grey, L, cast, n.text ? GREY_CHROMA.text : GREY_CHROMA.rest), s.grey, L);
+      colours[key] = swatch(neutralAt(L, n.text ? GREY_CHROMA.text : GREY_CHROMA.rest), s.grey, L);
     }
   }
 
@@ -260,7 +263,7 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
       const score =
         hd / 8 +
         Math.max(0, hd - 15) / 2 +
-        (a.vivid ? Math.max(0, a.minChroma - c.C) * 60 - c.C * 6 : Math.abs(c.C - a.chroma![mode]) * 60) +
+        (a.vivid ? Math.max(0, a.minChroma - c.C) * 60 + Math.max(0, c.C - SOFT_CHROMA[mode]) * 60 - c.C * 3 : Math.abs(c.C - a.chroma![mode]) * 60) +
         Math.abs(c.L - L0) * 8 +
         (used.get(c.ink) ?? 0) * 0.6 -
         // The season's own inks, where they're colourful enough for it.

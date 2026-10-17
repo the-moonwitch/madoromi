@@ -2,15 +2,15 @@
 [colors]
 foreground = "#cddadf"
 background = "#182124"
-cursor_bg = "#ffb1c8"
+cursor_bg = "#ffbbd0"
 cursor_fg = "#182124"
-cursor_border = "#ffb1c8"
+cursor_border = "#ffbbd0"
 selection_fg = "#cddadf"
 selection_bg = "#4a5e66"
 scrollbar_thumb = "#3a4b51"
 split = "#3a4b51"
-ansi = ["#3a4b51", "#ff6337", "#aacb32", "#eab00a", "#5095ff", "#ef7ccc", "#50c7bf", "#b7c7ce"]
-brights = ["#4a5e66", "#ff8d42", "#c1dd4a", "#f0cc05", "#6cabff", "#f998da", "#7ad7d2", "#9eb2ba"]
+ansi = ["#3a4b51", "#ff8b79", "#9abe2c", "#ffcd53", "#6eadff", "#f894d8", "#5eccc5", "#b7c7ce"]
+brights = ["#4a5e66", "#ffaba3", "#b1d137", "#ffe792", "#8ac3ff", "#ffb1e6", "#87dcd8", "#9eb2ba"]
 
 [metadata]
 name = "madoromi natsu-yoru"

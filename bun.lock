@@ -6,6 +6,7 @@
       "name": "iroshizuku",
       "dependencies": {
         "@fontsource/cormorant-garamond": "^5.3.0",
+        "@fontsource/m-plus-1-code": "^5.3.1",
         "solid-js": "^1.9.17",
         "three": "^0.186.1",
       },
@@ -62,6 +63,8 @@
     "@emnapi/runtime": ["@emnapi/runtime@1.11.3", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA=="],
 
     "@fontsource/cormorant-garamond": ["@fontsource/cormorant-garamond@5.3.0", "", {}, "sha512-weuGsCirGVWBWqpt6YUp0yLThTe4G8YO45noq8wxeJCRvEpq5lFrxNMFSTxcyOyV5k5otzJ8guDzYegdYlcLMQ=="],
+
+    "@fontsource/m-plus-1-code": ["@fontsource/m-plus-1-code@5.3.1", "", {}, "sha512-3ecDjm3buUu0tf8Fcb2VPe3PQDCDNlC75ATfAdmr638Vo/izd553DkkZbrP5DFwwXszXlzPHfhNjoCfk1MAJww=="],
 
     "@fontsource/yuji-syuku": ["@fontsource/yuji-syuku@5.3.1", "", {}, "sha512-ELjsWAESeJykf71gnjkcgL+UmV9K3dSAis/oQhFdwpGBL8wMAvXH89BypDFNELw1U/MnpfPj9x2Wvy/6dWVM5g=="],
 
