@@ -98,3 +98,16 @@ export function oklabToCss(lab: Vec3): string {
   const [L, C, h] = oklabToOklch(lab);
   return `oklch(${(L * 100).toFixed(1)}% ${C.toFixed(4)} ${h.toFixed(1)})`;
 }
+
+/** WCAG 2 relative luminance of the colour as displayed (gamut-mapped to sRGB). */
+export function luminance(lab: Vec3): number {
+  const { rgb } = oklabToSrgbGamut(lab);
+  const lin = rgb.map((c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2];
+}
+
+/** WCAG 2 contrast ratio between two colours, 1–21. */
+export function contrast(a: Vec3, b: Vec3): number {
+  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+}

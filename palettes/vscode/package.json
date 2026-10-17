@@ -1,0 +1,58 @@
+{
+  "name": "madoromi",
+  "displayName": "madoromi",
+  "description": "Colour themes made of Pilot iroshizuku inks: haru, natsu, aki, fuyu, each by day and by night.",
+  "version": "0.1.0",
+  "publisher": "madoromi",
+  "license": "MPL-2.0",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "madoromi haru-hiru",
+        "uiTheme": "vs",
+        "path": "./themes/madoromi-haru-hiru.json"
+      },
+      {
+        "label": "madoromi haru-yoru",
+        "uiTheme": "vs-dark",
+        "path": "./themes/madoromi-haru-yoru.json"
+      },
+      {
+        "label": "madoromi natsu-hiru",
+        "uiTheme": "vs",
+        "path": "./themes/madoromi-natsu-hiru.json"
+      },
+      {
+        "label": "madoromi natsu-yoru",
+        "uiTheme": "vs-dark",
+        "path": "./themes/madoromi-natsu-yoru.json"
+      },
+      {
+        "label": "madoromi aki-hiru",
+        "uiTheme": "vs",
+        "path": "./themes/madoromi-aki-hiru.json"
+      },
+      {
+        "label": "madoromi aki-yoru",
+        "uiTheme": "vs-dark",
+        "path": "./themes/madoromi-aki-yoru.json"
+      },
+      {
+        "label": "madoromi fuyu-hiru",
+        "uiTheme": "vs",
+        "path": "./themes/madoromi-fuyu-hiru.json"
+      },
+      {
+        "label": "madoromi fuyu-yoru",
+        "uiTheme": "vs-dark",
+        "path": "./themes/madoromi-fuyu-yoru.json"
+      }
+    ]
+  }
+}

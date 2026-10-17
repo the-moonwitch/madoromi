@@ -18,7 +18,10 @@ import type { SampleResult } from "./worker";
 // three.js is only fetched once a 3D view is near the screen (and warmed up when idle).
 const loadView3D = () => import("./components/View3D").then((m) => ({ default: m.View3D }));
 const View3D = lazy(loadView3D);
+const Palettes = lazy(() => import("./components/Palettes").then((m) => ({ default: m.Palettes })));
 const SharedSpace3D = lazy(() => import("./components/SharedSpace3D").then((m) => ({ default: m.SharedSpace3D })));
+
+const PALETTES = "palettes";
 
 /** Min px / bin and the margin are fixed: every ink is analysed the same way, ahead of time. */
 const opts = defaultAnalysisOptions;
@@ -56,6 +59,8 @@ export function App() {
     if (id && precomputedFor(id)) prefetchInk(id);
   };
   const current = createMemo(() => inks.find((i) => i.id === selected()));
+  /** The palettes page, at #palettes. */
+  const palettes = () => selected() === PALETTES;
 
   // --- What the summary covers: inks whose scans haven't changed since preprocessing.
   // Anything else is analysed here from the ink's scans.
@@ -162,9 +167,20 @@ export function App() {
             madoromi
           </a>
         </h1>
+        <nav>
+          <a class="link" classList={{ on: palettes() }} href={`#${PALETTES}`} onClick={(e) => (e.preventDefault(), select(PALETTES))}>
+            palettes
+          </a>
+        </nav>
       </header>
 
-      <div class="body">
+      <Show when={palettes()}>
+        <Suspense>
+          <Palettes ramps={ramps()} ready={ramps().size === inks.length} sprite={sprite} />
+        </Suspense>
+      </Show>
+
+      <div class="body" hidden={palettes()}>
         <Palette
           inks={inks}
           order={order()}
@@ -219,7 +235,7 @@ export function App() {
         </Show>
       </div>
 
-      <Show when={!current()}>
+      <Show when={!current() && !palettes()}>
         <section class="overview">
           <WhenNear class="view3d shared">
             <Suspense fallback={<div class="view3d shared" />}>

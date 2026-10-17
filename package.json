@@ -8,7 +8,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "check": "tsc --noEmit",
-    "preprocess": "bun scripts/preprocess.ts"
+    "preprocess": "bun scripts/preprocess.ts",
+    "palettes": "bun scripts/palettes.ts"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",
