@@ -6,7 +6,7 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node
 import { dirname, join } from "node:path";
 import { PRECOMPUTED_DIR } from "../src/core/cloudfile";
 import { contrast, oklabToOklch } from "../src/core/color";
-import { ACCENTS, MODES, NEUTRALS, ROLES, SEASONS, buildFamily, checkFlavour, type Flavour } from "../src/core/palette";
+import { ACCENTS, MODES, NEUTRALS, ROLES, SEASONS, buildFamily, checkFlavour, harmonyOf, type Flavour } from "../src/core/palette";
 import { SUMMARY_FILE, decodeSummary } from "../src/core/summary";
 import { HEADER, type Files } from "./ports/common";
 import { terminals } from "./ports/terminals";
@@ -32,6 +32,10 @@ for (const f of family) {
     const [L, C, h] = oklabToOklch(c.lab);
     return `${key.padEnd(9)} ${c.hex}  ${c.ink.padEnd(16)} at L ${c.L.toFixed(2)}  oklch ${L.toFixed(2)} ${C.toFixed(2)} ${h.toFixed(0).padStart(3)}  ${contrast(c.lab, paper).toFixed(1).padStart(4)}:1`;
   };
+  const h = harmonyOf(f);
+  console.log(
+    `  harmony: L** ${h.apparent.mean.toFixed(3)} ± ${h.apparent.sd.toFixed(3)}, glow ${h.glow.toFixed(3)}, chroma ${h.chroma.mean.toFixed(3)} ± ${h.chroma.sd.toFixed(3)}, gamut ${h.gamut.toFixed(2)}; loudest ${h.loudest.key} (glow ${h.loudest.glow.toFixed(3)})`,
+  );
   for (const a of ACCENTS) console.log("  " + line(a.key));
   for (const n of NEUTRALS) console.log("  " + line(n.key));
   for (const c of checkFlavour(f).filter((c) => c.value < c.min)) {

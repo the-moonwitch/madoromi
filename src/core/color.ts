@@ -111,3 +111,32 @@ export function contrast(a: Vec3, b: Vec3): number {
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
   return (hi + 0.05) / (lo + 0.05);
 }
+
+/** The most chroma sRGB can show at this oklab lightness and hue. */
+export function maxChroma(L: number, h: number): number {
+  const r = (h * Math.PI) / 180;
+  const [, a, b] = toSrgbGamut([L, Math.cos(r), Math.sin(r)]);
+  return Math.hypot(a, b);
+}
+
+/** CIELAB (D65), via linear sRGB: L* 0–100. */
+export function oklabToCielab(lab: Vec3): Vec3 {
+  const [r, g, b] = oklabToLinear(lab[0], lab[1], lab[2]);
+  const x = (0.4124564 * r + 0.3575761 * g + 0.1804375 * b) / 0.95047;
+  const y = 0.2126729 * r + 0.7151522 * g + 0.072175 * b;
+  const z = (0.0193339 * r + 0.119192 * g + 0.9503041 * b) / 1.08883;
+  const f = (t: number) => (t > 216 / 24389 ? Math.cbrt(t) : (24389 / 27 * t + 16) / 116);
+  return [116 * f(y) - 16, 500 * (f(x) - f(y)), 200 * (f(y) - f(z))];
+}
+
+/**
+ * How light a colour looks once its colourfulness is counted (the Helmholtz–Kohlrausch effect):
+ * Fairchild & Pirrotta's L**, as a fraction. Vivid colours look lighter than their L*, blues and
+ * purples the most, yellows the least.
+ */
+export function apparentLightness(lab: Vec3): number {
+  const [L, a, b] = oklabToCielab(lab);
+  const C = Math.hypot(a, b);
+  const h = Math.atan2(b, a);
+  return (L + (2.5 - 0.025 * L) * (0.116 * Math.abs(Math.sin((h - Math.PI / 2) / 2)) + 0.085) * C) / 100;
+}

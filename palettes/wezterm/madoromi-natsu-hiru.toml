@@ -9,8 +9,8 @@ selection_fg = "#41535a"
 selection_bg = "#a1b5bd"
 scrollbar_thumb = "#b3c4cb"
 split = "#b3c4cb"
-ansi = ["#52676f", "#c5081f", "#568134", "#e3920b", "#1a4fb7", "#af398b", "#038579", "#a1b5bd"]
-brights = ["#5a7078", "#c5081f", "#466e36", "#e3920b", "#1b3d9c", "#af398b", "#0f716b", "#b3c4cb"]
+ansi = ["#52676f", "#aa3944", "#558034", "#e2900b", "#4f69c8", "#aa5296", "#048478", "#a1b5bd"]
+brights = ["#5a7078", "#aa3944", "#456d36", "#e2900b", "#3f56b7", "#983e84", "#106f6a", "#b3c4cb"]
 
 [metadata]
 name = "madoromi natsu-hiru"

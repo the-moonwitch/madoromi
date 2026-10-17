@@ -2,7 +2,7 @@
 // flavour. Every colour in them is one of the inks at some dilution: a point on that ink's ramp
 // curve, read at the lightness the colour needs.
 
-import { contrast, oklabToHex, oklabToOklch, toSrgbGamut, type Vec3 } from "./color";
+import { apparentLightness, contrast, maxChroma, oklabToHex, oklabToOklch, toSrgbGamut, type Vec3 } from "./color";
 import type { InkView } from "./inkview";
 
 /** All a palette needs of an ink: its ramp curve. */
@@ -75,7 +75,7 @@ export const ACCENTS: Accent[] = [
   { key: "beni", name: "beni", kanji: "紅", english: "crimson", hue: 22, dL: { hiru: -0.02, yoru: -0.03 }, minChroma: 0.14, vivid: true },
   { key: "akane", name: "akane", kanji: "茜", english: "madder", hue: 8, dL: { hiru: 0.04, yoru: 0.04 }, minChroma: 0.1, vivid: true },
   { key: "kaki", name: "kaki", kanji: "柿", english: "persimmon", hue: 50, dL: { hiru: 0.17, yoru: 0.03 }, minChroma: 0.12, vivid: true, contrast: { hiru: 2.6 } },
-  { key: "yamabuki", name: "yamabuki", kanji: "山吹", english: "kerria gold", hue: 85, dL: { hiru: 0.21, yoru: 0.08 }, minChroma: 0.15, vivid: true, contrast: { hiru: 2.2 } },
+  { key: "yamabuki", name: "yamabuki", kanji: "山吹", english: "kerria gold", hue: 85, dL: { hiru: 0.21, yoru: 0.04 }, minChroma: 0.15, vivid: true, contrast: { hiru: 2.2 } },
   { key: "wakaba", name: "wakaba", kanji: "若葉", english: "young leaves", hue: 135, dL: { hiru: 0.06, yoru: 0.05 }, minChroma: 0.1, vivid: true },
   { key: "tokiwa", name: "tokiwa", kanji: "常磐", english: "evergreen", hue: 175, dL: { hiru: 0.02, yoru: 0.02 }, minChroma: 0.08, vivid: true },
   { key: "sora", name: "sora", kanji: "空", english: "sky", hue: 220, dL: { hiru: 0.04, yoru: 0.04 }, minChroma: 0.08, vivid: true },
@@ -113,10 +113,32 @@ export const NEUTRALS: Neutral[] = [
 /** Accents' lightness before contrast, and the contrast they must reach against the paper. */
 const ACCENT_L: Record<Mode, number> = { hiru: 0.54, yoru: 0.76 };
 const ACCENT_CONTRAST: Record<Mode, number> = { hiru: 4, yoru: 6 };
-/** Accents past this chroma are harder to look at side by side, and lose out. */
-const SOFT_CHROMA: Record<Mode, number> = { hiru: 0.19, yoru: 0.15 };
-/** How far contrast may push an accent from its target lightness. */
-const ACCENT_REACH = 0.14;
+
+/**
+ * What makes a flavour's accents sit together, per mode; the knobs to turn for a calmer or a
+ * richer family. Each accent is scored by how far it strays from them:
+ * - apparent: how light it looks with its colourfulness counted (Helmholtz–Kohlrausch L**, see
+ *   apparentLightness), so no accent glows past the others; each accent's `dL` offsets it.
+ * - chroma: the flavour's chroma level, so no accent is much louder or quieter than the rest.
+ * - glow: how much lighter its colourfulness makes it look than a grey of its lightness (L**
+ *   less L*) before it costs; past it the accent is loud.
+ * - gamut: the share of sRGB's chroma at that lightness and hue an accent may use before it
+ *   reads as neon (colours on the gamut's edge do).
+ */
+export const HARMONY: Record<Mode, { apparent: number; chroma: number; glow: number; gamut: number }> = {
+  hiru: { apparent: 0.6, chroma: 0.14, glow: 0.15, gamut: 0.9 },
+  yoru: { apparent: 0.78, chroma: 0.12, glow: 0.06, gamut: 0.85 },
+};
+/** How much each way of straying costs, per unit (hue in degrees, the rest as fractions). */
+const COST = { hue: 1 / 8, hueFar: 1 / 2, chroma: 40, shortfall: 60, apparent: 30, glow: 30, gamut: 15, reuse: 0.6, season: 3 };
+/** No accent looks lighter than its target by more than this (in L**): the ones that glare. */
+const APPARENT_BAND = 0.06;
+/** A season's own ink is preferred up to this much more chroma than the flavour's. */
+const SEASON_CHROMA_SLACK = 0.05;
+/** Hue strays up to this many degrees cost only `hue`; past it, `hueFar` too. */
+const HUE_EASY = 15;
+/** How far from its lightness an accent may be read, either way. */
+const ACCENT_REACH = 0.15;
 /** Accents in one flavour are at least this far apart (ΔE in oklab). */
 const MIN_DELTA = 0.05;
 /** How far an accent's hue may stray from its name's. */
@@ -124,6 +146,9 @@ const MAX_HUE_SHIFT = 40;
 const accentContrast = (a: Accent, mode: Mode) => a.contrast?.[mode] ?? ACCENT_CONTRAST[mode];
 /** The most chroma the neutrals take from their grey ink. */
 const GREY_CHROMA = { text: 0.055, rest: 0.04 };
+/** The papers (kami, hyōshi, chitsu) take less: at most this chroma, and this share of sRGB's. */
+const PAPER = { chroma: 0.025, gamut: 0.5 };
+const PAPERS = ["kami", "hyoshi", "chitsu"];
 /** The text tiers' minimum contrast against the paper. */
 const TEXT_CONTRAST: Record<string, number> = { sumi: 7, usuzumi0: 4.5, kasure2: 3 };
 
@@ -208,7 +233,9 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
 
   // --- Neutrals: the season's grey ink at each tier's lightness.
   const neutralAt = (L: number, cap: number) => greyAt(grey, L, cast, cap);
-  for (const n of NEUTRALS) colours[n.key] = swatch(neutralAt(n.L[mode], n.text ? GREY_CHROMA.text : GREY_CHROMA.rest), s.grey, n.L[mode]);
+  const capOf = (n: Neutral, L: number) =>
+    PAPERS.includes(n.key) ? Math.min(PAPER.chroma, PAPER.gamut * maxChroma(L, cast)) : n.text ? GREY_CHROMA.text : GREY_CHROMA.rest;
+  for (const n of NEUTRALS) colours[n.key] = swatch(neutralAt(n.L[mode], capOf(n, n.L[mode])), s.grey, n.L[mode]);
   const paper = colours.kami.lab;
   // Text tiers move away from the paper until they're legible enough.
   for (const [key, min] of Object.entries(TEXT_CONTRAST)) {
@@ -216,58 +243,56 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
     let L = n.L[mode];
     while (contrast(colours[key].lab, paper) < min && L > 0.02 && L < 0.98) {
       L += mode === "yoru" ? 0.01 : -0.01;
-      colours[key] = swatch(neutralAt(L, n.text ? GREY_CHROMA.text : GREY_CHROMA.rest), s.grey, L);
+      colours[key] = swatch(neutralAt(L, capOf(n, L)), s.grey, L);
     }
   }
 
-  // --- Accents. Every ink is a candidate, read at a few lightnesses around the accent's (each
-  // moved only as far as contrast needs). The best is the nearest in hue with the right chroma,
-  // preferring the season's inks and inks not used yet, and far enough from the accents already
-  // chosen. Accents with the fewest inks near their hue choose first.
-  type Candidate = { lab: Vec3; ink: string; L: number; h: number; C: number };
+  // --- Accents. Every ink is a candidate, read at every lightness near the accent's that's legible
+  // enough on the paper. The best is the nearest in hue that keeps the flavour's harmony (see
+  // HARMONY), preferring the season's inks and inks not used yet, and far enough from the accents
+  // already chosen. The pale ones choose first, then those with the fewest inks near their hue.
+  type Candidate = { lab: Vec3; ink: string; L: number; h: number; C: number; gamut: number; apparent: number; glow: number };
   const candidates = new Map<string, Candidate[]>();
   for (const a of ACCENTS) {
     const L0 = ACCENT_L[mode] + a.dL[mode];
     const min = accentContrast(a, mode);
     const list: Candidate[] = [];
     for (const [ink, v] of views)
-      for (let k = -2; k <= 2; k++) {
-        const start = L0 + k * 0.03;
-        let L = start;
-        let c = colourAt(v, L);
-        while (c && contrast(c, paper) < min && Math.abs(L - L0) < ACCENT_REACH) {
-          L += mode === "yoru" ? 0.005 : -0.005;
-          c = colourAt(v, L);
-        }
+      for (let L = L0 - ACCENT_REACH; L <= L0 + ACCENT_REACH + 1e-9; L += 0.01) {
+        const c = colourAt(v, L);
         if (!c || contrast(c, paper) < min) continue;
         const lab = toSrgbGamut(c);
         const [, C, h] = oklabToOklch(lab);
-        list.push({ lab, ink, L, h, C });
+        const apparent = apparentLightness(lab);
+        list.push({ lab, ink, L, h, C, gamut: C / maxChroma(L, h), apparent, glow: apparent - apparentLightness([lab[0], 0, 0]) });
       }
     candidates.set(a.key, list);
   }
   const near = (key: string) => candidates.get(key)!.filter((c) => hueDistance(c.h, ACCENTS.find((a) => a.key === key)!.hue) < 20 && c.C > 0.05).length;
-  // The pale ones first: the vivid ones would otherwise take the few soft inks they need.
   const pale = (key: string) => (ACCENTS.find((a) => a.key === key)!.vivid ? 1 : 0);
   const order = ACCENTS.map((a) => a.key).sort((x, y) => pale(x) - pale(y) || near(x) - near(y));
+  const harmony = HARMONY[mode];
   const used = new Map<string, number>();
   const chosen: Vec3[] = [];
   for (const key of order) {
     const a = ACCENTS.find((x) => x.key === key)!;
-    const L0 = ACCENT_L[mode] + a.dL[mode];
+    // dL is in oklab lightness; L** runs about 1.16 times as fast.
+    const apparent = harmony.apparent + a.dL[mode] * 1.16;
     let best: (Candidate & { score: number }) | undefined;
     for (const c of candidates.get(key)!) {
       if (chosen.some((o) => deltaE(o, c.lab) < MIN_DELTA)) continue;
       const hd = hueDistance(c.h, a.hue);
-      if (hd > MAX_HUE_SHIFT) continue;
+      if (hd > MAX_HUE_SHIFT || c.apparent > apparent + APPARENT_BAND) continue;
       const score =
-        hd / 8 +
-        Math.max(0, hd - 15) / 2 +
-        (a.vivid ? Math.max(0, a.minChroma - c.C) * 60 + Math.max(0, c.C - SOFT_CHROMA[mode]) * 60 - c.C * 3 : Math.abs(c.C - a.chroma![mode]) * 60) +
-        Math.abs(c.L - L0) * 8 +
-        (used.get(c.ink) ?? 0) * 0.6 -
-        // The season's own inks, where they're colourful enough for it.
-        (s.inks.includes(c.ink) && (!a.vivid || c.C >= a.minChroma) ? 3 : 0);
+        hd * COST.hue +
+        Math.max(0, hd - HUE_EASY) * COST.hueFar +
+        (a.vivid ? Math.abs(c.C - harmony.chroma) * COST.chroma + Math.max(0, a.minChroma - c.C) * COST.shortfall : Math.abs(c.C - a.chroma![mode]) * COST.shortfall) +
+        Math.abs(c.apparent - apparent) * COST.apparent +
+        Math.max(0, c.glow - harmony.glow) * COST.glow +
+        Math.max(0, c.gamut - harmony.gamut) * COST.gamut +
+        (used.get(c.ink) ?? 0) * COST.reuse -
+        // The season's own inks, where they're as colourful as the flavour wants.
+        (s.inks.includes(c.ink) && (!a.vivid || (c.C >= a.minChroma && c.C <= harmony.chroma + SEASON_CHROMA_SLACK)) ? COST.season : 0);
       if (!best || score < best.score) best = { ...c, score };
     }
     if (!best) throw new Error(`no ink fits ${key} in ${season}-${mode}`);
@@ -366,3 +391,18 @@ export const ROLES = {
   deleted: "beni",
 } as const;
 export type Role = keyof typeof ROLES;
+
+/** How evenly a flavour's accents sit: the spread of their apparent lightness and chroma, and the loudest. */
+export function harmonyOf(f: Flavour) {
+  const rows = ACCENTS.map((a) => {
+    const lab = f.colours[a.key].lab;
+    const [L, C, h] = oklabToOklch(lab);
+    const apparent = apparentLightness(lab);
+    return { key: a.key, apparent, glow: apparent - apparentLightness([L, 0, 0]), C, gamut: C / maxChroma(L, h) };
+  });
+  const mean = (xs: number[]) => xs.reduce((p, q) => p + q, 0) / xs.length;
+  const sd = (xs: number[]) => Math.sqrt(mean(xs.map((x) => (x - mean(xs)) ** 2)));
+  const apparent = rows.map((r) => r.apparent);
+  const loudest = rows.reduce((p, q) => (q.glow > p.glow ? q : p));
+  return { apparent: { mean: mean(apparent), sd: sd(apparent) }, glow: mean(rows.map((r) => r.glow)), chroma: { mean: mean(rows.map((r) => r.C)), sd: sd(rows.map((r) => r.C)) }, gamut: mean(rows.map((r) => r.gamut)), loudest, rows };
+}
