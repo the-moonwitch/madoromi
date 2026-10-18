@@ -23,7 +23,7 @@ export function Guide(props: { flavour: Flavour }) {
         <span class="deco kanji">手引</span>
         <div>
           <h2>style guide</h2>
-          <p>Which colour each thing is drawn in. The names are the same in every flavour; the ports follow this.</p>
+          <p>Which colour to use for each part of an interface or of code. The names are the same in every theme.</p>
         </div>
       </header>
       <nav class="m-toc">
@@ -63,7 +63,7 @@ export function Guide(props: { flavour: Flavour }) {
         <h3>
           <span class="kanji">色</span> ansi
         </h3>
-        <p class="m-note">Bright colours are the same ink as their normal colour, read {BRIGHT_STEP} further from the paper.</p>
+        <p class="m-note">Bright colours use the same ink as the normal colour, {BRIGHT_STEP} further from the background in lightness.</p>
         <table class="m-table">
           <tbody>
             <For each={ansiSlots(props.flavour)}>

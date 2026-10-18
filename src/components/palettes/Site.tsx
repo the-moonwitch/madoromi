@@ -34,7 +34,7 @@ export function Site(props: SiteProps) {
           <Ports flavour={props.flavour} family={props.family} />
         </Match>
         <Match when={props.page === "palettes/method"}>
-          <Method flavour={props.flavour} family={props.family} />
+          <Method flavour={props.flavour} family={props.family} ramp={props.ramp} />
         </Match>
         <Match when={true}>
           <Landing flavour={props.flavour} family={props.family} sprite={props.sprite} ramp={props.ramp} go={props.go} />

@@ -16,7 +16,7 @@ export interface SharedSpace3DProps {
 }
 
 /** a and b are stretched by this so the hue spread reads at the same scale as lightness. */
-const CHROMA_SCALE = 2;
+const CHROMA_SCALE = 3;
 // three's y is up: oklab (L, a, b) → (a·k, L, b·k).
 const pos = (lab: ArrayLike<number>, o = 0): [number, number, number] => [lab[o + 1] * CHROMA_SCALE, lab[o], lab[o + 2] * CHROMA_SCALE];
 const color = (lab: Vec3) => {
@@ -163,7 +163,6 @@ export function SharedSpace3D(props: SharedSpace3DProps) {
         if (id) props.onPick(id);
       }}
     >
-      <spin.Button />
     </div>
   );
 }

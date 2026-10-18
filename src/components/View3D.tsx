@@ -10,6 +10,9 @@ import { oklabToLinear, oklabToSrgbGamut, type Vec3 } from "../core/color";
 import type { InkView } from "../core/inkview";
 import { softDot, useFit, useSpin } from "./spin";
 
+/** How much further out chroma is drawn than lightness. */
+const CHROMA_SCALE = 2;
+
 export interface View3DProps {
   view: InkView;
   /** The ink's points, oklab flat. */
@@ -114,8 +117,8 @@ export function View3D(props: View3DProps) {
     g.clear();
   };
 
-  // Everything sits in oklab (lightness up), centred and scaled evenly to about [−1, 1], so the
-  // ink keeps its true proportions.
+  // Everything sits in oklab (lightness up), centred and scaled to about [−1, 1], with chroma
+  // (a and b) stretched by CHROMA_SCALE so an ink's colour reads as clearly as its lightness.
   const frame = createMemo(() => {
     const pts = props.points;
     const n = pts.length / 3;
@@ -123,6 +126,7 @@ export function View3D(props: View3DProps) {
     let extent = 1e-6;
     // three's y is up: oklab (L, a, b) → (a, L, b).
     const order = [1, 0, 2];
+    const stretch = [CHROMA_SCALE, 1, CHROMA_SCALE];
     for (let k = 0; k < 3; k++) {
       // Extents from a strided sample: as good as all the points, for a tenth of the sorting.
       const step = Math.max(1, Math.floor(n / 6000));
@@ -130,13 +134,13 @@ export function View3D(props: View3DProps) {
       const lo = axis[Math.floor(axis.length * 0.01)];
       const hi = axis[Math.floor(axis.length * 0.99)];
       centre[k] = (lo + hi) / 2;
-      extent = Math.max(extent, hi - lo);
+      extent = Math.max(extent, (hi - lo) * stretch[k]);
     }
     const k = 2 / extent;
     const at = (lab: ArrayLike<number>, o = 0): [number, number, number] => [
-      (lab[o + 1] - centre[0]) * k,
+      (lab[o + 1] - centre[0]) * k * CHROMA_SCALE,
       (lab[o] - centre[1]) * k,
-      (lab[o + 2] - centre[2]) * k,
+      (lab[o + 2] - centre[2]) * k * CHROMA_SCALE,
     ];
     const points = new Float32Array(n * 3);
     for (let i = 0; i < n; i++) points.set(at(pts, i * 3), i * 3);
@@ -211,7 +215,6 @@ export function View3D(props: View3DProps) {
 
   return (
     <div class="view3d" ref={host}>
-      <spin.Button />
     </div>
   );
 }

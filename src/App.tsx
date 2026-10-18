@@ -29,6 +29,8 @@ const Site = lazy(() => import("./components/palettes/Site").then((m) => ({ defa
 const SharedSpace3D = lazy(() => import("./components/SharedSpace3D").then((m) => ({ default: m.SharedSpace3D })));
 
 const PALETTES = "palettes";
+const AUTHOR_URL = "https://github.com/the-moonwitch";
+const REPO_URL = "https://github.com/the-moonwitch/madoromi";
 
 /** Min px / bin and the margin are fixed: every ink is analysed the same way, ahead of time. */
 const opts = defaultAnalysisOptions;
@@ -281,10 +283,11 @@ export function App() {
 
       <footer class="site-foot">
         <span>
-          <span class="kanji">微睡</span> madoromi
+          <span class="kanji">微睡</span> madoromi, by <a href={AUTHOR_URL}>samhain</a>
         </span>
-        <span>colours read from scans of Pilot's iroshizuku inks; iroshizuku is Pilot's</span>
-        <span>code and palettes under MPL-2.0; every port is in the repository's palettes/</span>
+        <a href={REPO_URL}>source on GitHub</a>
+        <a href={`${REPO_URL}/blob/main/LICENSE`}>licence: MPL-2.0</a>
+        <span>Iroshizuku is Pilot's. The colours here are measured from scans of their inks.</span>
       </footer>
     </div>
   );

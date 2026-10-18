@@ -36,8 +36,8 @@ export function Landing(props: LandingProps) {
       <header class="m-hero">
         <span class="deco kanji">微睡</span>
         <div>
-          <h2>colour themes made of fountain pen inks</h2>
-          <p>four seasons, by day and by night, for terminals, editors and the web</p>
+          <h2>Colour themes made from fountain pen inks</h2>
+          <p>Eight themes: each season, by day and by night. For terminals, code editors and the web.</p>
           <div class="m-ctas">
             {link("palettes/ports", "install")}
             {link("palettes/colours", "colours")}
@@ -92,9 +92,9 @@ export function Landing(props: LandingProps) {
           </figure>
           <h3>iroshizuku 色雫</h3>
           <p>
-            Forty inks, scanned on paper, each traced from its densest stroke to its palest wash.{" "}
+            Forty Pilot Iroshizuku inks were scanned on paper and measured, from the darkest stroke to the palest wash.{" "}
             <a href="#" onClick={(e) => (e.preventDefault(), props.go(""))}>
-              the inks
+              See the inks
             </a>
           </p>
         </article>
@@ -104,7 +104,8 @@ export function Landing(props: LandingProps) {
           </figure>
           <h3>usume 薄め</h3>
           <p>
-            Each accent is one ink, diluted: fuji is {fuji().ink} {kanjiOf(fuji().ink)} at {fuji().L.toFixed(2)}.
+            Every accent colour is one of those inks, diluted. In {props.flavour.id}, fuji is {fuji().ink} ({kanjiOf(fuji().ink)}) at lightness{" "}
+            {fuji().L.toFixed(2)}.
           </p>
         </article>
         <article>
@@ -121,25 +122,25 @@ export function Landing(props: LandingProps) {
             </For>
           </figure>
           <h3>shiki 四季</h3>
-          <p>Spring soft, summer clear, autumn deep, winter muted; each season on its grey ink's paper.</p>
+          <p>Each season has its own character: spring is soft, summer clear, autumn deep, winter muted. Each one's background is tinted by a grey ink.</p>
         </article>
         <article>
           <figure class="m-measures">
             <span>
-              <b>{legibility().toFixed(1)}:1</b> legible
+              <b>{legibility().toFixed(1)}:1</b> lowest contrast
             </span>
             <span>
-              <b>±{harmony().apparent.sd.toFixed(2)}</b> even
+              <b>±{harmony().apparent.sd.toFixed(2)}</b> spread in brightness
             </span>
             <span>
-              <b>{Math.round(harmony().gamut * 100)}%</b> of sRGB
+              <b>{Math.round(harmony().gamut * 100)}%</b> of screen colour
             </span>
           </figure>
           <h3>hakaru 測る</h3>
           <p>
-            Chosen by measure: legible on the paper, evenly bright to the eye, clear of sRGB's edge.{" "}
+            Colours are picked by measurement: readable on the background, evenly bright, and within what screens can show.{" "}
             <a href="#palettes/method" onClick={(e) => (e.preventDefault(), props.go("palettes/method"))}>
-              the method
+              How it works
             </a>
           </p>
         </article>

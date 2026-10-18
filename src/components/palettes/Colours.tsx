@@ -99,7 +99,7 @@ export function Colours(props: {
         <div>
           <h2>colours</h2>
           <p>
-            Every flavour's colours, then {props.flavour.id}'s with the ink each one is. Click a colour to copy it.
+            All eight themes side by side, then every colour of {props.flavour.id} with the ink it comes from. Click any colour to copy it.
           </p>
         </div>
       </header>
@@ -173,7 +173,7 @@ export function Colours(props: {
             <th />
             <th>accents</th>
             <th>{as()}</th>
-            <th>ink, and how strong</th>
+            <th>ink and lightness</th>
           </tr>
         </thead>
         <tbody>{rows(ACCENTS)}</tbody>
@@ -182,7 +182,7 @@ export function Colours(props: {
             <th />
             <th>neutrals</th>
             <th />
-            <th>in the cast of</th>
+            <th>tinted by</th>
           </tr>
         </thead>
         <tbody>{rows(NEUTRALS)}</tbody>

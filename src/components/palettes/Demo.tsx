@@ -87,13 +87,13 @@ print(self.ramp)`,
 };
 
 const TREE: { name: string; depth: number; folder?: boolean; open?: boolean; status?: "modified" | "added"; file?: boolean }[] = [
-  { name: "madoromi", depth: 0, folder: true, open: true },
-  { name: "src", depth: 1, folder: true, open: true },
+  { name: "notebook", depth: 0, folder: true, open: true },
+  { name: "ink", depth: 1, folder: true, open: true },
   { name: "brush", depth: 2, file: true, status: "modified" },
   { name: "ink", depth: 2 },
   { name: "palette", depth: 2, status: "added" },
-  { name: "palettes", depth: 1, folder: true },
-  { name: "samples", depth: 1, folder: true },
+  { name: "seasons", depth: 1, folder: true },
+  { name: "scans", depth: 1, folder: true },
   { name: "README.md", depth: 1 },
 ];
 
@@ -212,7 +212,7 @@ export function EditorDemo() {
 }
 
 type Seg = [text: string, colour?: number | string, bold?: boolean];
-const PROMPT: Seg[] = [["~/madoromi", 4], [" main", 5], [" ❯ ", 2]];
+const PROMPT: Seg[] = [["~/notebook", 4], [" main", 5], [" ❯ ", 2]];
 const bar = (label: string, n: number, of = 30): Seg[] => {
   const full = Math.round((n / 100) * of);
   const g = Math.min(full, Math.round(of * 0.5));
@@ -220,22 +220,22 @@ const bar = (label: string, n: number, of = 30): Seg[] => {
   return [[` ${label} `, 6], ["[", 8], ["|".repeat(g), 2], ["|".repeat(y), 3], ["|".repeat(full - g - y), 1], [" ".repeat(of - full)], [`${n}%`.padStart(4), 8], ["]", 8]];
 };
 const TERM: Seg[][] = [
-  [...PROMPT, ["ls -l palettes"]],
-  [["drwxr-xr-x  ", 8], ["ghostty/", 4, true], ["  "], ["nvim/", 4, true], ["  "], ["vscode/", 4, true]],
-  [["-rw-r--r--  ", 8], ["madoromi.json  style-guide.md"]],
-  [["lrwxr-xr-x  ", 8], ["latest", 6], [" -> madoromi.json"]],
-  [["-rwxr-xr-x  ", 8], ["install.sh", 2, true]],
+  [...PROMPT, ["ls -l seasons"]],
+  [["drwxr-xr-x  ", 8], ["haru/", 4, true], ["  "], ["natsu/", 4, true], ["  "], ["aki/", 4, true]],
+  [["-rw-r--r--  ", 8], ["inks.md  swatches.json"]],
+  [["lrwxr-xr-x  ", 8], ["now", 6], [" -> aki/"]],
+  [["-rwxr-xr-x  ", 8], ["brew.sh", 2, true]],
   [...PROMPT, ["git diff --stat"]],
-  [[" src/core/palette.ts | 42 "], ["+++++++++", 2], ["-----", 1]],
-  [[" palettes/README.md  |  7 "], ["+++", 2], ["--", 1]],
+  [[" inks.md       | 42 "], ["+++++++++", 2], ["-----", 1]],
+  [[" swatches.json |  7 "], ["+++", 2], ["--", 1]],
   [...PROMPT, ["git log --oneline -2"]],
-  [["dc76534", 3], [" (", 3], ["HEAD", 6, true], [" -> ", 3], ["main", 2, true], [")", 3], [" a site for the palettes"]],
-  [["cf9266d", 3], [" seasonal moods, even neutrals"]],
+  [["dc76534", 3], [" (", 3], ["HEAD", 6, true], [" -> ", 3], ["main", 2, true], [")", 3], [" add the autumn inks"]],
+  [["cf9266d", 3], [" dilute the greys"]],
   [...PROMPT, ["htop"]],
   bar("CPU", 58),
   bar("MEM", 83),
   [["  PID ", 0, true], ["USER     ", 0, true], ["COMMAND", 0, true]],
-  [[" 4071 ", 8], ["you      ", 8], ["bun run palettes", 2]],
+  [[" 4071 ", 8], ["you      ", 8], ["./brew.sh", 2]],
   [...PROMPT.slice(0, 2), [" ❯ ", 1], ["█", "cursor"]],
 ];
 

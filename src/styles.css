@@ -144,8 +144,6 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .readout code { font-family: inherit; font-size: 11px; color: var(--dim); }
 .chip { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
 .view3d { position: relative; height: 359px; border-radius: 2px; overflow: hidden; background: var(--paper); cursor: grab; }
-.view3d .spin { position: absolute; right: 6px; top: 5px; z-index: 1; font-size: 16px; line-height: 1; color: var(--dim); cursor: pointer; }
-.view3d .spin:hover { color: var(--ink); }
 .view3d:active { cursor: grabbing; }
 
 @media (max-width: 1100px) {
@@ -181,6 +179,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 /* ——— footer ——— */
 .site-foot { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 62px; padding-top: 17px; border-top: 1px solid var(--hair); font-family: var(--sans); font-size: 12px; color: var(--dim); }
 .site-foot .kanji { font-family: var(--sans); }
+.site-foot a { color: var(--link, var(--ink)); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 .page.open .site-foot { grid-column: 2; }
 
 /* ——— the flavour picker, in the masthead ——— */

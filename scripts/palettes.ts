@@ -58,7 +58,7 @@ const readme = [
       `### ${p.name}`,
       "",
       ...p.install.map((s, i) => `${i + 1}. ${step(s, example)}`),
-      ...(p.command ? ["", "```sh", step(p.command, example), "```"] : []),
+      ...(p.command ? ["", "```sh", step(p.command.repo, example), "```"] : []),
     ]),
   ]),
 ].join("\n");

@@ -15,7 +15,7 @@ export function Ports(props: { flavour: Flavour; family: Flavour[] }) {
         <span class="deco kanji">移植</span>
         <div>
           <h2>ports</h2>
-          <p>Shown for {props.flavour.id}; choose another flavour above. Every port also lives under palettes/ in the repository.</p>
+          <p>Files and commands for {props.flavour.id}. To get another theme, pick it at the top of the page.</p>
         </div>
       </header>
       <For each={GROUPS}>
@@ -70,8 +70,8 @@ function PortCard(props: { port: Port; flavour: Flavour; files: Record<string, s
       <Show when={props.port.command}>
         {(c) => (
           <div class="m-command">
-            <code>{step(c(), props.flavour)}</code>
-            <button class="link" onClick={() => copyCommand(step(c(), props.flavour))} aria-label={`copy the ${props.port.name} install command`}>
+            <code>{step(c().download, props.flavour)}</code>
+            <button class="link" onClick={() => copyCommand(step(c().download, props.flavour))} aria-label={`copy the ${props.port.name} install command`}>
               {copied() ? "copied" : "copy"}
             </button>
           </div>

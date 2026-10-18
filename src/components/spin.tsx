@@ -1,4 +1,3 @@
-import { createSignal, Show } from "solid-js";
 import * as THREE from "three";
 import type { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
@@ -67,39 +66,13 @@ export function useFit(camera: THREE.PerspectiveCamera, controls: () => OrbitCon
   return { fit, refit: apply };
 }
 
-/**
- * A 3D view turns slowly on its own. Pointing at it stops it, and it stays stopped (so it can be
- * looked at or dragged) until the resume button is pressed.
- */
+/** A 3D view turns on its own, and stops while the pointer is over it (to look, or to drag). */
 export function useSpin() {
-  const [paused, setPaused] = createSignal(false);
-  let controls: OrbitControls | undefined;
   const attach = (c: OrbitControls, host: HTMLElement) => {
-    controls = c;
     c.autoRotate = true;
-    c.autoRotateSpeed = 0.7;
-    host.addEventListener("pointerenter", () => {
-      c.autoRotate = false;
-      setPaused(true);
-    });
+    c.autoRotateSpeed = 1.8;
+    host.addEventListener("pointerenter", () => (c.autoRotate = false));
+    host.addEventListener("pointerleave", () => (c.autoRotate = true));
   };
-  const resume = () => {
-    if (controls) controls.autoRotate = true;
-    setPaused(false);
-  };
-  const Button = () => (
-    <Show when={paused()}>
-      <button
-        class="spin"
-        onClick={(e) => {
-          e.stopPropagation();
-          resume();
-        }}
-        title="resume turning"
-      >
-        ↻
-      </button>
-    </Show>
-  );
-  return { attach, Button };
+  return { attach };
 }

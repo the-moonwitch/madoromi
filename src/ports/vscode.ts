@@ -282,6 +282,8 @@ export function vscode(family: Flavour[]): Files {
       version: "0.1.0",
       publisher: "madoromi",
       license: "MPL-2.0",
+      author: "samhain",
+      repository: { type: "git", url: "https://github.com/the-moonwitch/madoromi" },
       engines: { vscode: "^1.80.0" },
       categories: ["Themes"],
       contributes: {

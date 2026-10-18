@@ -1,7 +1,9 @@
 import { For } from "solid-js";
 import { apparentLightness, contrast, oklabToOklch } from "../../core/color";
-import { ACCENT_CONTRAST, ACCENTS, APPARENT_BAND, CONTRAST_GIVE, COST, HARMONY, MAX_HUE_SHIFT, MODES, MOODS, SEASONS, type Flavour } from "../../core/palette";
+import { ACCENT_CONTRAST, ACCENTS, APPARENT_BAND, CONTRAST_GIVE, HARMONY, MAX_HUE_SHIFT, MODES, MOODS, SEASONS, type Flavour } from "../../core/palette";
 import { slotOf } from "../../core/guide";
+import type { Ramp } from "../../core/summary";
+import { InkSteps } from "./InkSteps";
 
 const W = 560;
 const H = 150;
@@ -71,7 +73,7 @@ function AccentChart(props: {
 }
 
 /** How the palettes are made, shown on the chosen flavour: the measures, and the knobs behind them. */
-export function Method(props: { flavour: Flavour; family: Flavour[] }) {
+export function Method(props: { flavour: Flavour; family: Flavour[]; ramp: (id: string) => Ramp | undefined }) {
   const f = () => props.flavour;
   const paper = () => f().colours.kami.lab;
   const mood = () => MOODS[f().season];
@@ -88,74 +90,76 @@ export function Method(props: { flavour: Flavour; family: Flavour[] }) {
         <span class="deco kanji">作り方</span>
         <div>
           <h2>method</h2>
-          <p>How every colour is chosen, measured on {f().id}.</p>
+          <p>How each colour is chosen, shown for {f().id}.</p>
         </div>
       </header>
 
       <section>
         <h3>
-          <span class="kanji">墨</span> from ink to ramp
+          <span class="kanji">墨</span> From ink to colour
         </h3>
         <ol class="m-steps">
-          <li>Each ink is scanned on paper; its pixels become a cloud of colours in oklab.</li>
-          <li>A plane is fitted through the cloud, and a gradient across it.</li>
-          <li>A curve runs through the cloud from the densest stroke to the palest wash: in each band of lightness, the hue the scans agree on and the chroma of the more vivid half.</li>
-          <li>Read along that curve, the ink gives one colour for every strength. Each accent is one ink, at one strength.</li>
+          <li>Each ink is scanned on paper. Every pixel's colour becomes a point in a colour space (oklab).</li>
+          <li>The points are split into bands by lightness. In each band, the most colourful points give that band's colour.</li>
+          <li>A smooth curve joins the bands, from the darkest ink to the palest. It gives one colour for every lightness.</li>
+          <li>A flat gradient is fitted through all the points, to show how the ink varies around the curve.</li>
+          <li>An accent colour is one point on one ink's curve.</li>
         </ol>
+        <InkSteps ramp={props.ramp} start={f().colours.fuji.ink} />
       </section>
 
       <section>
         <h3>
-          <span class="kanji">選</span> choosing an accent
+          <span class="kanji">選</span> Choosing an accent
         </h3>
         <p class="m-lede">
-          Every ink is read at every strength near the accent's that is legible on the paper. Each reading is scored on how far it strays from what the
-          flavour asks, and the lowest score wins. These are the knobs.
+          For each accent, every ink is tried at every lightness that is readable on the background. Each option is scored by how far it is from
+          the targets below, and the lowest score wins.
         </p>
         <table class="m-table m-knobs">
           <tbody>
             <tr>
-              <td>legible</td>
+              <td>readable</td>
               <td>
-                {ACCENT_CONTRAST.hiru}:1 by day, {ACCENT_CONTRAST.yoru}:1 by night; an accent that would lose its colour may give up to {Math.round((1 - CONTRAST_GIVE) * 100)}%
+                Contrast with the background of at least {ACCENT_CONTRAST.hiru}:1 by day and {ACCENT_CONTRAST.yoru}:1 by night. An accent may go {Math.round((1 - CONTRAST_GIVE) * 100)}% lower if it would otherwise lose its colour.
               </td>
             </tr>
             <tr>
               <td>evenly bright</td>
               <td>
-                apparent lightness (L**) aimed at {harmony().apparent.toFixed(2)} {f().mode === "hiru" ? "by day" : "by night"}, within ±{APPARENT_BAND}; costs {COST.apparent} per unit off
+                Apparent lightness (L**, which counts how colour makes things look brighter) close to {harmony().apparent.toFixed(2)}, within ±{APPARENT_BAND}.
               </td>
             </tr>
             <tr>
-              <td>as colourful as the rest</td>
+              <td>colourfulness</td>
               <td>
-                chroma aimed at {harmony().chroma.toFixed(2)}; {COST.loud} per unit over, {COST.chroma} under, {COST.shortfall} under the accent's own minimum
+                Chroma close to {harmony().chroma.toFixed(2)}. Too much is penalised more than too little, and losing the accent's own colour most of all.
               </td>
             </tr>
             <tr>
-              <td>not glowing</td>
+              <td>no glow</td>
               <td>
-                colourfulness may lift L** over L* by {harmony().glow}; {COST.glow} per unit more
+                Colour may make an accent look at most {harmony().glow} brighter than a grey of the same lightness.
               </td>
             </tr>
             <tr>
-              <td>clear of sRGB's edge</td>
+              <td>on screen</td>
               <td>
-                up to {Math.round(harmony().gamut * 100)}% of the chroma sRGB allows there; {COST.gamut} per unit more
+                At most {Math.round(harmony().gamut * 100)}% of the chroma a screen (sRGB) can show at that lightness and hue.
               </td>
             </tr>
             <tr>
-              <td>its name's hue</td>
+              <td>hue</td>
               <td>
-                within {MAX_HUE_SHIFT}°; {COST.hue} per degree, {COST.hueFar} more past 15°
+                Within {MAX_HUE_SHIFT}° of the hue its name describes.
               </td>
             </tr>
             <tr>
-              <td>its season</td>
+              <td>season</td>
               <td>
                 {f().season}: lightness {mood().apparent >= 0 ? "+" : ""}
                 {mood().apparent}, chroma {mood().chroma >= 0 ? "+" : ""}
-                {mood().chroma}, hues leaning {mood().lean}° towards {mood().pole}°; its own inks {COST.season} cheaper, another season's choice {COST.echo} dearer
+                {mood().chroma}, hues pulled up to {mood().lean}° towards {mood().pole}°. Prefers the season's own inks, and avoids inks another season already chose for the same accent.
               </td>
             </tr>
           </tbody>
@@ -164,7 +168,7 @@ export function Method(props: { flavour: Flavour; family: Flavour[] }) {
 
       <section>
         <h3>
-          <span class="kanji">測</span> the measures
+          <span class="kanji">測</span> The measurements
         </h3>
         <div class="m-charts">
           <figure>
@@ -179,7 +183,7 @@ export function Method(props: { flavour: Flavour; family: Flavour[] }) {
               bars
               mark={(k) => minContrast(k) * CONTRAST_GIVE}
             />
-            <figcaption>contrast with the paper; the line is the least each accent may have</figcaption>
+            <figcaption>Contrast with the background. The line marks each accent's minimum.</figcaption>
           </figure>
           <figure>
             <AccentChart
@@ -192,7 +196,7 @@ export function Method(props: { flavour: Flavour; family: Flavour[] }) {
               format={(v) => v.toFixed(1)}
               band={(k) => [target(k) - APPARENT_BAND, target(k) + APPARENT_BAND]}
             />
-            <figcaption>apparent lightness (L**), with the band each accent aims for</figcaption>
+            <figcaption>Apparent lightness. The grey band is each accent's target range.</figcaption>
           </figure>
           <figure>
             <AccentChart
@@ -203,9 +207,9 @@ export function Method(props: { flavour: Flavour; family: Flavour[] }) {
               hi={0.25}
               ticks={[0, 0.1, 0.2]}
               format={(v) => v.toFixed(1)}
-              line={{ at: harmony().chroma + mood().chroma, label: "the flavour's chroma" }}
+              line={{ at: harmony().chroma + mood().chroma, label: "target" }}
             />
-            <figcaption>chroma, against what the flavour aims for</figcaption>
+            <figcaption>Chroma. The dashed line is this theme's target.</figcaption>
           </figure>
           <figure class="m-distances">
             <For each={MODES}>
@@ -242,7 +246,7 @@ export function Method(props: { flavour: Flavour; family: Flavour[] }) {
                 );
               }}
             </For>
-            <figcaption>how far apart the seasons are: the mean difference (ΔE in oklab) of their accents</figcaption>
+            <figcaption>How different the seasons are: the average colour difference (ΔE) between their accents.</figcaption>
           </figure>
         </div>
       </section>
