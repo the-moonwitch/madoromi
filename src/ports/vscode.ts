@@ -271,14 +271,18 @@ function theme(f: Flavour) {
   };
 }
 
-export function vscode(family: Flavour[]): Files {
+export function vscode(family: Flavour[], name = "madoromi"): Files {
+  const about =
+    name === "madoromi"
+      ? `Colour themes made of Pilot iroshizuku inks: ${SEASONS.map((s) => s.id).join(", ")}, each by day and by night.`
+      : `A colour theme mixed from Pilot iroshizuku inks with madoromi, by day and by night.`;
   const out: Files = {};
   for (const f of family) out[`vscode/themes/${slug(f)}.json`] = JSON.stringify(theme(f), null, 2);
   out["vscode/package.json"] = JSON.stringify(
     {
-      name: "madoromi",
-      displayName: "madoromi",
-      description: `Colour themes made of Pilot iroshizuku inks: ${SEASONS.map((s) => s.id).join(", ")}, each by day and by night.`,
+      name,
+      displayName: name,
+      description: about,
       version: "0.1.0",
       publisher: "madoromi",
       license: "MPL-2.0",
@@ -295,9 +299,11 @@ export function vscode(family: Flavour[]): Files {
     2,
   );
   out["vscode/README.md"] = [
-    "# madoromi",
+    `# ${name}`,
     "",
-    "Colour themes made from fountain pen inks: each season, by day and by night. Every accent colour is one of Pilot's Iroshizuku inks, diluted.",
+    name === "madoromi"
+      ? "Colour themes made from fountain pen inks: each season, by day and by night. Every accent colour is one of Pilot's Iroshizuku inks, diluted."
+      : "A colour theme mixed from fountain pen inks, by day and by night. Every accent colour is one of Pilot's Iroshizuku inks, diluted.",
     "",
     `Themes: ${family.map((f) => themeName(f)).join(", ")}.`,
     "",

@@ -9,9 +9,9 @@ const swatchJSON = (f: Flavour, key: string) => {
   return { hex: c.hex, oklch: [+L.toFixed(4), +C.toFixed(4), +h.toFixed(2)], ink: c.ink, at: +c.L.toFixed(3) };
 };
 
-export function tokens(family: Flavour[]): Files {
+export function tokens(family: Flavour[], name = "madoromi"): Files {
   const json = {
-    name: "madoromi",
+    name,
     about:
       "Every accent is one of Pilot's iroshizuku inks, diluted: `ink` is the ink and `at` the lightness along its ramp. Neutrals are greys in the cast of the season's grey ink.",
     seasons: SEASONS.map(({ id, kanji, english, grey }) => ({ id, kanji, english, grey })),
@@ -23,7 +23,8 @@ export function tokens(family: Flavour[]): Files {
       family.map((f) => [
         f.id,
         {
-          season: f.season,
+          // A mix only borrows a season's structure, so it doesn't name one.
+          season: f.id === `${f.season}-${f.mode}` ? f.season : undefined,
           mode: f.mode,
           dark: f.mode === "yoru",
           colours: Object.fromEntries([...ACCENTS, ...NEUTRALS].map((s) => [s.key, swatchJSON(f, s.key)])),
@@ -33,7 +34,7 @@ export function tokens(family: Flavour[]): Files {
     ),
   };
   const css = [
-    `/* madoromi: ${HEADER}. */`,
+    `/* ${name}: ${HEADER}. */`,
     ...family.map((f) =>
       [
         `[data-madoromi="${f.id}"] {`,
@@ -43,5 +44,5 @@ export function tokens(family: Flavour[]): Files {
       ].join("\n"),
     ),
   ].join("\n\n");
-  return { "madoromi.json": JSON.stringify(json, null, 2), "css/madoromi.css": css };
+  return { [`${name}.json`]: JSON.stringify(json, null, 2), [`css/${name}.css`]: css };
 }

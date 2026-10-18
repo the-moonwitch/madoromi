@@ -226,12 +226,135 @@ function castOf(v: Curve): number {
 const hueDistance = (a: number, b: number) => Math.abs(((a - b + 540) % 360) - 180);
 const deltaE = (a: Vec3, b: Vec3) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 
+/** The accents that are the terminal's colours 1–6: red, green, yellow, blue, magenta, cyan. */
+const ANSI_HUES = ["beni", "wakaba", "yamabuki", "ai", "botan", "tokiwa"];
+
+/** Where a ladder's steps may stand: the mode's accent lightness, give or take this much. */
+const LADDER_REACH: Record<Mode, [number, number]> = { hiru: [-0.22, 0.2], yoru: [-0.18, 0.16] };
+/** Steps on one ink stand this far apart (ΔE in oklab) where the ink has room. */
+const LADDER_GAP = MIN_DELTA * 1.25;
+/** A grey ink (less chroma than this) is this many degrees further from a colourful accent in hue. */
+const GREY_MISS = { chroma: 0.06, degrees: 90 };
+
+/**
+ * Accents for a palette of a few inks (a mix): each accent is the ink nearest its hue, and the
+ * accents that share an ink are told apart by lightness, as steps along its ramp. Where an ink
+ * has a few accents, its steps stand close around the mode's accent lightness, so the palette
+ * stays evenly bright; where it has many (one ink alone), they spread along the whole legible
+ * stretch, in the order of their lightness offsets (gold and persimmon lightest, indigo darkest).
+ * An ink has only so many strengths MIN_DELTA apart; past that, accents share a colour outright
+ * rather than come out nearly alike.
+ */
+function ladder(views: Map<string, Curve>, inks: string[], mode: Mode, paper: Vec3): Record<string, Swatch> {
+  const [lo, hi] = LADDER_REACH[mode].map((d) => ACCENT_L[mode] + d);
+  type Point = { L: number; lab: Vec3; at: number; h: number; C: number; contrast: number };
+  // Each accent's least contrast, as the madoromi flavours allow it (gold may be lighter on white).
+  const floor = (a: Accent) => accentContrast(a, mode) * CONTRAST_GIVE;
+  const least = Math.min(...ACCENTS.map(floor));
+  // Each ink's stretch legible enough for some accent, sampled finely, with the distance along it.
+  const stretches = inks.flatMap((ink) => {
+    const v = views.get(ink);
+    if (!v) return [];
+    const points: Point[] = [];
+    for (let L = lo; L <= hi + 1e-9; L += 0.005) {
+      const c = colourAt(v, L);
+      if (!c) continue;
+      const lab = toSrgbGamut(c);
+      const k = contrast(lab, paper);
+      if (k < least) continue;
+      const [, C, h] = oklabToOklch(lab);
+      points.push({ L, lab, h, C, contrast: k, at: points.length ? points[points.length - 1].at + deltaE(points[points.length - 1].lab, lab) : 0 });
+    }
+    return points.length ? [{ ink, points, length: points[points.length - 1].at }] : [];
+  });
+  if (!stretches.length) throw new Error(`none of ${inks.join(", ")} is legible enough on this paper`);
+
+  // How far an ink is from an accent: its hue over the stretch (weighted by chroma), further if
+  // it's too grey for the accent, and out of reach if it's nowhere legible enough for it.
+  const character = new Map(
+    stretches.map((st) => {
+      const [a, b] = st.points.reduce(([a, b], p) => [a + p.lab[1], b + p.lab[2]], [0, 0]);
+      return [st, { h: (Math.atan2(b, a) * 180) / Math.PI, C: Math.max(...st.points.map((p) => p.C)) }];
+    }),
+  );
+  const miss = (st: (typeof stretches)[number], a: Accent) => {
+    const c = character.get(st)!;
+    return hueDistance(c.h, a.hue) + (a.vivid && c.C < GREY_MISS.chroma ? GREY_MISS.degrees : 0) + (st.points.some((q) => q.contrast >= floor(a)) ? 0 : 1000);
+  };
+  // Which accents keep a step of their own first: the six terminal colours, then those drawn in
+  // the most roles.
+  const seen = (key: string) => (ANSI_HUES.includes(key) ? ACCENTS.length : 0) + Object.values(ROLES).filter((k) => k === key).length;
+  const out: Record<string, Swatch> = {};
+  for (const st of stretches) {
+    const mine = ACCENTS.filter((a) => stretches.reduce((b, o) => (miss(o, a) < miss(b, a) ? o : b)) === st);
+    if (!mine.length) continue;
+    const steps = Math.max(1, Math.min(mine.length, Math.floor(st.length / MIN_DELTA) + 1));
+    // Those get a step each, darkest-meant first; the rest share the colour of the one nearest
+    // them in hue (akane beni's, ruri ai's), as a 16-colour terminal draws code.
+    const own = [...mine].sort((x, y) => seen(y.key) - seen(x.key)).slice(0, steps).sort((x, y) => x.dL[mode] - y.dL[mode]);
+    // Close around the accent lightness where they fit; else spread over the whole stretch.
+    const gap = Math.min(LADDER_GAP, steps > 1 ? st.length / (steps - 1) : 0);
+    const want = ACCENT_L[mode] + own.reduce((sum, a) => sum + a.dL[mode], 0) / own.length;
+    const centre = st.points.reduce((b, q) => (Math.abs(q.L - want) < Math.abs(b.L - want) ? q : b)).at;
+    let first = Math.min(Math.max(0, centre - (gap * (steps - 1)) / 2), st.length - gap * (steps - 1));
+    // Slide the steps along so each accent has its full contrast where the ink allows, else its least.
+    const legible = (min: number) => st.points.filter((q) => q.contrast >= min);
+    for (const need of [(a: Accent) => accentContrast(a, mode), floor]) {
+      let [from, to] = [-Infinity, Infinity];
+      own.forEach((a, i) => {
+        const fit = legible(need(a));
+        from = Math.max(from, (fit.length ? fit[0].at : Infinity) - i * gap);
+        to = Math.min(to, (fit.length ? fit[fit.length - 1].at : -Infinity) - i * gap);
+      });
+      if (from <= to) {
+        first = Math.min(Math.max(first, from), to);
+        break;
+      }
+    }
+    own.forEach((a, i) => {
+      const at = first + i * gap;
+      // The nearest step legible enough for this accent (or, if none is, the most legible).
+      const fit = legible(accentContrast(a, mode)).length ? legible(accentContrast(a, mode)) : legible(floor(a));
+      const p = fit.length ? fit.reduce((b, q) => (Math.abs(q.at - at) < Math.abs(b.at - at) ? q : b)) : st.points.reduce((b, q) => (q.contrast > b.contrast ? q : b));
+      out[a.key] = swatch(p.lab, st.ink, p.L);
+    });
+    for (const a of mine.filter((x) => !own.includes(x))) out[a.key] = out[own.reduce((b, o) => (hueDistance(o.hue, a.hue) < hueDistance(b.hue, a.hue) ? o : b)).key];
+  }
+
+  // Accents nearly alike (on two inks, or crowded at the end of one): the less seen moves to the
+  // nearest strength of its ink that's apart from every other accent, or else takes the other's colour.
+  const alike = (x: Swatch, y: Swatch) => x !== y && deltaE(x.lab, y.lab) < MIN_DELTA;
+  for (const a of [...ACCENTS].sort((x, y) => seen(x.key) - seen(y.key))) {
+    const others = ACCENTS.filter((o) => o !== a).map((o) => out[o.key]);
+    const near = others.find((o) => alike(out[a.key], o));
+    if (!near) continue;
+    const st = stretches.find((x) => x.ink === out[a.key].ink)!;
+    const here = st.points.reduce((b, q) => (Math.abs(q.L - out[a.key].L) < Math.abs(b.L - out[a.key].L) ? q : b)).at;
+    const free = st.points
+      .filter((q) => q.contrast >= floor(a) && others.every((o) => deltaE(o.lab, q.lab) >= MIN_DELTA))
+      .sort((x, y) => (y.contrast >= accentContrast(a, mode) ? 1 : 0) - (x.contrast >= accentContrast(a, mode) ? 1 : 0) || Math.abs(x.at - here) - Math.abs(y.at - here))[0];
+    out[a.key] = free ? swatch(free.lab, st.ink, free.L) : near;
+  }
+  return out;
+}
+
+/** How a flavour can be made other than from a whole season: a mix (see mix.ts). */
+export interface FlavourOptions {
+  /** Its id, if not `<season>-<mode>`. */
+  id?: string;
+  /** The ink whose cast tints the neutrals, if not the season's grey. */
+  grey?: string;
+  /** Accents from only these inks, as a ladder (see ladder), rather than the best fit from all. */
+  inks?: string[];
+}
+
 /**
  * Builds one flavour from every ink's view. `echoes` holds, per accent, the inks other seasons of
  * this mode already used for it; reusing one costs a little, so the seasons differ where they can.
  */
-export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mode, echoes = new Map<string, Set<string>>()): Flavour {
-  const s = SEASONS.find((x) => x.id === season)!;
+export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mode, echoes = new Map<string, Set<string>>(), opts: FlavourOptions = {}): Flavour {
+  const s0 = SEASONS.find((x) => x.id === season)!;
+  const s = { ...s0, grey: opts.grey ?? s0.grey };
   const grey = views.get(s.grey)!;
   const cast = castOf(grey);
   const colours: Record<string, Swatch> = {};
@@ -254,71 +377,75 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
     }
   }
 
-  // --- Accents. Every ink is a candidate, read at every lightness near the accent's that's legible
-  // enough on the paper. The best is the nearest in hue that keeps the flavour's harmony (see
-  // HARMONY), preferring the season's inks and inks not used yet, and far enough from the accents
-  // already chosen. The pale ones choose first, then those with the fewest inks near their hue.
-  type Candidate = { lab: Vec3; ink: string; L: number; h: number; C: number; gamut: number; apparent: number; glow: number; short: number };
-  const candidates = new Map<string, Candidate[]>();
-  for (const a of ACCENTS) {
-    const L0 = ACCENT_L[mode] + a.dL[mode];
-    const min = accentContrast(a, mode);
-    const list: Candidate[] = [];
-    for (const [ink, v] of views)
-      for (let L = L0 - ACCENT_REACH; L <= L0 + ACCENT_REACH + 1e-9; L += 0.01) {
-        const c = colourAt(v, L);
-        if (!c || contrast(c, paper) < min * CONTRAST_GIVE) continue;
-        const lab = toSrgbGamut(c);
-        const [, C, h] = oklabToOklch(lab);
-        const apparent = apparentLightness(lab);
-        const short = Math.max(0, min - contrast(lab, paper));
-        list.push({ lab, ink, L, h, C, gamut: C / maxChroma(L, h), apparent, glow: apparent - apparentLightness([lab[0], 0, 0]), short });
+  // --- Accents: from a few inks, a ladder (see ladder); from all, the best fit for each.
+  if (opts.inks) Object.assign(colours, ladder(views, opts.inks, mode, paper));
+  else {
+    // --- Accents. Every ink is a candidate, read at every lightness near the accent's that's legible
+    // enough on the paper. The best is the nearest in hue that keeps the flavour's harmony (see
+    // HARMONY), preferring the season's inks and inks not used yet, and far enough from the accents
+    // already chosen. The pale ones choose first, then those with the fewest inks near their hue.
+    type Candidate = { lab: Vec3; ink: string; L: number; h: number; C: number; gamut: number; apparent: number; glow: number; short: number };
+    const candidates = new Map<string, Candidate[]>();
+    for (const a of ACCENTS) {
+      const L0 = ACCENT_L[mode] + a.dL[mode];
+      const min = accentContrast(a, mode);
+      const list: Candidate[] = [];
+      for (const [ink, v] of views)
+        for (let L = L0 - ACCENT_REACH; L <= L0 + ACCENT_REACH + 1e-9; L += 0.01) {
+          const c = colourAt(v, L);
+          if (!c || contrast(c, paper) < min * CONTRAST_GIVE) continue;
+          const lab = toSrgbGamut(c);
+          const [, C, h] = oklabToOklch(lab);
+          const apparent = apparentLightness(lab);
+          const short = Math.max(0, min - contrast(lab, paper));
+          list.push({ lab, ink, L, h, C, gamut: C / maxChroma(L, h), apparent, glow: apparent - apparentLightness([lab[0], 0, 0]), short });
+        }
+      candidates.set(a.key, list);
+    }
+    const near = (key: string) => candidates.get(key)!.filter((c) => hueDistance(c.h, ACCENTS.find((a) => a.key === key)!.hue) < 20 && c.C > 0.05).length;
+    const pale = (key: string) => (ACCENTS.find((a) => a.key === key)!.vivid ? 1 : 0);
+    const order = ACCENTS.map((a) => a.key).sort((x, y) => pale(x) - pale(y) || near(x) - near(y));
+    const mood = MOODS[season];
+    const harmony = { ...HARMONY[mode], apparent: HARMONY[mode].apparent + mood.apparent, chroma: HARMONY[mode].chroma + mood.chroma };
+    const used = new Map<string, number>();
+    const chosen: Vec3[] = [];
+    for (const key of order) {
+      const a0 = ACCENTS.find((x) => x.key === key)!;
+      const a = { ...a0, hue: (a0.hue + mood.lean * Math.sin(((mood.pole - a0.hue) * Math.PI) / 180) + 360) % 360 };
+      // dL is in oklab lightness; L** runs about 1.16 times as fast.
+      const apparent = harmony.apparent + a.dL[mode] * 1.16;
+      let best: (Candidate & { score: number }) | undefined;
+      // Within the band and at full contrast if anything there is colourful enough for the accent;
+      // past the band if not; and only then giving up a little contrast (see CONTRAST_GIVE).
+      for (const [band, give] of [[APPARENT_BAND, false], [Infinity, false], [APPARENT_BAND, true], [Infinity, true]] as const) {
+      if (best && (!a.vivid || best.C >= a.minChroma * 0.85)) break;
+      best = undefined;
+      for (const c of candidates.get(key)!) {
+        if (chosen.some((o) => deltaE(o, c.lab) < MIN_DELTA)) continue;
+        if (c.short && !give) continue;
+        const hd = hueDistance(c.h, a.hue);
+        // However the season leans, an accent stays near its name's hue.
+        if (hueDistance(c.h, a0.hue) > MAX_HUE_SHIFT || Math.abs(c.apparent - apparent) > band) continue;
+        const score =
+          hd * COST.hue +
+          Math.max(0, hd - HUE_EASY) * COST.hueFar +
+          (a.vivid ? Math.max(0, harmony.chroma - c.C) * COST.chroma + Math.max(0, c.C - harmony.chroma) * COST.loud + Math.max(0, a.minChroma - c.C) * COST.shortfall : Math.abs(c.C - a.chroma![mode]) * COST.shortfall) +
+          Math.abs(c.apparent - apparent) * COST.apparent +
+          c.short * COST.contrast +
+          Math.max(0, c.glow - harmony.glow) * COST.glow +
+          Math.max(0, c.gamut - harmony.gamut) * COST.gamut +
+          (used.get(c.ink) ?? 0) * COST.reuse +
+          (echoes.get(key)?.has(c.ink) ? COST.echo : 0) -
+          // The season's own inks, where they're colourful enough for the accent.
+          (s.inks.includes(c.ink) && (!a.vivid || c.C >= a.minChroma) ? COST.season : 0);
+        if (!best || score < best.score) best = { ...c, score };
       }
-    candidates.set(a.key, list);
-  }
-  const near = (key: string) => candidates.get(key)!.filter((c) => hueDistance(c.h, ACCENTS.find((a) => a.key === key)!.hue) < 20 && c.C > 0.05).length;
-  const pale = (key: string) => (ACCENTS.find((a) => a.key === key)!.vivid ? 1 : 0);
-  const order = ACCENTS.map((a) => a.key).sort((x, y) => pale(x) - pale(y) || near(x) - near(y));
-  const mood = MOODS[season];
-  const harmony = { ...HARMONY[mode], apparent: HARMONY[mode].apparent + mood.apparent, chroma: HARMONY[mode].chroma + mood.chroma };
-  const used = new Map<string, number>();
-  const chosen: Vec3[] = [];
-  for (const key of order) {
-    const a0 = ACCENTS.find((x) => x.key === key)!;
-    const a = { ...a0, hue: (a0.hue + mood.lean * Math.sin(((mood.pole - a0.hue) * Math.PI) / 180) + 360) % 360 };
-    // dL is in oklab lightness; L** runs about 1.16 times as fast.
-    const apparent = harmony.apparent + a.dL[mode] * 1.16;
-    let best: (Candidate & { score: number }) | undefined;
-    // Within the band and at full contrast if anything there is colourful enough for the accent;
-    // past the band if not; and only then giving up a little contrast (see CONTRAST_GIVE).
-    for (const [band, give] of [[APPARENT_BAND, false], [Infinity, false], [APPARENT_BAND, true], [Infinity, true]] as const) {
-    if (best && (!a.vivid || best.C >= a.minChroma * 0.85)) break;
-    best = undefined;
-    for (const c of candidates.get(key)!) {
-      if (chosen.some((o) => deltaE(o, c.lab) < MIN_DELTA)) continue;
-      if (c.short && !give) continue;
-      const hd = hueDistance(c.h, a.hue);
-      // However the season leans, an accent stays near its name's hue.
-      if (hueDistance(c.h, a0.hue) > MAX_HUE_SHIFT || Math.abs(c.apparent - apparent) > band) continue;
-      const score =
-        hd * COST.hue +
-        Math.max(0, hd - HUE_EASY) * COST.hueFar +
-        (a.vivid ? Math.max(0, harmony.chroma - c.C) * COST.chroma + Math.max(0, c.C - harmony.chroma) * COST.loud + Math.max(0, a.minChroma - c.C) * COST.shortfall : Math.abs(c.C - a.chroma![mode]) * COST.shortfall) +
-        Math.abs(c.apparent - apparent) * COST.apparent +
-        c.short * COST.contrast +
-        Math.max(0, c.glow - harmony.glow) * COST.glow +
-        Math.max(0, c.gamut - harmony.gamut) * COST.gamut +
-        (used.get(c.ink) ?? 0) * COST.reuse +
-        (echoes.get(key)?.has(c.ink) ? COST.echo : 0) -
-        // The season's own inks, where they're colourful enough for the accent.
-        (s.inks.includes(c.ink) && (!a.vivid || c.C >= a.minChroma) ? COST.season : 0);
-      if (!best || score < best.score) best = { ...c, score };
+      }
+      if (!best) throw new Error(`no ink fits ${key} in ${season}-${mode}`);
+      colours[key] = swatch(best.lab, best.ink, best.L);
+      chosen.push(colours[key].lab);
+      used.set(best.ink, (used.get(best.ink) ?? 0) + 1);
     }
-    }
-    if (!best) throw new Error(`no ink fits ${key} in ${season}-${mode}`);
-    colours[key] = swatch(best.lab, best.ink, best.L);
-    chosen.push(colours[key].lab);
-    used.set(best.ink, (used.get(best.ink) ?? 0) + 1);
   }
 
   // --- Terminal colours. Bright ones are the same ink a step further from the paper.
@@ -328,12 +455,11 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
     const c = colourAt(views.get(sw.ink)!, L);
     return c ? swatch(c, sw.ink, L) : sw;
   };
-  const hues = ["beni", "wakaba", "yamabuki", "ai", "botan", "tokiwa"];
   const [black, brightBlack, white, brightWhite] =
     mode === "yoru" ? ["nijimi1", "nijimi2", "usuzumi1", "usuzumi0"] : ["usuzumi1", "usuzumi0", "nijimi2", "nijimi1"];
-  const ansi = [colours[black], ...hues.map((k) => colours[k]), colours[white], colours[brightBlack], ...hues.map(brighter), colours[brightWhite]];
+  const ansi = [colours[black], ...ANSI_HUES.map((k) => colours[k]), colours[white], colours[brightBlack], ...ANSI_HUES.map(brighter), colours[brightWhite]];
 
-  return { id: `${season}-${mode}`, season, mode, colours, ansi };
+  return { id: opts.id ?? `${season}-${mode}`, season, mode, colours, ansi };
 }
 
 export function buildFamily(views: Map<string, Curve>): Flavour[] {

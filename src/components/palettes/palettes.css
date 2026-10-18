@@ -195,7 +195,26 @@
 .m-command { display: flex; align-items: flex-start; gap: var(--s3); }
 .m-command pre { flex: 1; min-width: 0; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; line-height: 1.6; color: var(--ink); }
 .m-port-files { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s4); margin: 0; font-size: 12px; }
+.m-port-files .link { text-align: left; overflow-wrap: anywhere; }
 .m-file { margin: 0; max-height: 260px; overflow: auto; padding: var(--s2) 0; border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); font-size: 11px; line-height: 1.5; }
+
+/* ——— mix ——— */
+.m-mix-inks { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 2px var(--s3); }
+.m-mix-inks button { display: flex; align-items: center; gap: var(--s2); width: 100%; padding: 2px 0; font-size: 13px; color: var(--dim); text-align: left; border-bottom: 1px solid transparent; }
+.m-mix-inks button:hover { color: var(--ink); }
+.m-mix-inks button.on { color: var(--ink); font-weight: 700; border-bottom-color: var(--ink); }
+.m-mix-inks button.added { color: var(--ink); }
+.m-mix-inks button.added::after { content: "·"; margin-left: 2px; color: var(--m-fuji); font-weight: 700; }
+.m-mix-inks .stroke { width: 28px; height: 28px; flex: none; }
+.m-mix-harmonies { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s4); }
+.m-mix-harmonies button { font-size: 14px; color: var(--dim); border-bottom: 1px solid transparent; padding: 2px 0; }
+.m-mix-harmonies button.on { color: var(--ink); border-bottom-color: var(--ink); }
+.m-mix .m-command { margin: var(--s2) 0; }
+.m-mix-accents { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: var(--s5); font-size: 13px; }
+.m-mix-accents li { display: grid; grid-template-columns: 26px 9ch 8ch 1fr; align-items: center; gap: var(--s2); padding: 3px 0; break-inside: avoid; }
+.m-mix-accents code { font-family: var(--mono); font-size: 12px; color: var(--dim); }
+.m-mix-ladder { display: flex; height: 18px; margin-top: var(--s3); }
+.m-mix-ladder i { flex: 1; }
 
 /* ——— method ——— */
 .m-steps-demo { display: flex; flex-direction: column; gap: var(--s3); margin-top: var(--s5); max-width: 664px; }
@@ -247,6 +266,7 @@
   .m-hero h2 { font-size: 29px; }
   .m-about { grid-template-columns: minmax(0, 1fr); }
   .m-port { grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+  .m-mix-accents { columns: 1; }
   .m-charts { grid-template-columns: minmax(0, 1fr); }
   .m-table td:nth-child(4), .m-table th:nth-child(4) { display: none; }
   .m-name em { display: none; }

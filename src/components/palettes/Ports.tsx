@@ -4,7 +4,17 @@ import { GROUPS, PORTS, RELEASE, VSIX, portFiles, portFolder, step, type Port } 
 import { zip } from "../../ports/zip";
 
 /** Backticks as code. */
-const rich = (text: string) => text.split("`").map((part, i) => (i % 2 ? <code>{part}</code> : part));
+export const rich = (text: string) => text.split("`").map((part, i) => (i % 2 ? <code>{part}</code> : part));
+
+/** Hands the browser a file to save. */
+export function save(filename: string, data: BlobPart, type = "text/plain") {
+  const url = URL.createObjectURL(new Blob([data], { type }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 
 /** Every port: how to install it for the chosen theme, and its files. */
 export function Ports(props: { flavour: Flavour; family: Flavour[] }) {
@@ -47,14 +57,6 @@ function PortRow(props: { port: Port; flavour: Flavour; files: Record<string, st
   const path = () => props.port.file?.(props.flavour);
   const text = () => (path() ? props.files[path()!] : undefined);
   const name = () => path()?.split("/").pop();
-  const save = (filename: string, data: BlobPart, type: string) => {
-    const url = URL.createObjectURL(new Blob([data], { type }));
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  };
   /** Every theme at once, where each has its own file; the whole folder where it's several. */
   const folder = () => {
     if (props.port.dir === "." || (props.port.file && props.port.file({ id: "a" }) === props.port.file({ id: "b" }))) return;

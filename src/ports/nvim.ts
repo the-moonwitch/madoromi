@@ -247,7 +247,7 @@ const resolve = (c: C) => {
 };
 const luaKey = (k: string) => (/^[A-Za-z_][A-Za-z0-9_]*$/.test(k) ? k : `["${k}"]`);
 
-function groupsLua(): string {
+function groupsLua(module: string): string {
   const lines = GROUPS.map(([name, spec]) => {
     const fields =
       "link" in spec
@@ -266,10 +266,10 @@ function groupsLua(): string {
     `  }`,
     `end`,
     ``,
-    `--- Applies a flavour, e.g. require("madoromi").load("haru-yoru").`,
+    `--- Applies a flavour, e.g. require("${module}").load("${module === "madoromi" ? "haru-yoru" : "<flavour>"}").`,
     `function M.load(flavour)`,
-    `  local c = require("madoromi.palettes")[flavour]`,
-    `  assert(c, "madoromi: no flavour " .. tostring(flavour))`,
+    `  local c = require("${module}.palettes")[flavour]`,
+    `  assert(c, "${module}: no flavour " .. tostring(flavour))`,
     `  if vim.g.colors_name then vim.cmd("hi clear") end`,
     `  vim.g.colors_name = nil`,
     `  vim.o.background = c.dark and "dark" or "light"`,
@@ -302,11 +302,11 @@ function palettesLua(family: Flavour[]): string {
   return [`-- ${HEADER}`, `return {`, ...family.map(flavour), `}`].join("\n");
 }
 
-export function nvim(family: Flavour[]): Files {
+export function nvim(family: Flavour[], name = "madoromi"): Files {
   const out: Files = {
-    "nvim/lua/madoromi/init.lua": groupsLua(),
-    "nvim/lua/madoromi/palettes.lua": palettesLua(family),
+    [`nvim/lua/${name}/init.lua`]: groupsLua(name),
+    [`nvim/lua/${name}/palettes.lua`]: palettesLua(family),
   };
-  for (const f of family) out[`nvim/colors/madoromi-${f.id}.lua`] = `-- ${HEADER}\nrequire("madoromi").load("${f.id}")`;
+  for (const f of family) out[`nvim/colors/madoromi-${f.id}.lua`] = `-- ${HEADER}\nrequire("${name}").load("${f.id}")`;
   return out;
 }

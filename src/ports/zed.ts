@@ -152,12 +152,12 @@ function style(f: Flavour) {
   };
 }
 
-export function zed(family: Flavour[]): Files {
+export function zed(family: Flavour[], name = "madoromi"): Files {
   return {
-    "zed/madoromi.json": JSON.stringify(
+    [`zed/${name}.json`]: JSON.stringify(
       {
         $schema: "https://zed.dev/schema/themes/v0.2.0.json",
-        name: "madoromi",
+        name,
         author: AUTHOR,
         themes: family.map((f) => ({ name: themeName(f), appearance: isDark(f) ? "dark" : "light", style: style(f) })),
       },

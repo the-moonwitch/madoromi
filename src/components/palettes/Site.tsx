@@ -6,6 +6,7 @@ import { Colours } from "./Colours";
 import { Guide } from "./Guide";
 import { Landing } from "./Landing";
 import { Method } from "./Method";
+import { Mix } from "./Mix";
 import { Ports } from "./Ports";
 import "./palettes.css";
 
@@ -15,6 +16,8 @@ export interface SiteProps {
   family: Flavour[];
   sprite: (id: string) => Sprite | undefined;
   ramp: (id: string) => Ramp | undefined;
+  /** Every ink, in the order the table shows them. */
+  order: string[];
   strokeUrl: (id: string) => string | undefined;
   go: (page: string) => void;
 }
@@ -32,6 +35,9 @@ export function Site(props: SiteProps) {
         </Match>
         <Match when={props.page === "palettes/ports"}>
           <Ports flavour={props.flavour} family={props.family} />
+        </Match>
+        <Match when={props.page === "palettes/mix" || props.page.startsWith("palettes/mix/")}>
+          <Mix page={props.page} flavour={props.flavour} order={props.order} ramp={props.ramp} sprite={props.sprite} />
         </Match>
         <Match when={props.page === "palettes/method"}>
           <Method flavour={props.flavour} family={props.family} ramp={props.ramp} />

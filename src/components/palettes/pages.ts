@@ -4,5 +4,6 @@ export const PAGES = [
   { id: "palettes/colours", name: "colours" },
   { id: "palettes/guide", name: "guide" },
   { id: "palettes/ports", name: "ports" },
+  { id: "palettes/mix", name: "mix" },
   { id: "palettes/method", name: "method" },
 ];

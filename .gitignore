@@ -11,3 +11,4 @@ public/precomputed/*.bin
 swatches
 .claude/
 release
+madoromi-mix-*/

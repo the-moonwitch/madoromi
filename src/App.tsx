@@ -199,7 +199,7 @@ export function App() {
             {(p) => (
               <a
                 class="link"
-                classList={{ on: p.id ? selected() === p.id : !palettes() }}
+                classList={{ on: p.id === PALETTES ? selected() === p.id : p.id ? selected() === p.id || selected().startsWith(`${p.id}/`) : !palettes() }}
                 href={`#${p.id}`}
                 onClick={(e) => (e.preventDefault(), go(p.id))}
               >
@@ -213,7 +213,7 @@ export function App() {
 
       <Show when={palettes()}>
         <Suspense>
-          <Show when={flavour()}>{(f) => <Site page={selected()} flavour={f()} family={family()} sprite={sprite} ramp={ramp} strokeUrl={(id) => (precomputedFor(id) ? precomputed(strokeFile(id, onDarkPaper())) : undefined)} go={go} />}</Show>
+          <Show when={flavour()}>{(f) => <Site page={selected()} flavour={f()} family={family()} sprite={sprite} ramp={ramp} order={order()} strokeUrl={(id) => (precomputedFor(id) ? precomputed(strokeFile(id, onDarkPaper())) : undefined)} go={go} />}</Show>
         </Suspense>
       </Show>
 

@@ -11,7 +11,8 @@
     "preprocess": "bun scripts/preprocess.ts",
     "palettes": "bun scripts/palettes.ts",
     "test": "bun test tests",
-    "release": "bun scripts/release.ts"
+    "release": "bun scripts/release.ts",
+    "mix": "bun scripts/mix.ts"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",

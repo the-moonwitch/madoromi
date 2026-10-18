@@ -7,6 +7,18 @@ madoromi has two parts:
 - **The inks.** Forty of Pilot's Iroshizuku inks, measured from scans of ink on paper. For each ink there is a colour curve from its darkest stroke to its palest wash, a ramp of colours along that curve, and 2D and 3D views of its colours.
 - **The palettes.** Eight colour themes, one for each season by day and by night. Every accent colour is one of the inks at some lightness, chosen by measurement: readable, evenly bright, and within what screens can show. The themes are in [palettes/](palettes/README.md), ready to install for Ghostty, Kitty, WezTerm, Alacritty, iTerm2, VS Code, Zed, Neovim, CSS and JSON. [palettes/style-guide.md](palettes/style-guide.md) says which colour to use where.
 
+## Mixing your own
+
+The site's [mixer](https://madoromi.moonwit.ch/#palettes/mix) makes a madoromi palette from up to four inks you choose, in a harmony: mono-ramp (only those inks, as steps from dark to light), analogous, complementary, triadic or tetradic (the harmony adds the inks nearest those hues). You get a day and a night flavour, built by the same rules as the eight themes, and every port of them, named so they install beside the madoromi themes.
+
+The same from the command line:
+
+```sh
+bun run mix tsuki-yo hana-ikada --harmony complementary
+```
+
+This writes every port into `madoromi-mix-tsuki-yo-hana-ikada-complementary/` (or the folder `--out` names), with the VS Code extension as a `.vsix`, and prints each accent's ink and contrast.
+
 ## Running it
 
 You need [Bun](https://bun.sh).
@@ -24,7 +36,8 @@ Everything the site shows is already computed and committed, so it runs without 
 | `bun run build` | type-checks and builds the site into `dist/` |
 | `bun run preprocess` | re-measures the inks from the scans in `samples/` and redraws the brush strokes (needs the scans) |
 | `bun run palettes` | rebuilds the eight themes from the measured inks and writes every port under `palettes/` |
-| `bun test` | checks the themes (contrast, gamut, hues, variety) and that every port's files parse |
+| `bun run mix` | mixes a palette from inks you name and writes every port of it (see above) |
+| `bun test` | checks the themes (contrast, gamut, hues, variety), the mixer, and that every port's files parse |
 
 `preprocess` also cuts the kanji font down to the characters the site uses. That step needs fontTools in a local virtualenv: `python3 -m venv .venv && .venv/bin/pip install fonttools brotli`. Without it, the site loads the font in pieces instead.
 
@@ -41,9 +54,10 @@ To re-measure, put scans in `samples/`, named `<ink>--<anything>.<ext>` (for exa
 | `src/core/analyze.ts` | measuring an ink: colour points, the curve, the ramp, the gradient |
 | `src/core/palette.ts` | building the themes: seasons, colour names, targets and how accents are scored |
 | `src/core/guide.ts` | the style guide: which colour is used for what |
+| `src/core/mix.ts` | mixing palettes from inks in a harmony |
 | `src/ports/` | the generators for each terminal, editor and token format |
 | `src/components/` | the site |
-| `scripts/` | `preprocess` and `palettes` |
+| `scripts/` | `preprocess`, `palettes` and `mix` |
 | `tests/` | the checks `bun test` runs |
 | `palettes/` | the generated themes |
 | `public/precomputed/` | the generated measurements and brush strokes |
