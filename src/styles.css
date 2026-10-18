@@ -182,10 +182,18 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .page.open .site-foot { grid-column: 2; }
 
 /* ——— the flavour picker, in the masthead ——— */
-.picker { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-family: var(--sans); font-size: 12px; }
-.picker button { display: flex; align-items: center; gap: 5px; padding: 4px 9px 4px 7px; border-radius: 99px; box-shadow: 0 0 0 1px var(--m-nijimi1); color: var(--dim); }
-.picker button .kanji { font-family: var(--sans); font-size: 13px; line-height: 1; }
-.picker button.on { box-shadow: 0 0 0 2px var(--m-fuji); color: var(--ink); }
-.picker button:hover { color: var(--ink); }
-.picker-gap { width: 8px; }
-
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.picker { display: flex; align-items: center; gap: 10px; font-family: var(--sans); font-size: 13px; }
+.picker select { appearance: none; font: inherit; color: var(--ink); background: transparent; border: 0; border-radius: 99px; box-shadow: 0 0 0 1px var(--hair); padding: 4px 28px 4px 12px; cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, var(--dim) 50%), linear-gradient(135deg, var(--dim) 50%, transparent 50%);
+  background-position: calc(100% - 15px) 52%, calc(100% - 10px) 52%; background-size: 5px 5px; background-repeat: no-repeat; }
+.picker select:hover { box-shadow: 0 0 0 1px var(--faint); }
+.picker option { color: initial; background: initial; }
+.picker-mode { position: relative; display: flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 99px; box-shadow: 0 0 0 1px var(--hair); color: var(--faint); font-size: 12px; }
+.picker-mode .on { color: var(--ink); }
+.picker-mode .knob { position: relative; width: 26px; height: 14px; border-radius: 7px; background: var(--hair); }
+.picker-mode .knob::after { content: ""; position: absolute; top: 2px; left: 2px; width: 10px; height: 10px; border-radius: 50%; background: var(--m-fuji, var(--ink)); transition: transform 0.18s; }
+.picker-mode .knob.night::after { transform: translateX(12px); }
+@media (prefers-reduced-motion: reduce) {
+  .picker-mode .knob::after { transition: none; }
+}

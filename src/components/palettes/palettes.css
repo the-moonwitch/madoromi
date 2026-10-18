@@ -2,6 +2,7 @@
 
 /* One spacing scale for everything here. */
 .madoromi { --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 40px; --s7: 64px; }
+.madoromi { font-variant-numeric: tabular-nums; }
 .madoromi { display: flex; flex-direction: column; gap: var(--s7); padding-top: var(--s4); font-family: var(--sans); font-size: 14px; line-height: 1.6; animation: rise 260ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 .madoromi a { color: var(--link); }
 .madoromi p a { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
@@ -142,11 +143,11 @@
 .m-matrix thead .on { box-shadow: inset 2px 2px 0 var(--m-fuji), inset -2px 0 0 var(--m-fuji); }
 .m-matrix tbody tr:last-child .on { box-shadow: inset 2px -2px 0 var(--m-fuji), inset -2px 0 0 var(--m-fuji); }
 .m-ink a { color: inherit; }
-.m-story { position: relative; display: inline-flex; align-items: center; gap: 7px; margin-left: 6px; border-radius: 3px; }
+.m-story { position: relative; display: inline-flex; align-items: center; gap: 7px; margin-right: var(--s2); border-radius: 3px; }
 .m-strip { position: relative; display: block; width: 90px; height: 8px; border-radius: 4px; box-shadow: 0 0 0 1px var(--m-nijimi0); }
 .m-strip i { position: absolute; top: -4px; bottom: -4px; width: 3px; margin-left: -1.5px; border-radius: 2px; background: var(--ink); box-shadow: 0 0 0 1.5px var(--paper); }
 .m-strip.big { width: 100%; height: 12px; }
-.m-story-card { display: none; position: absolute; z-index: 5; right: 0; top: 22px; width: 260px; padding: var(--s3) var(--s4); font-family: var(--sans); border-radius: 8px; background: var(--m-hyoshi); box-shadow: 0 0 0 1px var(--m-nijimi1), 0 14px 30px -14px rgba(0, 0, 0, 0.4); flex-direction: column; align-items: center; gap: 10px; white-space: normal; }
+.m-story-card { display: none; position: absolute; z-index: 5; left: 0; top: 22px; width: 260px; padding: var(--s3) var(--s4); font-family: var(--sans); border-radius: 8px; background: var(--m-hyoshi); box-shadow: 0 0 0 1px var(--m-nijimi1), 0 14px 30px -14px rgba(0, 0, 0, 0.4); flex-direction: column; align-items: center; gap: 10px; white-space: normal; }
 .m-story:hover .m-story-card, .m-story:focus .m-story-card { display: flex; }
 .m-ink a:hover { color: var(--link); }
 .m-table { width: 100%; border-collapse: collapse; }
@@ -156,11 +157,12 @@
 .m-name { font-size: 14px; white-space: nowrap; }
 .m-name b { font-weight: 700; }
 .m-name em { color: var(--dim); font-size: 12px; font-style: normal; margin-left: 4px; }
-.m-value { font-size: 13px; color: var(--ink); padding: 2px 6px; border-radius: 3px; }
+.m-value { font-variant-numeric: tabular-nums; font-size: 13px; color: var(--ink); padding: 2px 6px; border-radius: 3px; }
 .m-value:hover { background: var(--m-nijimi0); }
 .m-ink { display: flex; align-items: center; gap: 7px; font-size: 13px; white-space: nowrap; }
 .m-ink .stroke { width: 34px; height: 34px; flex: none; }
-.m-at { color: var(--dim); font-family: var(--mono); font-size: 12px; }
+.m-at { color: var(--dim); font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums; }
+.m-story > .m-at { min-width: 4ch; }
 
 .m-toc { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: 13px; }
 .m-guide section { scroll-margin-top: 20px; }

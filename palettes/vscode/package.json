@@ -19,19 +19,9 @@
         "path": "./themes/madoromi-haru-hiru.json"
       },
       {
-        "label": "madoromi haru-yoru",
-        "uiTheme": "vs-dark",
-        "path": "./themes/madoromi-haru-yoru.json"
-      },
-      {
         "label": "madoromi natsu-hiru",
         "uiTheme": "vs",
         "path": "./themes/madoromi-natsu-hiru.json"
-      },
-      {
-        "label": "madoromi natsu-yoru",
-        "uiTheme": "vs-dark",
-        "path": "./themes/madoromi-natsu-yoru.json"
       },
       {
         "label": "madoromi aki-hiru",
@@ -39,14 +29,24 @@
         "path": "./themes/madoromi-aki-hiru.json"
       },
       {
-        "label": "madoromi aki-yoru",
-        "uiTheme": "vs-dark",
-        "path": "./themes/madoromi-aki-yoru.json"
-      },
-      {
         "label": "madoromi fuyu-hiru",
         "uiTheme": "vs",
         "path": "./themes/madoromi-fuyu-hiru.json"
+      },
+      {
+        "label": "madoromi haru-yoru",
+        "uiTheme": "vs-dark",
+        "path": "./themes/madoromi-haru-yoru.json"
+      },
+      {
+        "label": "madoromi natsu-yoru",
+        "uiTheme": "vs-dark",
+        "path": "./themes/madoromi-natsu-yoru.json"
+      },
+      {
+        "label": "madoromi aki-yoru",
+        "uiTheme": "vs-dark",
+        "path": "./themes/madoromi-aki-yoru.json"
       },
       {
         "label": "madoromi fuyu-yoru",

@@ -2,9 +2,9 @@ import { createSignal, For, Show } from "solid-js";
 import { oklabToOklch } from "../../core/color";
 import { ACCENTS, MODES, NEUTRALS, SEASONS, type Flavour } from "../../core/palette";
 import { oklabToHex } from "../../core/color";
-import { SHEET_COLUMNS, type Ramp } from "../../core/summary";
+import type { Ramp } from "../../core/summary";
 import { inks } from "../../inks";
-import type { Sprite } from "../Palette";
+import { spriteStyle, type Sprite } from "../Palette";
 
 const FORMATS = ["hex", "rgb", "hsl", "oklch"] as const;
 type Format = (typeof FORMATS)[number];
@@ -80,24 +80,11 @@ export function Colours(props: {
               </button>
             </td>
             <td class="m-ink">
-              <Show when={sprite()}>
-                {(sp) => (
-                  <span
-                    class="stroke"
-                    style={{
-                      "background-image": `url(${sp().url})`,
-                      "background-size": `${SHEET_COLUMNS * 100}% ${sp().rows * 100}%`,
-                      "background-position": `${((sp().index % SHEET_COLUMNS) / (SHEET_COLUMNS - 1)) * 100}% ${
-                        sp().rows > 1 ? (Math.floor(sp().index / SHEET_COLUMNS) / (sp().rows - 1)) * 100 : 0
-                      }%`,
-                    }}
-                  />
-                )}
-              </Show>
+              <Story ramp={props.ramp(c().ink)} L={c().L} stroke={props.strokeUrl(c().ink)} />
+              <Show when={sprite()}>{(sp) => <span class="stroke" style={spriteStyle(sp())} />}</Show>
               <a href={`#${c().ink}`} onClick={(e) => (e.preventDefault(), props.go(c().ink))}>
                 {c().ink} <span class="kanji">{ink()?.kanji}</span>
-              </a>{" "}
-              <Story ramp={props.ramp(c().ink)} L={c().L} stroke={props.strokeUrl(c().ink)} />
+              </a>
             </td>
           </tr>
         );

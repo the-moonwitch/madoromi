@@ -324,15 +324,15 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
 }
 
 export function buildFamily(views: Map<string, Curve>): Flavour[] {
-  const echoes = new Map(MODES.map((m) => [m.id, new Map<string, Set<string>>()]));
-  return SEASONS.flatMap((s) =>
-    MODES.map((m) => {
-      const f = buildFlavour(views, s.id, m.id, echoes.get(m.id));
-      const seen = echoes.get(m.id)!;
-      for (const a of ACCENTS) seen.set(a.key, (seen.get(a.key) ?? new Set()).add(f.colours[a.key].ink));
+  // Every day flavour, then every night one; within each, the seasons in order.
+  return MODES.flatMap((m) => {
+    const echoes = new Map<string, Set<string>>();
+    return SEASONS.map((s) => {
+      const f = buildFlavour(views, s.id, m.id, echoes);
+      for (const a of ACCENTS) echoes.set(a.key, (echoes.get(a.key) ?? new Set()).add(f.colours[a.key].ink));
       return f;
-    }),
-  );
+    });
+  });
 }
 
 export interface Check {

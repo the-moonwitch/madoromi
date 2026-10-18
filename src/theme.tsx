@@ -86,37 +86,28 @@ export function legibleOn(curve: ArrayLike<number>, main: Vec3, paper: Vec3, min
   return toSrgbGamut(c);
 }
 
-/** Season and time of day; each season wears its own paper. */
+/** The season, from a list, and day or night, by a switch. */
 export function Picker(props: { family: Flavour[] }) {
-  const swatchOf = (id: string) => props.family.find((f) => f.id === id);
+  const night = () => choice().mode === "yoru";
   return (
-    <div class="picker" role="group" aria-label="flavour">
-      <For each={SEASONS}>
-        {(s) => {
-          const f = () => swatchOf(`${s.id}-${choice().mode}`);
-          return (
-            <button
-              classList={{ on: choice().season === s.id }}
-              aria-pressed={choice().season === s.id}
-              style={f() ? { background: f()!.colours.kami.hex, color: f()!.colours.sumi.hex } : {}}
-              title={s.english}
-              onClick={() => choose({ season: s.id })}
-            >
-              <span class="kanji">{s.kanji}</span>
-              <span>{s.id}</span>
-            </button>
-          );
-        }}
-      </For>
-      <span class="picker-gap" />
-      <For each={MODES}>
-        {(m) => (
-          <button classList={{ on: choice().mode === m.id }} aria-pressed={choice().mode === m.id} title={m.english} onClick={() => choose({ mode: m.id })}>
-            <span class="kanji">{m.kanji}</span>
-            <span>{m.id}</span>
-          </button>
-        )}
-      </For>
+    <div class="picker">
+      <label class="picker-season">
+        <span class="visually-hidden">season</span>
+        <select value={choice().season} onChange={(e) => choose({ season: e.currentTarget.value as Season })}>
+          <For each={SEASONS}>
+            {(s) => (
+              <option value={s.id}>
+                {s.kanji} {s.id}
+              </option>
+            )}
+          </For>
+        </select>
+      </label>
+      <button class="picker-mode" role="switch" aria-checked={night()} aria-label="night" onClick={() => choose({ mode: night() ? "hiru" : "yoru" })}>
+        <span classList={{ on: !night() }}>昼</span>
+        <span class="knob" classList={{ night: night() }} />
+        <span classList={{ on: night() }}>夜</span>
+      </button>
     </div>
   );
 }
