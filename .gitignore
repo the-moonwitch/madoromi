@@ -2,9 +2,12 @@ node_modules
 dist
 .DS_Store
 .venv
-# The scans are third-party photos and aren't distributed; what's derived from them is in
-# public/precomputed.
+# The scans are third-party photos: neither they nor any record of them are distributed, only
+# what's derived from them (public/precomputed). These are kept locally by preprocessing.
 samples/
+src/samples.json
+public/precomputed/manifest.json
+public/precomputed/*.bin
 swatches
 .claude/
 release

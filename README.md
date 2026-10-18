@@ -30,9 +30,9 @@ Everything the site shows is already computed and committed, so it runs without 
 
 ## The scans
 
-The scans are other people's photos, so they aren't in the repository. What's measured from them (colour points, curves, ramps, brush strokes) is in `public/precomputed/`.
+The scans are other people's photos, so neither they nor a list of them are in the repository. What's measured from them (colour points, curves, ramps, brush strokes) is in `public/precomputed/`.
 
-To re-measure, download the scans into `samples/`, named `<ink>--<anything>.<ext>` (for example `ajisai--1.jpg`), and run `bun run preprocess`.
+To re-measure, put scans in `samples/`, named `<ink>--<anything>.<ext>` (for example `ajisai--1.jpg`), and run `bun run preprocess`.
 
 ## Where things are
 

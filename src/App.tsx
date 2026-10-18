@@ -79,12 +79,14 @@ export function App() {
   /** The palettes page, at #palettes. */
   const palettes = () => selected() === PALETTES || selected().startsWith(`${PALETTES}/`);
 
-  // --- What the summary covers: inks whose scans haven't changed since preprocessing.
-  // Anything else is analysed here from the ink's scans.
+  // --- What the summary covers: every ink, unless its scans are here and have changed since
+  // preprocessing; those are analysed here from the scans.
   const signatures = new Map(inks.map((i) => [i.id, sampleSignature(i.samples)]));
   const precomputedFor = (id: string): InkView | undefined => {
     const s = summary();
-    if (!s || s.minCount !== opts.minCount || s.files.get(id) !== signatures.get(id)) return;
+    if (!s || s.minCount !== opts.minCount) return;
+    const here = signatures.get(id);
+    if (here && s.files.get(id) !== here) return;
     return s.views.get(id);
   };
 
@@ -92,7 +94,7 @@ export function App() {
   const requested = new Set<string>();
   createEffect(() => {
     if (summary() === undefined) return; // still loading
-    const todo = inks.filter((i) => !precomputedFor(i.id) && !requested.has(i.id));
+    const todo = inks.filter((i) => i.samples.length && !precomputedFor(i.id) && !requested.has(i.id));
     if (!todo.length) return;
     for (const i of todo) requested.add(i.id);
     loadInks(todo, (r) => setResults(new Map(results()).set(r.id, r)));

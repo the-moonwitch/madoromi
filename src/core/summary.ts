@@ -30,7 +30,7 @@ export const SHEET_COLUMNS = 8;
 const CURVE_SAMPLES = 96;
 
 interface InkJSON {
-  /** Which scans (and crops) it was computed from; see sampleSignature. */
+  /** A hash of which scans (and crops) it was computed from; see sampleSignature. */
   files: string;
   main: number[];
   ramp: number[][];
@@ -63,12 +63,25 @@ export interface Summary {
   sheetRows: number;
 }
 
-/** Identifies an ink's set of scans, so a summary made from other scans isn't used. */
-export const sampleSignature = (samples: { file: string; crop?: number[] }[]) =>
-  samples
+/**
+ * Identifies an ink's set of scans (and their crops), so a summary made from other scans isn't
+ * used. A hash, so the summary doesn't name the scans; "" where there are none here.
+ */
+export function sampleSignature(samples: { file: string; crop?: number[] }[]): string {
+  if (!samples.length) return "";
+  const text = samples
     .map((s) => (s.crop ? `${s.file}@${s.crop.join(",")}` : s.file))
     .sort()
     .join("|");
+  // FNV-1a, twice over with different offsets: 64 bits, as 16 hex digits.
+  let a = 0x811c9dc5;
+  let b = 0xcbf29ce4;
+  for (let i = 0; i < text.length; i++) {
+    a = Math.imul(a ^ text.charCodeAt(i), 0x01000193) >>> 0;
+    b = Math.imul(b ^ text.charCodeAt(i), 0x01000193) >>> 0;
+  }
+  return a.toString(16).padStart(8, "0") + b.toString(16).padStart(8, "0");
+}
 
 const round = (x: number, d: number) => Math.round(x * 10 ** d) / 10 ** d;
 const rounded = (v: ArrayLike<number>, d: number) => Array.from(v, (x) => round(x, d));

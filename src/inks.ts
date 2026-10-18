@@ -1,14 +1,15 @@
-// The ink lineup and its sample scans. Samples live in samples/ as `[NN_]<slug>[--anything].<ext>`,
-// so one ink can have several scans (e.g. `ku-jaku--2.jpg` next to `ku-jaku.webp`).
-// Each scan's crop (`[x0, y0, x1, y1]`, fractions of width and height) is the part of it that's
-// ink on paper.
+// The ink lineup, and where there are scans of them here, the scans. Scans live in samples/ as
+// `[NN_]<slug>[--anything].<ext>`, so one ink can have several.
 //
-// The images themselves aren't part of the app or the repository: preprocessing lists them (with
-// their crops) in samples.json, and the app works from what was derived from them. Only the dev
-// server, run where the images are, can fetch one to extract it in the browser.
+// The scans aren't part of the app or the repository, nor is any list of them: the app works from
+// what was derived from them (public/precomputed). Where they are, preprocessing lists them (with
+// the part of each that's ink on paper) in src/samples.json, which isn't committed either; then the
+// dev server can fetch one to measure it again in the browser.
 
 import { SAMPLE_FILE } from "./core/cloudfile";
-import listed from "./samples.json";
+
+/** The local list of scans, if there is one: `{ file: crop | null }`. */
+const listed = (Object.values(import.meta.glob("./samples.json", { eager: true, import: "default" }))[0] ?? {}) as Record<string, number[] | null>;
 
 /**
  * Pilot iroshizuku, in the order Pilot lists them, then the limited editions: romanised name, kanji,
@@ -85,7 +86,7 @@ export interface Ink {
 
 // JSON imports type crops as number[], not as the 4-tuple.
 const samplesBySlug = new Map<string, Sample[]>();
-for (const [file, crop] of Object.entries(listed as Record<string, number[] | null>).sort(([a], [b]) => a.localeCompare(b))) {
+for (const [file, crop] of Object.entries(listed).sort(([a], [b]) => a.localeCompare(b))) {
   const m = file.match(SAMPLE_FILE);
   if (!m) continue;
   const sample: Sample = { file, url: `${import.meta.env.BASE_URL}samples/${file}`, ...(crop ? { crop: crop as SampleSource["crop"] } : {}) };
@@ -94,12 +95,12 @@ for (const [file, crop] of Object.entries(listed as Record<string, number[] | nu
 
 const known = new Set(LINEUP.map(([slug]) => slug));
 export const inks: Ink[] = [
-  ...LINEUP.filter(([slug]) => samplesBySlug.has(slug)).map(([slug, kanji, english]) => ({
+  ...LINEUP.map(([slug, kanji, english]) => ({
     id: slug,
     name: slug,
     kanji,
     english,
-    samples: samplesBySlug.get(slug)!,
+    samples: samplesBySlug.get(slug) ?? [],
   })),
   ...[...samplesBySlug]
     .filter(([slug]) => !known.has(slug))
