@@ -316,18 +316,18 @@ export function InkSteps(props: { ramp: (id: string) => Ramp | undefined }) {
           )}
         </For>
       </div>
-      <canvas ref={canvas} class="m-steps-canvas" role="img" aria-label={`${ink.name}, ${STEPS[step()].name}`} />
-      <div class="m-steps-nav">
-        <button class="m-cta" onClick={() => go(-1)} aria-label="previous step">
+      <div class="m-steps-stage">
+        <button class="m-steps-arrow" onClick={() => go(-1)} aria-label="previous step">
           ←
         </button>
-        <span class="m-steps-count">
-          Step {step() + 1} of {STEPS.length}: <b>{STEPS[step()].name}</b>
-        </span>
-        <button class="m-cta" onClick={() => go(1)} aria-label="next step">
+        <canvas ref={canvas} class="m-steps-canvas" role="img" aria-label={`${ink.name}, ${STEPS[step()].name}`} />
+        <button class="m-steps-arrow" onClick={() => go(1)} aria-label="next step">
           →
         </button>
       </div>
+      <span class="m-steps-count">
+        Step {step() + 1} of {STEPS.length}: <b>{STEPS[step()].name}</b>
+      </span>
       <p class="m-steps-text">{STEPS[step()].text}</p>
     </div>
   );
