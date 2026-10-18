@@ -9,8 +9,8 @@ selection_fg = "#4a4e63"
 selection_bg = "#acb0c3"
 scrollbar_thumb = "#bcc0d3"
 split = "#bcc0d3"
-ansi = ["#5e6277", "#bb355a", "#618c32", "#b2953c", "#4a63c3", "#a74f93", "#028e7f", "#acb0c3"]
-brights = ["#696d83", "#bb355a", "#4f7935", "#a18138", "#3b50b0", "#953b81", "#087971", "#bcc0d3"]
+ansi = ["#5e6277", "#bb355a", "#618c32", "#e3940b", "#4a63c3", "#a74f93", "#028e7f", "#acb0c3"]
+brights = ["#696d83", "#bb355a", "#4f7935", "#e3940b", "#3b50b0", "#953b81", "#087971", "#bcc0d3"]
 
 [metadata]
 name = "madoromi fuyu-hiru"

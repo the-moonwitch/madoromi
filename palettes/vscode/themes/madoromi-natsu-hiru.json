@@ -33,7 +33,7 @@
     "input.placeholderForeground": "#80969f",
     "inputOption.activeBorder": "#6526b9",
     "inputValidation.errorBorder": "#b53753",
-    "inputValidation.warningBorder": "#b2953c",
+    "inputValidation.warningBorder": "#e3940b",
     "inputValidation.infoBorder": "#008bae",
     "dropdown.background": "#ddeaf0",
     "dropdown.border": "#bed6df",
@@ -50,7 +50,7 @@
     "list.focusOutline": "#6526b9",
     "list.highlightForeground": "#6526b9",
     "list.errorForeground": "#b53753",
-    "list.warningForeground": "#b2953c",
+    "list.warningForeground": "#e3940b",
     "tree.indentGuidesStroke": "#aec5ce",
     "activityBar.background": "#d3e1e6",
     "activityBar.foreground": "#6526b9",
@@ -136,19 +136,19 @@
     "editorInlayHint.background": "#bed6df80",
     "editorLink.activeForeground": "#008bae",
     "editorError.foreground": "#b53753",
-    "editorWarning.foreground": "#b2953c",
+    "editorWarning.foreground": "#e3940b",
     "editorInfo.foreground": "#008bae",
     "editorHint.foreground": "#028e7f",
     "editorGutter.addedBackground": "#00915c",
-    "editorGutter.modifiedBackground": "#b2953c",
+    "editorGutter.modifiedBackground": "#e3940b",
     "editorGutter.deletedBackground": "#b53753",
     "editorOverviewRuler.border": "#e9f4f800",
     "editorOverviewRuler.errorForeground": "#b53753",
-    "editorOverviewRuler.warningForeground": "#b2953c",
+    "editorOverviewRuler.warningForeground": "#e3940b",
     "editorOverviewRuler.infoForeground": "#008bae",
     "editorBracketHighlight.foreground1": "#6526b9",
     "editorBracketHighlight.foreground2": "#526ccb",
-    "editorBracketHighlight.foreground3": "#b2953c",
+    "editorBracketHighlight.foreground3": "#e3940b",
     "editorBracketHighlight.foreground4": "#00915c",
     "editorBracketHighlight.foreground5": "#b0599b",
     "editorBracketHighlight.foreground6": "#008bae",
@@ -161,7 +161,7 @@
     "merge.incomingHeaderBackground": "#526ccb66",
     "gitDecoration.addedResourceForeground": "#00915c",
     "gitDecoration.untrackedResourceForeground": "#00915c",
-    "gitDecoration.modifiedResourceForeground": "#b2953c",
+    "gitDecoration.modifiedResourceForeground": "#e3940b",
     "gitDecoration.deletedResourceForeground": "#b53753",
     "gitDecoration.conflictingResourceForeground": "#6526b9",
     "gitDecoration.ignoredResourceForeground": "#8fa6ae",
@@ -172,7 +172,7 @@
     "terminal.ansiBlack": "#4e6872",
     "terminal.ansiRed": "#b53753",
     "terminal.ansiGreen": "#00915c",
-    "terminal.ansiYellow": "#b2953c",
+    "terminal.ansiYellow": "#e3940b",
     "terminal.ansiBlue": "#526ccb",
     "terminal.ansiMagenta": "#b0599b",
     "terminal.ansiCyan": "#028e7f",
@@ -180,7 +180,7 @@
     "terminal.ansiBrightBlack": "#57717a",
     "terminal.ansiBrightRed": "#b53753",
     "terminal.ansiBrightGreen": "#007d4e",
-    "terminal.ansiBrightYellow": "#a18138",
+    "terminal.ansiBrightYellow": "#e3940b",
     "terminal.ansiBrightBlue": "#4259ba",
     "terminal.ansiBrightMagenta": "#9e458a",
     "terminal.ansiBrightCyan": "#087971",
@@ -376,7 +376,7 @@
         "storage.type.built-in"
       ],
       "settings": {
-        "foreground": "#b2953c"
+        "foreground": "#e3940b"
       }
     },
     {
@@ -443,7 +443,7 @@
         "entity.other.attribute-name.id.css"
       ],
       "settings": {
-        "foreground": "#b2953c"
+        "foreground": "#e3940b"
       }
     },
     {
@@ -566,7 +566,7 @@
         "punctuation.definition.changed"
       ],
       "settings": {
-        "foreground": "#b2953c"
+        "foreground": "#e3940b"
       }
     },
     {
@@ -584,22 +584,22 @@
       "foreground": "#455cbd"
     },
     "type": {
-      "foreground": "#b2953c"
+      "foreground": "#e3940b"
     },
     "class": {
-      "foreground": "#b2953c"
+      "foreground": "#e3940b"
     },
     "enum": {
-      "foreground": "#b2953c"
+      "foreground": "#e3940b"
     },
     "interface": {
-      "foreground": "#b2953c"
+      "foreground": "#e3940b"
     },
     "struct": {
-      "foreground": "#b2953c"
+      "foreground": "#e3940b"
     },
     "typeParameter": {
-      "foreground": "#b2953c",
+      "foreground": "#e3940b",
       "fontStyle": "italic"
     },
     "parameter": {

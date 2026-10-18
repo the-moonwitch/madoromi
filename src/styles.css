@@ -55,11 +55,13 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .page:not(.open) { padding-bottom: 86px; }
 
 /* ——— motion: the table and overview rise in, the list slides in beside the open ink ——— */
-@keyframes rise { from { opacity: 0; transform: translateY(11px); } }
-@keyframes slide { from { opacity: 0; transform: translateX(-11px); } }
+/* Movement only, never opacity: where animations don't run (a background tab, print, a preview),
+   the page is still all there, just a few pixels off. */
+@keyframes rise { from { transform: translateY(11px); } }
+@keyframes slide { from { transform: translateX(-11px); } }
 .palette.grid { animation: rise 260ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 .overview { animation: rise 300ms 60ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
-@keyframes up { from { transform: translateY(100%); } }
+@keyframes up { from { transform: translateY(11px); } }
 .hist-bar { animation: up 320ms 80ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 .palette.list { animation: slide 200ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 .detail { animation: rise 220ms 40ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }

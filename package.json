@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "check": "tsc --noEmit",
     "preprocess": "bun scripts/preprocess.ts",
-    "palettes": "bun scripts/palettes.ts"
+    "palettes": "bun scripts/palettes.ts",
+    "test": "bun test tests"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",

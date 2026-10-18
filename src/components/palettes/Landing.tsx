@@ -136,7 +136,12 @@ export function Landing(props: LandingProps) {
             </span>
           </figure>
           <h3>hakaru 測る</h3>
-          <p>Chosen by measure: legible on the paper, evenly bright to the eye, clear of sRGB's edge.</p>
+          <p>
+            Chosen by measure: legible on the paper, evenly bright to the eye, clear of sRGB's edge.{" "}
+            <a href="#palettes/method" onClick={(e) => (e.preventDefault(), props.go("palettes/method"))}>
+              the method
+            </a>
+          </p>
         </article>
       </section>
     </main>

@@ -5,6 +5,7 @@ import type { Sprite } from "../Palette";
 import { Colours } from "./Colours";
 import { Guide } from "./Guide";
 import { Landing } from "./Landing";
+import { Method } from "./Method";
 import { Ports } from "./Ports";
 import "./palettes.css";
 
@@ -31,6 +32,9 @@ export function Site(props: SiteProps) {
         </Match>
         <Match when={props.page === "palettes/ports"}>
           <Ports flavour={props.flavour} family={props.family} />
+        </Match>
+        <Match when={props.page === "palettes/method"}>
+          <Method flavour={props.flavour} family={props.family} />
         </Match>
         <Match when={true}>
           <Landing flavour={props.flavour} family={props.family} sprite={props.sprite} ramp={props.ramp} go={props.go} />

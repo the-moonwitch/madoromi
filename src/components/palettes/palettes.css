@@ -199,6 +199,27 @@
 .m-card-actions .link { font-size: 12px; }
 .m-file { margin: 0; max-height: 260px; overflow: auto; padding: 10px 12px; border-radius: 4px; background: var(--m-kami); font-size: 11px; line-height: 1.5; }
 
+/* ——— method ——— */
+.m-steps { margin: 0; padding-left: 20px; max-width: 46em; line-height: 1.7; }
+.m-lede { margin: 0 0 var(--s3); max-width: 46em; color: var(--dim); }
+.m-knobs td:first-child { width: 22%; font-weight: 700; }
+.m-knobs td:last-child { color: var(--dim); }
+.m-charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s5); }
+.m-charts figure { margin: 0; display: flex; flex-direction: column; gap: var(--s2); }
+.m-charts figcaption { font-size: 12px; color: var(--dim); }
+.m-chart { width: 100%; height: auto; overflow: visible; }
+.m-chart .grid { stroke: var(--hair); stroke-width: 1; }
+.m-chart .target { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 3 3; }
+.m-chart .band { fill: var(--hair); }
+.m-chart .mark { stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+.m-chart .tick { font: 10px var(--mono); fill: var(--dim); }
+.m-chart .label { font: 11px var(--sans); fill: var(--dim); }
+.m-distances { flex-direction: row !important; flex-wrap: wrap; align-items: flex-start; }
+.m-distances table { border-collapse: separate; border-spacing: 3px; font: 11px var(--mono); }
+.m-distances th { font: 12px var(--sans); color: var(--dim); font-weight: 400; padding: 2px 4px; }
+.m-distances td { padding: 6px 6px; border-radius: 4px; text-align: center; min-width: 44px; }
+.m-distances figcaption { flex-basis: 100%; }
+
 @media (max-width: 1100px) {
   .m-demo-row { grid-template-columns: minmax(0, 1fr); }
   .m-family ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -214,6 +235,7 @@
   .m-hero h2 { font-size: 29px; }
   .m-about { grid-template-columns: minmax(0, 1fr); }
   .m-cards { grid-template-columns: minmax(0, 1fr); }
+  .m-charts { grid-template-columns: minmax(0, 1fr); }
   .m-table td:nth-child(4), .m-table th:nth-child(4) { display: none; }
   .m-name em { display: none; }
   .m-use { width: auto; }

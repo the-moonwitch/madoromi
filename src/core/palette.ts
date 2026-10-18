@@ -146,18 +146,23 @@ export const MOODS: Record<Season, { apparent: number; chroma: number; pole: num
  * How much each way of straying costs, per unit (hue in degrees, the rest as fractions). Chroma
  * past the flavour's costs `loud`, short of it `chroma`: a loud accent spoils a flavour more.
  */
-export const COST = { hue: 1 / 8, hueFar: 1, chroma: 50, loud: 150, shortfall: 300, apparent: 60, glow: 30, gamut: 25, reuse: 0.6, season: 4, echo: 3 };
+export const COST = { hue: 1 / 8, hueFar: 1, chroma: 50, loud: 150, shortfall: 400, apparent: 60, glow: 30, gamut: 25, reuse: 0.6, season: 4, echo: 3, contrast: 8 };
 /** No accent looks lighter or darker than its target by more than this (in L**), where any ink can. */
-const APPARENT_BAND = 0.06;
+export const APPARENT_BAND = 0.06;
 /** Hue strays up to this many degrees cost only `hue`; past it, `hueFar` too. */
 const HUE_EASY = 15;
 /** How far from its lightness an accent may be read, either way. */
 const ACCENT_REACH = 0.15;
 /** Accents in one flavour are at least this far apart (ΔE in oklab). */
-const MIN_DELTA = 0.05;
+export const MIN_DELTA = 0.05;
 /** How far an accent's hue may stray from its name's. */
-const MAX_HUE_SHIFT = 25;
+export const MAX_HUE_SHIFT = 25;
 const accentContrast = (a: Accent, mode: Mode) => a.contrast?.[mode] ?? ACCENT_CONTRAST[mode];
+/**
+ * An accent that can't keep its colour at full contrast (a gold on white) may give some up, to
+ * this share of it, and pays COST.contrast for every 1:1 it gives.
+ */
+export const CONTRAST_GIVE = 0.85;
 /**
  * The neutrals' chroma, the same in every season so that only the cast differs: the papers
  * (kami, hyōshi, chitsu), the ladder between, and the text. Each takes at most this share of
@@ -253,7 +258,7 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
   // enough on the paper. The best is the nearest in hue that keeps the flavour's harmony (see
   // HARMONY), preferring the season's inks and inks not used yet, and far enough from the accents
   // already chosen. The pale ones choose first, then those with the fewest inks near their hue.
-  type Candidate = { lab: Vec3; ink: string; L: number; h: number; C: number; gamut: number; apparent: number; glow: number };
+  type Candidate = { lab: Vec3; ink: string; L: number; h: number; C: number; gamut: number; apparent: number; glow: number; short: number };
   const candidates = new Map<string, Candidate[]>();
   for (const a of ACCENTS) {
     const L0 = ACCENT_L[mode] + a.dL[mode];
@@ -262,11 +267,12 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
     for (const [ink, v] of views)
       for (let L = L0 - ACCENT_REACH; L <= L0 + ACCENT_REACH + 1e-9; L += 0.01) {
         const c = colourAt(v, L);
-        if (!c || contrast(c, paper) < min) continue;
+        if (!c || contrast(c, paper) < min * CONTRAST_GIVE) continue;
         const lab = toSrgbGamut(c);
         const [, C, h] = oklabToOklch(lab);
         const apparent = apparentLightness(lab);
-        list.push({ lab, ink, L, h, C, gamut: C / maxChroma(L, h), apparent, glow: apparent - apparentLightness([lab[0], 0, 0]) });
+        const short = Math.max(0, min - contrast(lab, paper));
+        list.push({ lab, ink, L, h, C, gamut: C / maxChroma(L, h), apparent, glow: apparent - apparentLightness([lab[0], 0, 0]), short });
       }
     candidates.set(a.key, list);
   }
@@ -283,12 +289,14 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
     // dL is in oklab lightness; L** runs about 1.16 times as fast.
     const apparent = harmony.apparent + a.dL[mode] * 1.16;
     let best: (Candidate & { score: number }) | undefined;
-    // Within the band if anything there is colourful enough for the accent; past it otherwise.
-    for (const band of [APPARENT_BAND, Infinity]) {
+    // Within the band and at full contrast if anything there is colourful enough for the accent;
+    // past the band if not; and only then giving up a little contrast (see CONTRAST_GIVE).
+    for (const [band, give] of [[APPARENT_BAND, false], [Infinity, false], [APPARENT_BAND, true], [Infinity, true]] as const) {
     if (best && (!a.vivid || best.C >= a.minChroma * 0.85)) break;
     best = undefined;
     for (const c of candidates.get(key)!) {
       if (chosen.some((o) => deltaE(o, c.lab) < MIN_DELTA)) continue;
+      if (c.short && !give) continue;
       const hd = hueDistance(c.h, a.hue);
       // However the season leans, an accent stays near its name's hue.
       if (hueDistance(c.h, a0.hue) > MAX_HUE_SHIFT || Math.abs(c.apparent - apparent) > band) continue;
@@ -297,6 +305,7 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
         Math.max(0, hd - HUE_EASY) * COST.hueFar +
         (a.vivid ? Math.max(0, harmony.chroma - c.C) * COST.chroma + Math.max(0, c.C - harmony.chroma) * COST.loud + Math.max(0, a.minChroma - c.C) * COST.shortfall : Math.abs(c.C - a.chroma![mode]) * COST.shortfall) +
         Math.abs(c.apparent - apparent) * COST.apparent +
+        c.short * COST.contrast +
         Math.max(0, c.glow - harmony.glow) * COST.glow +
         Math.max(0, c.gamut - harmony.gamut) * COST.gamut +
         (used.get(c.ink) ?? 0) * COST.reuse +
@@ -350,7 +359,7 @@ export interface Check {
 export function checkFlavour(f: Flavour): Check[] {
   const paper = f.colours.kami.lab;
   const out: Check[] = [];
-  for (const a of ACCENTS) out.push({ flavour: f.id, what: `${a.key} contrast`, value: contrast(f.colours[a.key].lab, paper), min: accentContrast(a, f.mode) });
+  for (const a of ACCENTS) out.push({ flavour: f.id, what: `${a.key} contrast`, value: contrast(f.colours[a.key].lab, paper), min: accentContrast(a, f.mode) * CONTRAST_GIVE });
   for (const [key, min] of Object.entries(TEXT_CONTRAST)) out.push({ flavour: f.id, what: `${key} contrast`, value: contrast(f.colours[key].lab, paper), min });
   for (let i = 0; i < ACCENTS.length; i++)
     for (let j = i + 1; j < ACCENTS.length; j++)
