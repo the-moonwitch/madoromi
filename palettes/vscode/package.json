@@ -16,6 +16,10 @@
   "categories": [
     "Themes"
   ],
+  "files": [
+    "themes/*.json",
+    "README.md"
+  ],
   "contributes": {
     "themes": [
       {

@@ -1,12 +1,12 @@
 import { createMemo, createSignal, For, Show } from "solid-js";
 import type { Flavour } from "../../core/palette";
-import { GROUPS, PORTS, portFiles, portFolder, step, type Port } from "../../ports";
+import { GROUPS, PORTS, RELEASE, VSIX, portFiles, portFolder, step, type Port } from "../../ports";
 import { zip } from "../../ports/zip";
 
 /** Backticks as code. */
 const rich = (text: string) => text.split("`").map((part, i) => (i % 2 ? <code>{part}</code> : part));
 
-/** Every port, with how to install it and its file for the chosen flavour. */
+/** Every port: how to install it for the chosen theme, and its files. */
 export function Ports(props: { flavour: Flavour; family: Flavour[] }) {
   const files = createMemo(() => portFiles(props.family));
   return (
@@ -15,16 +15,16 @@ export function Ports(props: { flavour: Flavour; family: Flavour[] }) {
         <span class="deco kanji">移植</span>
         <div>
           <h2>ports</h2>
-          <p>Files and commands for {props.flavour.id}. To get another theme, pick it at the top of the page.</p>
+          <p>How to install {props.flavour.id}. To get another theme, pick it at the top of the page.</p>
         </div>
       </header>
       <For each={GROUPS}>
         {(g) => (
           <section>
             <h3>{g.name}</h3>
-            <div class="m-cards">
-              <For each={PORTS.filter((p) => p.group === g.id)}>{(p) => <PortCard port={p} flavour={props.flavour} files={files()} />}</For>
-            </div>
+            <ul class="m-port-list">
+              <For each={PORTS.filter((p) => p.group === g.id)}>{(p) => <PortRow port={p} flavour={props.flavour} files={files()} />}</For>
+            </ul>
           </section>
         )}
       </For>
@@ -32,73 +32,82 @@ export function Ports(props: { flavour: Flavour; family: Flavour[] }) {
   );
 }
 
-function PortCard(props: { port: Port; flavour: Flavour; files: Record<string, string> }) {
+function PortRow(props: { port: Port; flavour: Flavour; files: Record<string, string> }) {
   const [open, setOpen] = createSignal(false);
   const [copied, setCopied] = createSignal(false);
-  const copyCommand = (text: string) =>
-    navigator.clipboard?.writeText(text).then(() => {
+  const code = () => {
+    const c = props.port.command ?? props.port.snippet?.text;
+    return c ? step(c, props.flavour) : undefined;
+  };
+  const copy = () =>
+    navigator.clipboard?.writeText(code()!).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1200);
     });
   const path = () => props.port.file?.(props.flavour);
   const text = () => (path() ? props.files[path()!] : undefined);
   const name = () => path()?.split("/").pop();
-  const save = (name: string, data: BlobPart, type: string) => {
+  const save = (filename: string, data: BlobPart, type: string) => {
     const url = URL.createObjectURL(new Blob([data], { type }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = name;
+    a.download = filename;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
-  const download = () => save(name()!, text()!.endsWith("\n") ? text()! : text() + "\n", "text/plain");
-  /** Every flavour at once, where each has its own file; the whole folder where it's more than one. */
+  /** Every theme at once, where each has its own file; the whole folder where it's several. */
   const folder = () => {
     if (props.port.dir === "." || (props.port.file && props.port.file({ id: "a" }) === props.port.file({ id: "b" }))) return;
     return portFolder(props.port, props.files);
   };
-  const downloadFolder = () => {
-    const f = folder()!;
-    save(f.name, zip(f.files) as BlobPart, "application/zip");
-  };
+
   return (
-    <article class="m-card">
+    <li class="m-port">
       <h4>{props.port.name}</h4>
-      <ol>
-        <For each={props.port.install}>{(s) => <li>{rich(step(s, props.flavour))}</li>}</For>
-      </ol>
-      <Show when={props.port.command}>
-        {(c) => (
-          <div class="m-command">
-            <code>{step(c().download, props.flavour)}</code>
-            <button class="link" onClick={() => copyCommand(step(c().download, props.flavour))} aria-label={`copy the ${props.port.name} install command`}>
-              {copied() ? "copied" : "copy"}
-            </button>
-          </div>
-        )}
-      </Show>
-      <div class="m-card-actions">
-        <Show when={text()}>
-          <button class="m-cta" onClick={download}>
-            {name()}
-          </button>
-        </Show>
-        <Show when={folder()}>
-          {(f) => (
-            <button class={text() ? "link" : "m-cta"} onClick={downloadFolder}>
-              {text() ? "every flavour (.zip)" : f().name}
-            </button>
+      <div class="m-port-body">
+        <ol>
+          <For each={props.port.install}>{(s) => <li>{rich(step(s, props.flavour))}</li>}</For>
+        </ol>
+        <Show when={code()}>
+          {(c) => (
+            <div class="m-command">
+              <pre>
+                <code>{c()}</code>
+              </pre>
+              <button class="link" onClick={copy} aria-label={`copy the ${props.port.name} ${props.port.command ? "command" : "snippet"}`}>
+                {copied() ? "copied" : "copy"}
+              </button>
+            </div>
           )}
         </Show>
-        <Show when={text()}>
-          <button class="link" onClick={() => setOpen(!open())}>
-            {open() ? "hide" : "show"}
-          </button>
+        <p class="m-port-files">
+          <Show when={text()}>
+            <button class="link" onClick={() => save(name()!, text()!.endsWith("\n") ? text()! : text() + "\n", "text/plain")}>
+              {name()}
+            </button>
+          </Show>
+          <Show when={props.port.id === "vscode"}>
+            <a class="link" href={`${RELEASE}/${VSIX}`}>
+              {VSIX}
+            </a>
+          </Show>
+          <Show when={folder()}>
+            {(f) => (
+              <button class="link" onClick={() => save(f().name, zip(f().files) as BlobPart, "application/zip")}>
+                {text() ? "all themes (.zip)" : f().name}
+              </button>
+            )}
+          </Show>
+          <Show when={text()}>
+            <button class="link" onClick={() => setOpen(!open())} aria-expanded={open()}>
+              {open() ? "hide file" : "show file"}
+            </button>
+          </Show>
+        </p>
+        <Show when={open() && text()}>
+          <pre class="m-file">{text()!.length > 6000 ? text()!.slice(0, 6000) + "\n…" : text()}</pre>
         </Show>
       </div>
-      <Show when={open() && text()}>
-        <pre class="m-file">{text()!.length > 6000 ? text()!.slice(0, 6000) + "\n…" : text()}</pre>
-      </Show>
-    </article>
+    </li>
   );
 }

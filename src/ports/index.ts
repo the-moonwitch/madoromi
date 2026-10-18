@@ -1,5 +1,7 @@
-// Every port: what it's for, how to install it, and its files. The page offers each flavour's file
-// for download; `bun run palettes` writes them all, and the readme, under palettes/.
+// Every port: what it's for, how to install it, and its files. `bun run palettes` writes them all,
+// and the readme, under palettes/; a release (see .github/workflows/release.yml) zips each port
+// and packages the VS Code extension. Install commands fetch straight from the repository or the
+// latest release.
 import type { Flavour, Season } from "../core/palette";
 import type { Files } from "./common";
 import { nvim } from "./nvim";
@@ -23,9 +25,19 @@ export interface Port {
    * stand for a flavour, its theme name and its season's day and night flavours.
    */
   install: string[];
-  /** Shell commands that install it: from the files the page offers, and from the repository. */
-  command?: { download: string; repo: string };
+  /** One shell command that installs it, fetching from the repository or the latest release. */
+  command?: string;
+  /** Or, where it's set up in a config file instead, what to put there. */
+  snippet?: { lang: string; text: string };
 }
+
+export const REPO = "https://github.com/the-moonwitch/madoromi";
+/** The generated ports as they are on the main branch. */
+export const RAW = "https://raw.githubusercontent.com/the-moonwitch/madoromi/main/palettes";
+/** What the latest release built. */
+export const RELEASE = `${REPO}/releases/latest/download`;
+/** The VS Code extension, as a release builds it. */
+export const VSIX = "madoromi.vsix";
 
 export const PORTS: Port[] = [
   {
@@ -34,11 +46,8 @@ export const PORTS: Port[] = [
     group: "terminals",
     dir: "ghostty",
     file: (f) => `ghostty/madoromi-${f.id}`,
-    install: ["Put the theme file in `~/.config/ghostty/themes/`.", "Add this line to your Ghostty config: `theme = light:madoromi-{hiru},dark:madoromi-{yoru}`."],
-    command: {
-      download: "mkdir -p ~/.config/ghostty/themes && mv ~/Downloads/madoromi-{id} ~/.config/ghostty/themes/",
-      repo: "mkdir -p ~/.config/ghostty/themes && cp palettes/ghostty/madoromi-* ~/.config/ghostty/themes/",
-    },
+    install: ["Run this to fetch the day and night themes for your season.", "Add to your Ghostty config: `theme = light:madoromi-{hiru},dark:madoromi-{yoru}`"],
+    command: `curl -fsSL --create-dirs -o ~/.config/ghostty/themes/madoromi-{hiru} ${RAW}/ghostty/madoromi-{hiru} -o ~/.config/ghostty/themes/madoromi-{yoru} ${RAW}/ghostty/madoromi-{yoru}`,
   },
   {
     id: "kitty",
@@ -46,11 +55,8 @@ export const PORTS: Port[] = [
     group: "terminals",
     dir: "kitty",
     file: (f) => `kitty/madoromi-${f.id}.conf`,
-    install: ["Put the theme file in `~/.config/kitty/themes/`.", "Run `kitten themes` and choose it, or add `include themes/madoromi-{id}.conf` to `kitty.conf`."],
-    command: {
-      download: "mkdir -p ~/.config/kitty/themes && mv ~/Downloads/madoromi-{id}.conf ~/.config/kitty/themes/",
-      repo: "mkdir -p ~/.config/kitty/themes && cp palettes/kitty/madoromi-*.conf ~/.config/kitty/themes/",
-    },
+    install: ["Run this to fetch the theme.", "Add to `kitty.conf`: `include themes/madoromi-{id}.conf`"],
+    command: `curl -fsSL --create-dirs -o ~/.config/kitty/themes/madoromi-{id}.conf ${RAW}/kitty/madoromi-{id}.conf`,
   },
   {
     id: "wezterm",
@@ -58,11 +64,8 @@ export const PORTS: Port[] = [
     group: "terminals",
     dir: "wezterm",
     file: (f) => `wezterm/madoromi-${f.id}.toml`,
-    install: ["Put the theme file in `~/.config/wezterm/colors/`.", 'Add this to your WezTerm config: `config.color_scheme = "{name}"`.'],
-    command: {
-      download: "mkdir -p ~/.config/wezterm/colors && mv ~/Downloads/madoromi-{id}.toml ~/.config/wezterm/colors/",
-      repo: "mkdir -p ~/.config/wezterm/colors && cp palettes/wezterm/madoromi-*.toml ~/.config/wezterm/colors/",
-    },
+    install: ["Run this to fetch the theme.", 'Add to your WezTerm config: `config.color_scheme = "{name}"`'],
+    command: `curl -fsSL --create-dirs -o ~/.config/wezterm/colors/madoromi-{id}.toml ${RAW}/wezterm/madoromi-{id}.toml`,
   },
   {
     id: "alacritty",
@@ -70,11 +73,8 @@ export const PORTS: Port[] = [
     group: "terminals",
     dir: "alacritty",
     file: (f) => `alacritty/madoromi-${f.id}.toml`,
-    install: ["Put the theme file in `~/.config/alacritty/themes/`.", 'In `alacritty.toml`, under `[general]`, add: `import = ["~/.config/alacritty/themes/madoromi-{id}.toml"]`.'],
-    command: {
-      download: "mkdir -p ~/.config/alacritty/themes && mv ~/Downloads/madoromi-{id}.toml ~/.config/alacritty/themes/",
-      repo: "mkdir -p ~/.config/alacritty/themes && cp palettes/alacritty/madoromi-*.toml ~/.config/alacritty/themes/",
-    },
+    install: ["Run this to fetch the theme.", 'Add to `alacritty.toml`, under `[general]`: `import = ["~/.config/alacritty/themes/madoromi-{id}.toml"]`'],
+    command: `curl -fsSL --create-dirs -o ~/.config/alacritty/themes/madoromi-{id}.toml ${RAW}/alacritty/madoromi-{id}.toml`,
   },
   {
     id: "iterm2",
@@ -82,16 +82,16 @@ export const PORTS: Port[] = [
     group: "terminals",
     dir: "iterm2",
     file: (f) => `iterm2/madoromi-${f.id}.itermcolors`,
-    install: ["Open the file; iTerm2 imports it.", "In Settings → Profiles → Colors → Color Presets, choose {name}."],
-    command: { download: "open ~/Downloads/madoromi-{id}.itermcolors", repo: "open palettes/iterm2/madoromi-{id}.itermcolors" },
+    install: ["Run this; iTerm2 opens the theme and adds it to its presets.", "In Settings → Profiles → Colors → Color Presets, choose {name}."],
+    command: `curl -fsSL -o /tmp/madoromi-{id}.itermcolors ${RAW}/iterm2/madoromi-{id}.itermcolors && open /tmp/madoromi-{id}.itermcolors`,
   },
   {
     id: "vscode",
     name: "VS Code",
     group: "editors",
     dir: "vscode",
-    install: ["Unzip it into `~/.vscode/extensions/`; it makes a `madoromi` folder.", "Restart VS Code, then run Preferences: Color Theme and choose {name}."],
-    command: { download: "unzip ~/Downloads/madoromi-vscode.zip -d ~/.vscode/extensions/", repo: "cp -r palettes/vscode ~/.vscode/extensions/madoromi" },
+    install: ["Run this to install the extension (it has every theme).", "Run Preferences: Color Theme and choose {name}."],
+    command: `curl -fsSL -o /tmp/${VSIX} ${RELEASE}/${VSIX} && code --install-extension /tmp/${VSIX}`,
   },
   {
     id: "zed",
@@ -99,21 +99,26 @@ export const PORTS: Port[] = [
     group: "editors",
     dir: "zed",
     file: () => "zed/madoromi.json",
-    install: ["Put `madoromi.json` (it has every theme) in `~/.config/zed/themes/`.", "Run `theme selector: toggle` and choose {name}."],
-    command: {
-      download: "mkdir -p ~/.config/zed/themes && mv ~/Downloads/madoromi.json ~/.config/zed/themes/",
-      repo: "mkdir -p ~/.config/zed/themes && cp palettes/zed/madoromi.json ~/.config/zed/themes/",
-    },
+    install: ["Run this to fetch the themes (one file has them all).", "Run `theme selector: toggle` and choose {name}."],
+    command: `curl -fsSL --create-dirs -o ~/.config/zed/themes/madoromi.json ${RAW}/zed/madoromi.json`,
   },
   {
     id: "nvim",
     name: "Neovim",
     group: "editors",
     dir: "nvim",
-    install: ["Unzip it into `~/.config/nvim/pack/madoromi/start/`; Neovim loads it from there.", "Run `:colorscheme madoromi-{id}`."],
-    command: {
-      download: "mkdir -p ~/.config/nvim/pack/madoromi/start && unzip ~/Downloads/madoromi-nvim.zip -d ~/.config/nvim/pack/madoromi/start/",
-      repo: "mkdir -p ~/.config/nvim/pack/madoromi/start && cp -r palettes/nvim ~/.config/nvim/pack/madoromi/start/madoromi.nvim",
+    install: ["With lazy.nvim, add this to your plugins. It loads the theme from this repository."],
+    snippet: {
+      lang: "lua",
+      text: `{
+  "the-moonwitch/madoromi",
+  lazy = false,
+  priority = 1000,
+  config = function(plugin)
+    vim.opt.rtp:append(plugin.dir .. "/palettes/nvim")
+    vim.cmd.colorscheme("madoromi-{id}")
+  end,
+}`,
     },
   },
   {
@@ -122,7 +127,8 @@ export const PORTS: Port[] = [
     group: "tokens",
     dir: "css",
     file: () => "css/madoromi.css",
-    install: ['Include `madoromi.css` (it has every theme). Set `data-madoromi="{id}"` on an element, then use `var(--madoromi-sumi)` and the other colours inside it.'],
+    install: ['Add this to your page. Then set `data-madoromi="{id}"` on an element and use `var(--madoromi-sumi)` and the other colours inside it.'],
+    snippet: { lang: "html", text: `<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/the-moonwitch/madoromi@main/palettes/css/madoromi.css">` },
   },
   {
     id: "json",
@@ -130,7 +136,8 @@ export const PORTS: Port[] = [
     group: "tokens",
     dir: ".",
     file: () => "madoromi.json",
-    install: ["`madoromi.json` has every theme's colours (hex, oklch and the ink each comes from), its terminal colours, and which colour each role uses."],
+    install: ["Every theme's colours (hex, oklch and the ink each comes from), terminal colours, and which colour each role uses."],
+    command: `curl -fsSL -O ${RAW}/madoromi.json`,
   },
 ];
 

@@ -86,9 +86,8 @@ export function legibleOn(curve: ArrayLike<number>, main: Vec3, paper: Vec3, min
   return toSrgbGamut(c);
 }
 
-/** The season, from a list, and day or night, by a switch. */
+/** The season, from a list, and day or night. */
 export function Picker(props: { family: Flavour[] }) {
-  const night = () => choice().mode === "yoru";
   return (
     <div class="picker">
       <label class="picker-season">
@@ -103,11 +102,15 @@ export function Picker(props: { family: Flavour[] }) {
           </For>
         </select>
       </label>
-      <button class="picker-mode" role="switch" aria-checked={night()} aria-label="night" onClick={() => choose({ mode: night() ? "hiru" : "yoru" })}>
-        <span classList={{ on: !night() }}>昼</span>
-        <span class="knob" classList={{ night: night() }} />
-        <span classList={{ on: night() }}>夜</span>
-      </button>
+      <span class="picker-mode" role="group" aria-label="day or night">
+        <For each={MODES}>
+          {(m) => (
+            <button classList={{ on: choice().mode === m.id }} aria-pressed={choice().mode === m.id} onClick={() => choose({ mode: m.id })}>
+              {m.english}
+            </button>
+          )}
+        </For>
+      </span>
     </div>
   );
 }

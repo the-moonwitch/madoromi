@@ -1,0 +1,20 @@
+# Every push and pull request: type-check, test (the themes' measures, the generated files being
+# current, every port parsing), and build the site.
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: sudo apt-get update && sudo apt-get install -y neovim unzip
+      - run: bun install --frozen-lockfile
+      - run: bun run check
+      - run: bun test tests
+      - run: bun run build

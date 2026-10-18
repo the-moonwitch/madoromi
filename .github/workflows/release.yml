@@ -1,0 +1,29 @@
+# Tagging a version (v1.2.3) publishes a release: every port zipped, the tokens, and the VS Code
+# extension packaged as madoromi.vsix. Install commands fetch from the latest release.
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun test tests
+      - run: bun scripts/release.ts
+      - name: package the VS Code extension
+        working-directory: palettes/vscode
+        run: |
+          npm pkg set version="${GITHUB_REF_NAME#v}"
+          npx --yes @vscode/vsce@3 package --skip-license --allow-missing-repository -o ../../release/madoromi.vsix
+      - name: publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" release/* --title "madoromi $GITHUB_REF_NAME" --generate-notes

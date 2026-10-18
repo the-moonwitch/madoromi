@@ -286,6 +286,7 @@ export function vscode(family: Flavour[]): Files {
       repository: { type: "git", url: "https://github.com/the-moonwitch/madoromi" },
       engines: { vscode: "^1.80.0" },
       categories: ["Themes"],
+      files: ["themes/*.json", "README.md"],
       contributes: {
         themes: family.map((f) => ({ label: themeName(f), uiTheme: isDark(f) ? "vs-dark" : "vs", path: `./themes/${slug(f)}.json` })),
       },
@@ -293,5 +294,14 @@ export function vscode(family: Flavour[]): Files {
     null,
     2,
   );
+  out["vscode/README.md"] = [
+    "# madoromi",
+    "",
+    "Colour themes made from fountain pen inks: each season, by day and by night. Every accent colour is one of Pilot's Iroshizuku inks, diluted.",
+    "",
+    `Themes: ${family.map((f) => themeName(f)).join(", ")}.`,
+    "",
+    "More, and the themes for other apps: https://github.com/the-moonwitch/madoromi",
+  ].join("\n");
   return out;
 }

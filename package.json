@@ -10,7 +10,8 @@
     "check": "tsc --noEmit",
     "preprocess": "bun scripts/preprocess.ts",
     "palettes": "bun scripts/palettes.ts",
-    "test": "bun test tests"
+    "test": "bun test tests",
+    "release": "bun scripts/release.ts"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",
