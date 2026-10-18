@@ -1,7 +1,8 @@
 // An ink's ramp painted as a brush stroke on the ink's own plane: the stroke follows the ramp's
 // curve through the 2D chart, with each chart axis stretched so the curve fills the canvas, and
 // it masks the chart's gradient, so its colour changes across the stroke as well as along it.
-// Like ink, it is as opaque as it is dark: the ink's darkest step is solid, white is clear.
+// Like ink, it is as opaque as it stands apart from the paper: on white, the ink's darkest step is
+// solid and white is clear.
 // It's painted straight into pixels, so dozens of strokes stay cheap.
 
 import { oklabToSrgbGamut, type Vec3 } from "./color";
@@ -20,6 +21,8 @@ export interface StrokeOptions {
   thickness: number;
   /** Seeds the ragged edges, so an ink always gets the same stroke. */
   seed: string;
+  /** The paper's lightness: 1 (white) unless it's painted for a dark one. */
+  paper?: number;
 }
 
 
@@ -268,17 +271,20 @@ export function paintStroke(r: Ramp, o: StrokeOptions): StrokePixels {
       out[p * 4] = rgb[0] * 255;
       out[p * 4 + 1] = rgb[1] * 255;
       out[p * 4 + 2] = rgb[2] * 255;
-      out[p * 4 + 3] = cover[p] * inkOpacity(lab[0], darkest) * 255;
+      out[p * 4 + 3] = cover[p] * inkOpacity(lab[0], darkest, o.paper) * 255;
     }
   }
   return img;
 }
 
 /**
- * Ink is as opaque as it is dark: fully at the ink's darkest, not at all at white. Eased so the
- * dark and middle tones stay nearly solid and only the pale end fades into the paper.
+ * Ink is as opaque as it stands apart from the paper: on white, fully at the ink's darkest and not
+ * at all at white; on a dark paper, fully at whichever end of the ink is furthest from it, not at
+ * all at the paper's own lightness. Eased so the strong tones stay nearly solid and only those
+ * nearest the paper fade into it.
  */
-export function inkOpacity(L: number, darkest: number): number {
-  const x = Math.min(1, Math.max(0, (L - darkest) / (1 - darkest)));
+export function inkOpacity(L: number, darkest: number, paper = 1): number {
+  const far = Math.max(Math.abs(darkest - paper), Math.abs(1 - paper));
+  const x = 1 - Math.min(1, Math.abs(L - paper) / far);
   return 1 - x * x;
 }

@@ -34,6 +34,12 @@ export function Ports(props: { flavour: Flavour; family: Flavour[] }) {
 
 function PortCard(props: { port: Port; flavour: Flavour; files: Record<string, string> }) {
   const [open, setOpen] = createSignal(false);
+  const [copied, setCopied] = createSignal(false);
+  const copyCommand = (text: string) =>
+    navigator.clipboard?.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    });
   const path = () => props.port.file?.(props.flavour);
   const text = () => (path() ? props.files[path()!] : undefined);
   const name = () => path()?.split("/").pop();
@@ -61,6 +67,16 @@ function PortCard(props: { port: Port; flavour: Flavour; files: Record<string, s
       <ol>
         <For each={props.port.install}>{(s) => <li>{rich(step(s, props.flavour))}</li>}</For>
       </ol>
+      <Show when={props.port.command}>
+        {(c) => (
+          <div class="m-command">
+            <code>{step(c(), props.flavour)}</code>
+            <button class="link" onClick={() => copyCommand(step(c(), props.flavour))} aria-label={`copy the ${props.port.name} install command`}>
+              {copied() ? "copied" : "copy"}
+            </button>
+          </div>
+        )}
+      </Show>
       <div class="m-card-actions">
         <Show when={text()}>
           <button class="m-cta" onClick={download}>

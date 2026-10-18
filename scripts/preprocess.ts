@@ -1,7 +1,7 @@
 // Extracts every sample scan ahead of time so the app doesn't have to (see src/core/cloudfile.ts),
 // then analyses every ink and prerenders everything the app shows (see src/core/summary.ts).
 // Writes public/precomputed/{manifest.json, <ink>.bin, summary.json, strokes.webp,
-// strokes/<ink>.webp, points/<ink>.bin}, and src/{samples.json, kanji.woff2, kanji-font.css}. Only changed scans
+// strokes-yoru.webp, strokes/<ink>[-yoru].webp, points/<ink>.bin}, and src/{samples.json, kanji.woff2, kanji-font.css}. Only changed scans
 // are re-extracted; scans whose files were deleted from samples/ are dropped, along with their
 // entries in samples/sources.json.
 // Usage: bun run preprocess [--force]
@@ -24,6 +24,7 @@ import {
 import { ANALYSIS_VERSION, analyze, combineScans, defaultAnalysisOptions } from "../src/core/analyze";
 import { EXTRACT_VERSION } from "../src/core/extract";
 import { paintStroke } from "../src/core/brush";
+import { NEUTRALS } from "../src/core/palette";
 import { encodePoints, viewOf, type InkView } from "../src/core/inkview";
 import { loopOrder } from "../src/core/order";
 import { inkHistogram, type InkHistogram } from "../src/core/shared";
@@ -31,7 +32,7 @@ import {
   DETAIL_STROKE,
   SHEET_COLUMNS,
   STROKE_DPR,
-  STROKE_SHEET,
+  strokeSheet,
   SUMMARY_FILE,
   TABLE_STROKE,
   pointsFile,
@@ -192,20 +193,24 @@ const order = loopOrder([...analysed.keys()], (id) => analysed.get(id)?.view);
 const encode = (px: { data: Uint8ClampedArray; width: number; height: number }) =>
   sharp(Buffer.from(px.data.buffer, px.data.byteOffset, px.data.byteLength), { raw: { width: px.width, height: px.height, channels: 4 } });
 const cell = TABLE_STROKE.size * STROKE_DPR;
-const tiles = await Promise.all(
-  order.map(async (ink, i) => {
-    const { view } = analysed.get(ink)!;
-    const opts = { dpr: STROKE_DPR, seed: ink };
-    const big = paintStroke(view, { ...opts, width: DETAIL_STROKE.size, height: DETAIL_STROKE.size, thickness: DETAIL_STROKE.thickness });
-    await encode(big).webp({ quality: 88, alphaQuality: 90, effort: 5 }).toFile(`${OUT}/${strokeFile(ink)}`);
-    const small = paintStroke(view, { ...opts, width: TABLE_STROKE.size, height: TABLE_STROKE.size, thickness: TABLE_STROKE.thickness });
-    return { input: await encode(small).png().toBuffer(), left: (i % SHEET_COLUMNS) * cell, top: Math.floor(i / SHEET_COLUMNS) * cell };
-  }),
-);
-await sharp({ create: { width: SHEET_COLUMNS * cell, height: Math.ceil(order.length / SHEET_COLUMNS) * cell, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
-  .composite(tiles)
-  .webp({ quality: 88, alphaQuality: 90, effort: 5 })
-  .toFile(`${OUT}/${STROKE_SHEET}`);
+// Painted for white paper, and for the night papers (whose lightness they share closely enough).
+const NIGHT_PAPER = NEUTRALS.find((n) => n.key === "kami")!.L.yoru;
+for (const night of [false, true]) {
+  const tiles = await Promise.all(
+    order.map(async (ink, i) => {
+      const { view } = analysed.get(ink)!;
+      const opts = { dpr: STROKE_DPR, seed: ink, paper: night ? NIGHT_PAPER : 1 };
+      const big = paintStroke(view, { ...opts, width: DETAIL_STROKE.size, height: DETAIL_STROKE.size, thickness: DETAIL_STROKE.thickness });
+      await encode(big).webp({ quality: 88, alphaQuality: 90, effort: 5 }).toFile(`${OUT}/${strokeFile(ink, night)}`);
+      const small = paintStroke(view, { ...opts, width: TABLE_STROKE.size, height: TABLE_STROKE.size, thickness: TABLE_STROKE.thickness });
+      return { input: await encode(small).png().toBuffer(), left: (i % SHEET_COLUMNS) * cell, top: Math.floor(i / SHEET_COLUMNS) * cell };
+    }),
+  );
+  await sharp({ create: { width: SHEET_COLUMNS * cell, height: Math.ceil(order.length / SHEET_COLUMNS) * cell, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+    .composite(tiles)
+    .webp({ quality: 88, alphaQuality: 90, effort: 5 })
+    .toFile(`${OUT}/${strokeSheet(night)}`);
+}
 
 const summary: SummaryFile = { analysis: ANALYSIS_VERSION, minCount, order, inks: {} };
 order.forEach((ink, i) => {

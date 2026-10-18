@@ -5,6 +5,7 @@ import { decodeScan, MAX_SIDE, PRECOMPUTED_DIR, type Manifest } from "./core/clo
 import { EXTRACT_VERSION } from "./core/extract";
 import { decodePoints } from "./core/inkview";
 import { decodeSummary, pointsFile, strokeFile, SUMMARY_FILE, type Summary, type SummaryFile } from "./core/summary";
+import { onDarkPaper } from "./theme";
 import type { Ink } from "./inks";
 import { extractAll } from "./pool";
 import type { SampleResult } from "./worker";
@@ -38,7 +39,7 @@ export function loadPoints(ink: string): Promise<Float32Array | undefined> {
 /** Starts fetching what opening this ink will need, so it opens at once. */
 export function prefetchInk(ink: string): void {
   void loadPoints(ink);
-  new Image().src = precomputed(strokeFile(ink));
+  new Image().src = precomputed(strokeFile(ink, onDarkPaper()));
 }
 
 let manifest: Promise<Manifest | undefined> | undefined;

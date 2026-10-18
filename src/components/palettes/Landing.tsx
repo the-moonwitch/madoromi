@@ -56,15 +56,17 @@ export function Landing(props: LandingProps) {
                 <li>
                   <button
                     classList={{ on: f.id === props.flavour.id }}
+                    aria-pressed={f.id === props.flavour.id}
+                    aria-label={`${f.id} (${s.english} ${m.english})`}
                     style={{ background: f.colours.kami.hex, color: f.colours.sumi.hex }}
                     onClick={() => choose({ season: f.season, mode: f.mode })}
                   >
                     <span class="kanji">{s.kanji + m.kanji}</span>
                     <span class="name">{f.id}</span>
-                    <span class="dots">
+                    <span class="dots" aria-hidden="true">
                       <For each={ACCENTS}>{(a) => <i style={{ background: f.colours[a.key].hex }} />}</For>
                     </span>
-                    <span class="dots ladder">
+                    <span class="dots ladder" aria-hidden="true">
                       <For each={LADDER.filter((k) => NEUTRALS.some((n) => n.key === k))}>{(k) => <i style={{ background: f.colours[k].hex }} />}</For>
                     </span>
                   </button>
@@ -79,7 +81,7 @@ export function Landing(props: LandingProps) {
         <EditorDemo />
         <div class="m-demo-row">
           <TerminalDemo />
-          <InterfaceDemo />
+          <InterfaceDemo season={props.flavour.season} mode={props.flavour.mode} />
         </div>
       </section>
 

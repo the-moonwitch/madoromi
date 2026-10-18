@@ -12,10 +12,12 @@ import type { InkHistogram } from "./shared";
 export type Ramp = Pick<Analysis, "main" | "ramp" | "rampParams" | "curve" | "sampleField">;
 
 export const SUMMARY_FILE = "summary.json";
-/** Every ink's table stroke, on one sheet. */
+/** Every ink's table stroke, on one sheet: painted for white paper, or for a night paper. */
 export const STROKE_SHEET = "strokes.webp";
-/** An ink's large stroke and its points, one file each. */
-export const strokeFile = (ink: string) => `strokes/${ink}.webp`;
+export const NIGHT_STROKE_SHEET = "strokes-yoru.webp";
+export const strokeSheet = (night: boolean) => (night ? NIGHT_STROKE_SHEET : STROKE_SHEET);
+/** An ink's large stroke (for white paper or a night one) and its points, one file each. */
+export const strokeFile = (ink: string, night = false) => `strokes/${ink}${night ? "-yoru" : ""}.webp`;
 export const pointsFile = (ink: string) => `points/${ink}.bin`;
 
 /** Stroke sizes in CSS px, prerendered at STROKE_DPR. */

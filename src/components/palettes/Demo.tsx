@@ -112,7 +112,7 @@ export function EditorDemo() {
         <span class="langs" role="group" aria-label="language">
           <For each={Object.entries(LANGUAGES)}>
             {([id, l]) => (
-              <button classList={{ on: lang() === id }} onClick={() => setLang(id as keyof typeof LANGUAGES)}>
+              <button classList={{ on: lang() === id }} aria-pressed={lang() === id} onClick={() => setLang(id as keyof typeof LANGUAGES)}>
                 {l.name}
               </button>
             )}
@@ -257,21 +257,21 @@ export function TerminalDemo() {
         </For>
       </pre>
       <ol class="ansi">
-        <For each={Array.from({ length: 16 }, (_, i) => i)}>{(i) => <li style={{ background: ansi(i) }} title={`${i}`} />}</For>
+        <For each={Array.from({ length: 16 }, (_, i) => i)}>{(i) => <li style={{ background: ansi(i) }} title={`colour ${i}`} aria-label={`colour ${i}`} />}</For>
       </ol>
     </figure>
   );
 }
 
 /** Buttons, notices, tags and links. */
-export function InterfaceDemo() {
+export function InterfaceDemo(props: { season: string; mode: string }) {
   return (
     <figure class="win ui" aria-label="interface parts in this flavour">
       <div class="ui-row">
         <button class="ui-button primary">install</button>
         <button class="ui-button">preview</button>
-        <span class="ui-tag">aki</span>
-        <span class="ui-tag">yoru</span>
+        <span class="ui-tag">{props.season}</span>
+        <span class="ui-tag">{props.mode}</span>
         <a class="ui-link">style guide</a>
       </div>
       <For each={[["success", "64 files written"], ["info", "8 flavours, 26 colours each"], ["warning", "fuji glows by day"], ["error", "no ink fits that hue"]] as const}>
@@ -283,7 +283,7 @@ export function InterfaceDemo() {
       </For>
       <label class="ui-input">
         <span>search</span>
-        <input placeholder="an ink, a colour…" />
+        <input placeholder="an ink, a colour…" aria-label="search (a sample input)" />
       </label>
     </figure>
   );

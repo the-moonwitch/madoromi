@@ -69,13 +69,13 @@ export function Colours(props: {
         return (
           <tr>
             <td>
-              <span class="m-swatch" style={{ background: c().hex }} />
+              <span class="m-swatch" aria-hidden="true" style={{ background: c().hex }} />
             </td>
             <td class="m-name">
               <b>{s.name}</b> <span class="kanji">{s.kanji}</span> <em>{s.english}</em>
             </td>
             <td>
-              <button class="m-value" onClick={() => copy(s.key, format(props.flavour, s.key, as()))} title="copy">
+              <button class="m-value" onClick={() => copy(s.key, format(props.flavour, s.key, as()))} title="copy" aria-label={`copy ${s.name}, ${format(props.flavour, s.key, as())}`}>
                 {copied() === s.key ? "copied" : format(props.flavour, s.key, as())}
               </button>
             </td>
@@ -119,7 +119,7 @@ export function Colours(props: {
       <div class="m-formats" role="group" aria-label="format">
         <For each={FORMATS}>
           {(fm) => (
-            <button class="link" classList={{ on: as() === fm }} onClick={() => setAs(fm)}>
+            <button class="link" classList={{ on: as() === fm }} aria-pressed={as() === fm} onClick={() => setAs(fm)}>
               {fm}
             </button>
           )}
@@ -160,6 +160,7 @@ export function Colours(props: {
                     {(f) => (
                       <td classList={{ on: f.id === props.flavour.id }} style={{ background: f.colours.kami.hex }}>
                         <button
+                          aria-label={`copy ${f.id} ${sl.name}, ${format(f, sl.key, as())}`}
                           style={{ background: f.colours[sl.key].hex }}
                           title={`${f.id} ${sl.name}: ${format(f, sl.key, as())} (${f.colours[sl.key].ink})`}
                           onClick={() => copy(`${f.id}:${sl.key}`, format(f, sl.key, as()))}
@@ -223,7 +224,7 @@ export function Story(props: { ramp: Ramp | undefined; L: number; stroke: string
   return (
     <Show when={strip()}>
       {(st) => (
-        <span class="m-story" tabindex="0">
+        <span class="m-story" tabindex="0" aria-label={`read at ${props.L.toFixed(2)} of ${st().L0.toFixed(2)} to ${st().L1.toFixed(2)}`}>
           <span class="m-strip" style={{ background: st().gradient }}>
             <i style={{ left: `${st().at * 100}%` }} />
           </span>

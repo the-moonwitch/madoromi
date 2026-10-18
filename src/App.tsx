@@ -6,13 +6,13 @@ import { Ramp1D } from "./components/Ramp1D";
 import { WhenNear } from "./components/WhenNear";
 import { PAGES } from "./components/palettes/pages";
 import { buildFamily } from "./core/palette";
-import { legibleOn, paperLab, Picker, useTheme } from "./theme";
+import { legibleOn, onDarkPaper, paperLab, Picker, useTheme } from "./theme";
 import { analyze, combineScans, defaultAnalysisOptions, type Analysis, type Cloud } from "./core/analyze";
 import { oklabToHex } from "./core/color";
 import { viewOf, type InkView } from "./core/inkview";
 import { loopOrder } from "./core/order";
 import { inkHistogram, type InkHistogram } from "./core/shared";
-import { sampleSignature, STROKE_SHEET, strokeFile, type Ramp, type Summary } from "./core/summary";
+import { sampleSignature, strokeFile, strokeSheet, type Ramp, type Summary } from "./core/summary";
 import { inks } from "./inks";
 import { loadInks, loadPoints, loadSummary, precomputed, prefetchInk, type InkScans } from "./load";
 import { nextTask } from "./tasks";
@@ -142,7 +142,7 @@ export function App() {
   const sprite = (id: string): Sprite | undefined => {
     const s = summary();
     if (!s || !precomputedFor(id)) return;
-    return { url: precomputed(STROKE_SHEET), index: s.strokes.get(id)!, rows: s.sheetRows };
+    return { url: precomputed(strokeSheet(onDarkPaper())), index: s.strokes.get(id)!, rows: s.sheetRows };
   };
 
   // --- The open ink: its view and points, from the summary and its point file, or analysed here.
@@ -199,7 +199,7 @@ export function App() {
 
       <Show when={palettes()}>
         <Suspense>
-          <Show when={flavour()}>{(f) => <Site page={selected()} flavour={f()} family={family()} sprite={sprite} ramp={ramp} strokeUrl={(id) => (precomputedFor(id) ? precomputed(strokeFile(id)) : undefined)} go={go} />}</Show>
+          <Show when={flavour()}>{(f) => <Site page={selected()} flavour={f()} family={family()} sprite={sprite} ramp={ramp} strokeUrl={(id) => (precomputedFor(id) ? precomputed(strokeFile(id, onDarkPaper())) : undefined)} go={go} />}</Show>
         </Suspense>
       </Show>
 
@@ -233,7 +233,7 @@ export function App() {
                     <em>{ink.english}</em>
                   </header>
                   <Show when={ramp(ink.id)}>
-                    {(r) => <Ramp1D ramp={r()} name={ink.id} image={precomputedFor(ink.id) && precomputed(strokeFile(ink.id))} />}
+                    {(r) => <Ramp1D ramp={r()} name={ink.id} image={precomputedFor(ink.id) && precomputed(strokeFile(ink.id, onDarkPaper()))} />}
                   </Show>
                 </div>
                 <Show when={inkView()}>

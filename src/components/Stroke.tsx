@@ -1,5 +1,6 @@
 import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 import { paintStroke } from "../core/brush";
+import { paperLab } from "../theme";
 import type { Ramp } from "../core/summary";
 import { nextTask } from "../tasks";
 
@@ -40,14 +41,15 @@ export function Stroke(props: { ramp: Ramp | undefined; seed: string; height: nu
     const w = width();
     const { height, thickness, seed } = props;
     if (!r || !w) return;
-    const key = [r, w, height, thickness, seed];
+    const paper = paperLab()[0];
+    const key = [r, w, height, thickness, seed, paper];
     if (key.every((k, i) => k === painted[i])) return;
     painted = key;
     const mine = ++token;
     enqueue(() => {
       if (mine !== token) return;
       const dpr = window.devicePixelRatio || 1;
-      const px = paintStroke(r, { width: w, height, dpr, thickness, seed });
+      const px = paintStroke(r, { width: w, height, dpr, thickness, seed, paper: paper < 0.5 ? paper : 1 });
       canvas.width = px.width;
       canvas.height = px.height;
       canvas.getContext("2d")!.putImageData(new ImageData(px.data, px.width, px.height), 0, 0);

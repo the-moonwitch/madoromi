@@ -23,11 +23,14 @@ export interface Port {
    * stand for a flavour, its theme name and its season's day and night flavours.
    */
   install: string[];
+  /** A shell command that installs it from a checkout of the repository, where one does. */
+  command?: string;
 }
 
 export const PORTS: Port[] = [
   {
     id: "ghostty",
+    command: "mkdir -p ~/.config/ghostty/themes && cp palettes/ghostty/madoromi-* ~/.config/ghostty/themes/",
     name: "Ghostty",
     group: "terminals",
     dir: "ghostty",
@@ -36,6 +39,7 @@ export const PORTS: Port[] = [
   },
   {
     id: "kitty",
+    command: "mkdir -p ~/.config/kitty/themes && cp palettes/kitty/madoromi-*.conf ~/.config/kitty/themes/",
     name: "Kitty",
     group: "terminals",
     dir: "kitty",
@@ -44,6 +48,7 @@ export const PORTS: Port[] = [
   },
   {
     id: "wezterm",
+    command: "mkdir -p ~/.config/wezterm/colors && cp palettes/wezterm/madoromi-*.toml ~/.config/wezterm/colors/",
     name: "WezTerm",
     group: "terminals",
     dir: "wezterm",
@@ -52,6 +57,7 @@ export const PORTS: Port[] = [
   },
   {
     id: "alacritty",
+    command: "mkdir -p ~/.config/alacritty/themes && cp palettes/alacritty/madoromi-*.toml ~/.config/alacritty/themes/",
     name: "Alacritty",
     group: "terminals",
     dir: "alacritty",
@@ -60,6 +66,7 @@ export const PORTS: Port[] = [
   },
   {
     id: "iterm2",
+    command: "open palettes/iterm2/madoromi-{id}.itermcolors",
     name: "iTerm2",
     group: "terminals",
     dir: "iterm2",
@@ -68,6 +75,7 @@ export const PORTS: Port[] = [
   },
   {
     id: "vscode",
+    command: "cp -r palettes/vscode ~/.vscode/extensions/madoromi",
     name: "VS Code",
     group: "editors",
     dir: "vscode",
@@ -75,6 +83,7 @@ export const PORTS: Port[] = [
   },
   {
     id: "zed",
+    command: "mkdir -p ~/.config/zed/themes && cp palettes/zed/madoromi.json ~/.config/zed/themes/",
     name: "Zed",
     group: "editors",
     dir: "zed",

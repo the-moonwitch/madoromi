@@ -5,6 +5,7 @@ import { Line2 } from "three/examples/jsm/lines/Line2.js";
 import { LineGeometry } from "three/examples/jsm/lines/LineGeometry.js";
 import { LineMaterial } from "three/examples/jsm/lines/LineMaterial.js";
 import { inkOpacity } from "../core/brush";
+import { paperLab } from "../theme";
 import { oklabToLinear, oklabToSrgbGamut, type Vec3 } from "../core/color";
 import type { InkView } from "../core/inkview";
 import { softDot, useFit, useSpin } from "./spin";
@@ -17,22 +18,23 @@ export interface View3DProps {
 }
 
 /**
- * Linear-sRGB vertex colours for a cloud's points, with ink opacity (opaque at the ink's darkest,
- * clear at white) as alpha. Computed once per points array.
+ * Linear-sRGB vertex colours for a cloud's points, with ink opacity as alpha (opaque where the ink
+ * stands apart from the paper, clear at the paper's lightness). Computed once per points array
+ * and paper.
  */
-const colorCache = new WeakMap<Float32Array, Float32Array>();
-function inkColors(points: Float32Array, darkest: number): Float32Array {
-  let out = colorCache.get(points);
-  if (out) return out;
+const colorCache = new WeakMap<Float32Array, { paper: number; out: Float32Array }>();
+function inkColors(points: Float32Array, darkest: number, paper: number): Float32Array {
+  const hit = colorCache.get(points);
+  if (hit?.paper === paper) return hit.out;
   const n = points.length / 3;
-  out = new Float32Array(n * 4);
+  const out = new Float32Array(n * 4);
   const lin: Vec3 = [0, 0, 0];
   for (let i = 0; i < n; i++) {
     oklabToLinear(points[i * 3], points[i * 3 + 1], points[i * 3 + 2], lin);
     for (let k = 0; k < 3; k++) out[i * 4 + k] = Math.min(1, Math.max(0, lin[k]));
-    out[i * 4 + 3] = inkOpacity(points[i * 3], darkest);
+    out[i * 4 + 3] = inkOpacity(points[i * 3], darkest, paper);
   }
-  colorCache.set(points, out);
+  colorCache.set(points, { paper, out });
   return out;
 }
 
@@ -152,7 +154,8 @@ export function View3D(props: View3DProps) {
     frameView.fit(positions);
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    g.setAttribute("color", new THREE.BufferAttribute(inkColors(pts, v.ramp[0][0]), 4));
+    const paper = paperLab()[0];
+    g.setAttribute("color", new THREE.BufferAttribute(inkColors(pts, v.ramp[0][0], paper < 0.5 ? paper : 1), 4));
     // Broad, faint Gaussian splats, overlapping many deep, add up to an even haze of colour.
     pointLayer.add(
       new THREE.Points(
