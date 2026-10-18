@@ -54,6 +54,7 @@ export function View3D(props: View3DProps) {
   let controls: OrbitControls;
   const spin = useSpin();
   const lineMaterials: LineMaterial[] = [];
+  let peakRing: THREE.Mesh | undefined;
   const frameView = useFit(camera, () => controls);
 
   onMount(() => {
@@ -84,6 +85,8 @@ export function View3D(props: View3DProps) {
     let raf = 0;
     const loop = () => {
       controls.update();
+      // The peak's ring always faces the viewer, however the view has turned.
+      peakRing?.quaternion.copy(camera.quaternion);
       renderer.render(scene, camera);
       raf = requestAnimationFrame(loop);
     };
@@ -207,7 +210,8 @@ export function View3D(props: View3DProps) {
       new THREE.MeshBasicMaterial({ color: 0xffffff }),
     );
     ring.position.set(...fr.at(a.peak.lab));
-    ring.lookAt(camera.position);
+    ring.quaternion.copy(camera.quaternion);
+    peakRing = ring;
     curveLayer.add(ring);
   });
 

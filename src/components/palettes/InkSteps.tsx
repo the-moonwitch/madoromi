@@ -67,9 +67,12 @@ export function InkSteps(props: { ramp: (id: string) => Ramp | undefined }) {
       controls.push([0, 1, 2].map((c) => top.reduce((t, i) => t + pts[i][c], 0) / top.length) as Vec3);
     }
     const mid = (edges[0] + edges[BANDS]) / 2;
-    const reach = Math.max(0.05, ...pts.map((p) => Math.hypot(p[1], p[2]) * CHROMA_SCALE), (edges[BANDS] - edges[0]) / 2);
-    const radius = Math.max(...pts.map((p) => Math.hypot(p[1], p[2]))) * 1.05;
-    return { edges, vivid, controls, mid, radius, scale: (H / 2 - 30) / reach };
+    const radius = Math.max(0.02, ...pts.map((p) => Math.hypot(p[1], p[2]))) * 1.05;
+    // Framed on the whole turn: as wide as the cloud's furthest point from the axis, as tall as its
+    // lightness plus the tilted rings top and bottom.
+    const wide = (W / 2 - 24) / (radius * CHROMA_SCALE);
+    const tall = (H - 44) / ((edges[BANDS] - edges[0]) * Math.cos(TILT) + 2 * radius * CHROMA_SCALE * Math.sin(TILT));
+    return { edges, vivid, controls, mid, radius, scale: Math.min(wide, tall) };
   });
 
   // 3D → screen: turned about the lightness axis by `turn`, seen from a little above. The third
