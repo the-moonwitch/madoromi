@@ -5,7 +5,11 @@ import { Palette, type Sprite } from "./components/Palette";
 import { Ramp1D } from "./components/Ramp1D";
 import { WhenNear } from "./components/WhenNear";
 import { PAGES } from "./components/palettes/pages";
-import { buildFamily } from "./core/palette";
+import { decodeFamily, type FamilyJSON } from "./core/palette";
+import flavours from "./flavours.json";
+
+// JSON imports type tuples as arrays.
+const FAMILY = decodeFamily(flavours as unknown as FamilyJSON);
 import { legibleOn, onDarkPaper, paperLab, Picker, useTheme } from "./theme";
 import { analyze, combineScans, defaultAnalysisOptions, type Analysis, type Cloud } from "./core/analyze";
 import { oklabToHex } from "./core/color";
@@ -64,6 +68,12 @@ export function App() {
     if (id && precomputedFor(id)) prefetchInk(id);
   };
   const current = createMemo(() => inks.find((i) => i.id === selected()));
+  // The tab says where you are.
+  createEffect(() => {
+    const ink = current();
+    const page = PAGES.find((p) => p.id === selected());
+    document.title = ink ? `${ink.name} ${ink.kanji ?? ""} · madoromi` : page ? `${page.name} · madoromi` : "madoromi 微睡";
+  });
   /** The palettes page, at #palettes. */
   const palettes = () => selected() === PALETTES || selected().startsWith(`${PALETTES}/`);
 
@@ -119,8 +129,8 @@ export function App() {
 
   const ramp = (id: string): Ramp | undefined => precomputedFor(id) ?? computed().get(id);
   const ramps = createMemo(() => new Map(inks.flatMap((i) => (ramp(i.id) ? [[i.id, ramp(i.id)!] as const] : []))));
-  // Every page is shown in a madoromi flavour, built from the inks once they're all here.
-  const family = createMemo(() => (ramps().size === inks.length ? buildFamily(ramps()) : []));
+  // Every page is shown in a madoromi flavour, as `bun run palettes` built them from the inks.
+  const family = () => FAMILY;
   const flavour = useTheme(family);
   /** An ink's colour for its name: itself, read thinner where the paper is too dark for it. */
   const inkColour = (id: string) => {
@@ -268,6 +278,14 @@ export function App() {
           <HueHistogram hists={hists()} hovered={hovered()} />
         </div>
       </Show>
+
+      <footer class="site-foot">
+        <span>
+          <span class="kanji">微睡</span> madoromi
+        </span>
+        <span>colours read from scans of Pilot's iroshizuku inks; iroshizuku is Pilot's</span>
+        <span>code and palettes under MPL-2.0; every port is in the repository's palettes/</span>
+      </footer>
     </div>
   );
 }

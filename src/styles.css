@@ -176,6 +176,11 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .masthead nav { margin-left: auto; display: flex; flex-wrap: wrap; gap: 6px 19px; font-family: var(--sans); font-size: 14px; }
 .masthead nav .link { font-variant: normal; letter-spacing: 0.01em; }
 
+/* ——— footer ——— */
+.site-foot { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 62px; padding-top: 17px; border-top: 1px solid var(--hair); font-family: var(--sans); font-size: 12px; color: var(--dim); }
+.site-foot .kanji { font-family: var(--sans); }
+.page.open .site-foot { grid-column: 2; }
+
 /* ——— the flavour picker, in the masthead ——— */
 .picker { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-family: var(--sans); font-size: 12px; }
 .picker button { display: flex; align-items: center; gap: 5px; padding: 4px 9px 4px 7px; border-radius: 99px; box-shadow: 0 0 0 1px var(--m-nijimi1); color: var(--dim); }

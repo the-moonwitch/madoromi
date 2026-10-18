@@ -7,7 +7,8 @@ import { dirname, join } from "node:path";
 import { PRECOMPUTED_DIR } from "../src/core/cloudfile";
 import { contrast, oklabToOklch } from "../src/core/color";
 import { guideMarkdown } from "../src/core/guide";
-import { ACCENTS, NEUTRALS, buildFamily, checkFlavour, harmonyOf } from "../src/core/palette";
+import { ACCENTS, NEUTRALS, buildFamily, checkFlavour, encodeFamily, harmonyOf } from "../src/core/palette";
+import { contrast as contrastOf } from "../src/core/color";
 import { SUMMARY_FILE, decodeSummary } from "../src/core/summary";
 import { GROUPS, PORTS, portFiles, step, type Files } from "../src/ports";
 
@@ -70,6 +71,66 @@ for (const [path, text] of Object.entries(files)) {
   writeFileSync(to, text.endsWith("\n") ? text : text + "\n");
 }
 console.log(`\nwrote ${Object.keys(files).length} files under ${OUT}/`);
+
+// --- The app's copy: the family itself (so the page needn't build it), and the colours the page
+// is painted in before anything else loads, inlined into index.html.
+writeFileSync("src/flavours.json", JSON.stringify(encodeFamily(family)));
+const paint = Object.fromEntries(
+  family.map((f) => {
+    const c = (k: string) => f.colours[k].hex;
+    const link = ["sora", "ai", "sumi"].find((k) => contrastOf(f.colours[k].lab, f.colours.hyoshi.lab) >= 4.5) ?? "sumi";
+    return [f.id, [c("kami"), c("sumi"), c("usuzumi0"), c("kasure0"), c("nijimi0"), c(link), c("fuji")]];
+  }),
+);
+const START = "<!-- madoromi:theme -->";
+const END = "<!-- /madoromi:theme -->";
+const html = readFileSync("index.html", "utf8");
+const script = `${START}
+    <script>
+      // The chosen flavour's paper and ink, before the page is drawn (see src/theme.tsx).
+      (function () {
+        var P = ${JSON.stringify(paint)};
+        var id;
+        try { id = localStorage.getItem("madoromi-flavour"); } catch (e) {}
+        if (!P[id]) {
+          var m = new Date().getMonth();
+          var s = m >= 2 && m <= 4 ? "haru" : m >= 5 && m <= 7 ? "natsu" : m >= 8 && m <= 10 ? "aki" : "fuyu";
+          id = s + (matchMedia("(prefers-color-scheme: dark)").matches ? "-yoru" : "-hiru");
+        }
+        var c = P[id], r = document.documentElement.style, n = ["--paper", "--ink", "--dim", "--faint", "--hair", "--link", "--m-fuji"];
+        for (var i = 0; i < n.length; i++) r.setProperty(n[i], c[i]);
+        r.setProperty("color-scheme", id.slice(-4) === "yoru" ? "dark" : "light");
+        var l = document.createElement("link");
+        l.rel = "preload"; l.as = "image"; l.href = "/precomputed/strokes" + (id.slice(-4) === "yoru" ? "-yoru" : "") + ".webp";
+        document.head.appendChild(l);
+      })();
+    </script>
+    ${END}`;
+const i0 = html.indexOf(START);
+const i1 = html.indexOf(END);
+if (i0 < 0 || i1 < 0) throw new Error("index.html has no madoromi:theme block");
+writeFileSync("index.html", html.slice(0, i0) + script + html.slice(i1 + END.length));
+console.log("wrote src/flavours.json and index.html's theme");
+
+// --- The share image: the eight flavours side by side, each its paper with its accents and its
+// ladder of neutrals. No text, so it reads in any language.
+{
+  const W = 1200;
+  const H = 630;
+  const col = W / family.length;
+  const rects = family.flatMap((f, i) => {
+    const x = i * col;
+    const accents = ACCENTS.map((a, k) => `<rect x="${x + 28}" y="${84 + k * 26}" width="${col - 56}" height="18" rx="9" fill="${f.colours[a.key].hex}"/>`);
+    const ladder = ["chitsu", "hyoshi", "nijimi0", "nijimi1", "nijimi2", "kasure0", "kasure1", "kasure2", "usuzumi0", "usuzumi1", "sumi"].map(
+      (k, j) => `<rect x="${x + 28 + j * ((col - 56) / 11)}" y="${H - 96}" width="${(col - 56) / 11 + 0.5}" height="34" fill="${f.colours[k].hex}"/>`,
+    );
+    return [`<rect x="${x}" y="0" width="${col + 1}" height="${H}" fill="${f.colours.kami.hex}"/>`, ...accents, ...ladder];
+  });
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">${rects.join("")}</svg>`;
+  const { default: sharp } = await import("sharp");
+  await sharp(Buffer.from(svg)).png().toFile("public/og.png");
+  console.log("wrote public/og.png");
+}
 if (failed) {
   console.error(`${failed} checks failed`);
   process.exit(1);

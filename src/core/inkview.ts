@@ -2,7 +2,7 @@
 // its most chromatic point. Preprocessing stores this for every ink, so opening one only fetches
 // its points.
 
-import { defaultAnalysisOptions, renderField, type Analysis } from "./analyze";
+import { defaultAnalysisOptions, anchoredField, renderField, type Analysis } from "./analyze";
 import type { Vec3 } from "./color";
 import type { Ramp } from "./summary";
 
@@ -26,7 +26,7 @@ export function viewOf(a: Analysis): InkView {
 }
 
 /** The gradient image for the 2D chart, at the fixed margin. */
-export const fieldOf = (v: InkView) => renderField(v.sampleField, defaultAnalysisOptions.margin);
+export const fieldOf = (v: InkView) => renderField(anchoredField(v.sampleField, v.curve), defaultAnalysisOptions.margin);
 
 // --- Point files: an ink's surviving points for the 3D view, capped in number, as a byte per
 // channel (L over [0, 1], a and b over [−0.5, 0.5]): steps of ~0.004, far finer than the soft

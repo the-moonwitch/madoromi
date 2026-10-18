@@ -505,7 +505,7 @@ function buildBase(cloud: Cloud, minCount: number): Base {
  * Gradient over the chart: the linear least-squares fit of the points' true colours across it.
  * (Each point's colour reaches the whole chart, so local detail averages out to this trend.)
  */
-function buildField(b: Base, opts: AnalysisOptions): Pick<Analysis, "field" | "fieldCoef" | "sampleField"> {
+function buildField(b: Base): Pick<Analysis, "fieldCoef" | "sampleField"> {
   const { n, chart, points } = b;
   const ATA = [
     [0, 0, 0],
@@ -530,7 +530,44 @@ function buildField(b: Base, opts: AnalysisOptions): Pick<Analysis, "field" | "f
   const coef = ATy.map((rhs) => solve(ATA, rhs));
   const trend = trendOf(coef);
 
-  return { field: renderField(trend, opts.margin), fieldCoef: coef, sampleField: trend };
+  return { fieldCoef: coef, sampleField: trend };
+}
+
+/** How far from the curve (in chart units) the gradient is still held to it. */
+const ANCHOR_REACH = 0.1;
+
+/**
+ * The gradient held to the ink's curve: the linear trend, plus how far the curve's own colours
+ * are from it, blended by nearness to each point of the curve and fading within ANCHOR_REACH. On
+ * the curve it is the ink exactly (so in gamut, as the curve is); further off, the trend. The brush strokes
+ * are coloured by the same rule.
+ */
+export function anchoredField(trend: (u: number, v: number) => Vec3, curve: { uv: ArrayLike<number>; lab: ArrayLike<number> }): (u: number, v: number) => Vec3 {
+  const n = curve.lab.length / 3;
+  const step = Math.max(1, Math.floor(n / 128));
+  const pts: { u: number; v: number; d: Vec3 }[] = [];
+  for (let i = 0; i < n; i += step) {
+    const u = curve.uv[i * 2];
+    const v = curve.uv[i * 2 + 1];
+    const t = trend(u, v);
+    pts.push({ u, v, d: [curve.lab[i * 3] - t[0], curve.lab[i * 3 + 1] - t[1], curve.lab[i * 3 + 2] - t[2]] });
+  }
+  return (u, v) => {
+    const t = trend(u, v);
+    let w = 0;
+    let near = Infinity;
+    const d: Vec3 = [0, 0, 0];
+    for (const p of pts) {
+      const r2 = (p.u - u) ** 2 + (p.v - v) ** 2;
+      near = Math.min(near, r2);
+      const k = 1 / (r2 + 1e-4) ** 1.5;
+      w += k;
+      for (let c = 0; c < 3; c++) d[c] += p.d[c] * k;
+    }
+    // The curve's pull fades with distance from it: within ANCHOR_REACH it holds.
+    const hold = Math.exp(-near / (ANCHOR_REACH * ANCHOR_REACH)) / w;
+    return [Math.min(1, Math.max(0, t[0] + d[0] * hold)), t[1] + d[1] * hold, t[2] + d[2] * hold];
+  };
 }
 
 /** The gradient as an image over the chart, the unit square plus a margin all round. */
@@ -723,7 +760,7 @@ export function analyze(cloud: Cloud, opts: AnalysisOptions = defaultAnalysisOpt
   }
   const base = c.base.value;
   const fieldKey = String(opts.margin);
-  if (c.field?.key !== fieldKey) c.field = { key: fieldKey, value: buildField(base, opts) };
+  if (c.field?.key !== fieldKey) c.field = { key: fieldKey, value: buildField(base) };
   c.curve ??= buildCurve(base);
   c.main ??= fullStrength(cloud);
   return {
@@ -742,6 +779,7 @@ export function analyze(cloud: Cloud, opts: AnalysisOptions = defaultAnalysisOpt
     axisNote: base.axisNote,
     chartToPlane: base.chartToPlane,
     ...c.field.value,
+    field: renderField(anchoredField(c.field.value.sampleField, c.curve.curve), opts.margin),
     ...c.curve,
     main: c.main,
   };

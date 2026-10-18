@@ -421,3 +421,16 @@ export function harmonyOf(f: Flavour) {
   const loudest = rows.reduce((p, q) => (q.glow > p.glow ? q : p));
   return { apparent: { mean: mean(apparent), sd: sd(apparent) }, glow: mean(rows.map((r) => r.glow)), chroma: { mean: mean(rows.map((r) => r.C)), sd: sd(rows.map((r) => r.C)) }, gamut: mean(rows.map((r) => r.gamut)), loudest, rows };
 }
+
+/** A family as `bun run palettes` stores it (src/flavours.json), and back. */
+export type FamilyJSON = { id: string; season: Season; mode: Mode; colours: Record<string, Swatch>; ansi: Swatch[] }[];
+const roundSwatch = (w: Swatch): Swatch => ({ lab: w.lab.map((x) => Math.round(x * 1e5) / 1e5) as Vec3, hex: w.hex, ink: w.ink, L: Math.round(w.L * 1e4) / 1e4 });
+export const encodeFamily = (family: Flavour[]): FamilyJSON =>
+  family.map((f) => ({
+    id: f.id,
+    season: f.season,
+    mode: f.mode,
+    colours: Object.fromEntries(Object.entries(f.colours).map(([k, w]) => [k, roundSwatch(w)])),
+    ansi: f.ansi.map(roundSwatch),
+  }));
+export const decodeFamily = (json: FamilyJSON): Flavour[] => json as Flavour[];

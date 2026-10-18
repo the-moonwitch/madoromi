@@ -1,5 +1,6 @@
 import { createEffect, createMemo, createSignal, onCleanup, onMount, Show, untrack } from "solid-js";
 import { oklabToCss, oklabToHex, oklabToSrgbGamut, type Vec3 } from "../core/color";
+import { anchoredField } from "../core/analyze";
 import { fieldOf, type InkView } from "../core/inkview";
 import { noise, noise2 } from "../core/noise";
 
@@ -37,6 +38,8 @@ export function Chart2D(props: Chart2DProps) {
     return { s, toX, toY, fromPx };
   };
   const field = createMemo(() => fieldOf(props.view));
+  /** The colour at a point of the chart: the gradient as drawn, held to the curve. */
+  const colourAt = createMemo(() => anchoredField(props.view.sampleField, props.view.curve));
   const curve = createMemo(() => props.view.curve);
 
   const setup = (c: HTMLCanvasElement, s: number) => {
@@ -120,7 +123,7 @@ export function Chart2D(props: Chart2DProps) {
 
   const hoverLab = () => {
     const h = hover();
-    return h ? props.view.sampleField(h.u, h.v) : null;
+    return h ? colourAt()(h.u, h.v) : null;
   };
 
   // The readout sits beside the pointer, on whichever side has room.
