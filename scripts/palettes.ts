@@ -93,11 +93,7 @@ const script = `${START}
         var P = ${JSON.stringify(paint)};
         var id;
         try { id = localStorage.getItem("madoromi-flavour"); } catch (e) {}
-        if (!P[id]) {
-          var m = new Date().getMonth();
-          var s = m >= 2 && m <= 4 ? "haru" : m >= 5 && m <= 7 ? "natsu" : m >= 8 && m <= 10 ? "aki" : "fuyu";
-          id = s + (matchMedia("(prefers-color-scheme: dark)").matches ? "-yoru" : "-hiru");
-        }
+        if (!P[id]) id = "fuyu-hiru";
         var c = P[id], r = document.documentElement.style, n = ["--paper", "--ink", "--dim", "--faint", "--hair", "--link", "--m-fuji"];
         for (var i = 0; i < n.length; i++) r.setProperty(n[i], c[i]);
         r.setProperty("color-scheme", id.slice(-4) === "yoru" ? "dark" : "light");

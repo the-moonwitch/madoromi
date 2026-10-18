@@ -1,24 +1,21 @@
 // The flavour every page is shown in: the paper, the ink and the rest of a madoromi palette, as
 // custom properties on the page (--paper, --ink, … and --m-<slot>, --m-ansi-<n>). Remembered per
-// browser; at first the season it is and the light or dark the system prefers.
+// browser; fuyu-hiru until one is chosen.
 import { createEffect, createMemo, createSignal, For, type Accessor } from "solid-js";
 import { contrast, toSrgbGamut, type Vec3 } from "./core/color";
 import { ACCENTS, MODES, NEUTRALS, SEASONS, type Flavour, type Mode, type Season } from "./core/palette";
 
 const KEY = "madoromi-flavour";
 
-const seasonNow = (): Season => {
-  const m = new Date().getMonth();
-  return m >= 2 && m <= 4 ? "haru" : m >= 5 && m <= 7 ? "natsu" : m >= 8 && m <= 10 ? "aki" : "fuyu";
-};
-const modeNow = (): Mode => (matchMedia?.("(prefers-color-scheme: dark)").matches ? "yoru" : "hiru");
+/** The flavour a first visit sees. */
+export const DEFAULT_FLAVOUR = { season: "fuyu", mode: "hiru" } as const;
 
 function initial(): { season: Season; mode: Mode } {
   try {
     const [season, mode] = (localStorage.getItem(KEY) ?? "").split("-");
     if (SEASONS.some((s) => s.id === season) && MODES.some((m) => m.id === mode)) return { season: season as Season, mode: mode as Mode };
   } catch {}
-  return { season: seasonNow(), mode: modeNow() };
+  return { ...DEFAULT_FLAVOUR };
 }
 
 const [choice, setChoice] = createSignal(initial());
