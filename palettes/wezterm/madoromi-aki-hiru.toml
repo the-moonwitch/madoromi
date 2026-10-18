@@ -9,8 +9,8 @@ selection_fg = "#5d4c3c"
 selection_bg = "#beae9f"
 scrollbar_thumb = "#cebeaf"
 split = "#cebeaf"
-ansi = ["#715f4f", "#a43b3b", "#618c32", "#b2953c", "#20609e", "#9e458a", "#028a7d", "#beae9f"]
-brights = ["#7d6b5a", "#a43b3b", "#4f7935", "#a18138", "#1c4c8a", "#8b3278", "#0b766f", "#cebeaf"]
+ansi = ["#715f4f", "#a43b3b", "#7e8418", "#b2953c", "#384dad", "#a1488d", "#008b57", "#beae9f"]
+brights = ["#7d6b5a", "#a43b3b", "#6d721d", "#a18138", "#323b94", "#8f357b", "#00764a", "#cebeaf"]
 
 [metadata]
 name = "madoromi aki-hiru"

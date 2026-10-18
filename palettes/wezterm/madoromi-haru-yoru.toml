@@ -2,15 +2,15 @@
 [colors]
 foreground = "#e1d1e7"
 background = "#241c26"
-cursor_bg = "#ffc3e3"
+cursor_bg = "#ffc5da"
 cursor_fg = "#241c26"
-cursor_border = "#ffc3e3"
+cursor_border = "#ffc5da"
 selection_fg = "#e1d1e7"
 selection_bg = "#615665"
 scrollbar_thumb = "#4e4352"
 split = "#4e4352"
-ansi = ["#4e4352", "#ff8799", "#c1dd4a", "#ffc849", "#91acf2", "#f894d8", "#81d9ba", "#cdbed3"]
-brights = ["#615665", "#ffa7bb", "#dcee73", "#ffe387", "#a8c0fa", "#ffb1e6", "#a3e9d1", "#b7a8bd"]
+ansi = ["#4e4352", "#ff9181", "#c1dd4a", "#ffc849", "#6eadff", "#fe8dc0", "#7bd6b6", "#cdbed3"]
+brights = ["#615665", "#ffb0a9", "#dcee73", "#ffe387", "#8ac3ff", "#f9b3d1", "#9de6cd", "#b7a8bd"]
 
 [metadata]
 name = "madoromi haru-yoru"

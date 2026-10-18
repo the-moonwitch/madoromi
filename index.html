@@ -16,7 +16,7 @@
     <script>
       // The chosen flavour's paper and ink, before the page is drawn (see src/theme.tsx).
       (function () {
-        var P = {"haru-hiru":["#f6eff8","#584a5c","#77697c","#a99cad","#d9ccdd","#1955bf","#6c2ac1"],"natsu-hiru":["#e9f4f8","#3b545e","#57717a","#8fa6ae","#bed6df","#3b545e","#6526b9"],"aki-hiru":["#f8f0e9","#5d4c3c","#7d6b5a","#ae9e90","#dfcebf","#20609e","#551aa2"],"fuyu-hiru":["#f0f1f8","#4a4e63","#696d83","#9ca0b3","#ccd0e4","#2266a4","#6223b4"],"haru-yoru":["#241c26","#e1d1e7","#b7a8bd","#756a7a","#392e3c","#7bddff","#dfb8ff"],"natsu-yoru":["#132227","#c0dde8","#97b3be","#5d737b","#23363d","#5cd7f5","#d3a1ff"],"aki-yoru":["#271d14","#e8d3c1","#beaa98","#7b6c5e","#3d3024","#66c7dd","#d09dff"],"fuyu-yoru":["#1c1e2a","#d2d6eb","#a8adc4","#6a6e7f","#2f3241","#6ccff8","#bbb8ff"]};
+        var P = {"haru-hiru":["#f6eff8","#584a5c","#77697c","#a99cad","#d9ccdd","#1955bf","#6928bd"],"natsu-hiru":["#e9f4f8","#3b545e","#57717a","#8fa6ae","#bed6df","#3b545e","#6526b9"],"aki-hiru":["#f8f0e9","#5d4c3c","#7d6b5a","#ae9e90","#dfcebf","#384dad","#581ca7"],"fuyu-hiru":["#f0f1f8","#4a4e63","#696d83","#9ca0b3","#ccd0e4","#4a4e63","#5e21b0"],"haru-yoru":["#241c26","#e1d1e7","#b7a8bd","#756a7a","#392e3c","#88d9eb","#ddb3ff"],"natsu-yoru":["#132227","#c0dde8","#97b3be","#5d737b","#23363d","#5cd7f5","#aea8ff"],"aki-yoru":["#271d14","#e8d3c1","#beaa98","#7b6c5e","#3d3024","#5ac6f1","#d3a1ff"],"fuyu-yoru":["#1c1e2a","#d2d6eb","#a8adc4","#6a6e7f","#2f3241","#7db9e2","#bbb8ff"]};
         var id;
         try { id = localStorage.getItem("madoromi-flavour"); } catch (e) {}
         if (!P[id]) {

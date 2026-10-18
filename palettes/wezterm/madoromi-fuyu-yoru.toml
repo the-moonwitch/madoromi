@@ -2,15 +2,15 @@
 [colors]
 foreground = "#d2d6eb"
 background = "#1c1e2a"
-cursor_bg = "#ffbbd0"
+cursor_bg = "#ffbee1"
 cursor_fg = "#1c1e2a"
-cursor_border = "#ffbbd0"
+cursor_border = "#ffbee1"
 selection_fg = "#d2d6eb"
 selection_bg = "#565a6b"
 scrollbar_thumb = "#434757"
 split = "#434757"
-ansi = ["#434757", "#ff8b79", "#b5d43b", "#ecba09", "#86a1ed", "#fe8dc1", "#6fd0ae", "#bec3db"]
-brights = ["#565a6b", "#ffaba3", "#cee65d", "#f3d401", "#9cb6f6", "#ffaed7", "#92e1c5", "#a8adc4"]
+ansi = ["#434757", "#ff8799", "#84ac2d", "#ecba09", "#86a1ed", "#d18bb7", "#5eccc5", "#bec3db"]
+brights = ["#565a6b", "#ffa7bb", "#9abe2c", "#f3d401", "#9cb6f6", "#dfa3c0", "#87dcd8", "#a8adc4"]
 
 [metadata]
 name = "madoromi fuyu-yoru"

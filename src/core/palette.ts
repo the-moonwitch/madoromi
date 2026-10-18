@@ -131,21 +131,22 @@ export const HARMONY: Record<Mode, { apparent: number; chroma: number; glow: num
   yoru: { apparent: 0.78, chroma: 0.12, glow: 0.06, gamut: 0.85 },
 };
 /**
- * Each season's mood, as offsets to HARMONY: spring lighter and softer, summer clear, autumn deep
- * and quiet, winter muted. The same ink read at another strength is another colour, so the seasons differ
+ * Each season's mood, as offsets to HARMONY (spring lighter and softer, summer clear, autumn deep,
+ * winter muted), and a lean: every accent's hue is drawn up to `lean` degrees towards the season's
+ * `pole` (young leaves, sky, persimmon, wisteria). The same ink read at another strength is another colour, so the seasons differ
  * even where they share inks.
  */
-export const MOODS: Record<Season, { apparent: number; chroma: number }> = {
-  haru: { apparent: 0.03, chroma: -0.015 },
-  natsu: { apparent: 0.01, chroma: 0.015 },
-  aki: { apparent: -0.035, chroma: -0.015 },
-  fuyu: { apparent: 0, chroma: -0.025 },
+export const MOODS: Record<Season, { apparent: number; chroma: number; pole: number; lean: number }> = {
+  haru: { apparent: 0.02, chroma: -0.01, pole: 130, lean: 15 },
+  natsu: { apparent: 0.01, chroma: 0.02, pole: 220, lean: 15 },
+  aki: { apparent: -0.03, chroma: 0, pole: 40, lean: 15 },
+  fuyu: { apparent: -0.01, chroma: -0.03, pole: 290, lean: 15 },
 };
 /**
  * How much each way of straying costs, per unit (hue in degrees, the rest as fractions). Chroma
  * past the flavour's costs `loud`, short of it `chroma`: a loud accent spoils a flavour more.
  */
-export const COST = { hue: 1 / 8, hueFar: 1, chroma: 50, loud: 150, shortfall: 300, apparent: 60, glow: 30, gamut: 25, reuse: 0.6, season: 4, echo: 1.5 };
+export const COST = { hue: 1 / 8, hueFar: 1, chroma: 50, loud: 150, shortfall: 300, apparent: 60, glow: 30, gamut: 25, reuse: 0.6, season: 4, echo: 3 };
 /** No accent looks lighter or darker than its target by more than this (in L**), where any ink can. */
 const APPARENT_BAND = 0.06;
 /** Hue strays up to this many degrees cost only `hue`; past it, `hueFar` too. */
@@ -277,17 +278,20 @@ export function buildFlavour(views: Map<string, Curve>, season: Season, mode: Mo
   const used = new Map<string, number>();
   const chosen: Vec3[] = [];
   for (const key of order) {
-    const a = ACCENTS.find((x) => x.key === key)!;
+    const a0 = ACCENTS.find((x) => x.key === key)!;
+    const a = { ...a0, hue: (a0.hue + mood.lean * Math.sin(((mood.pole - a0.hue) * Math.PI) / 180) + 360) % 360 };
     // dL is in oklab lightness; L** runs about 1.16 times as fast.
     const apparent = harmony.apparent + a.dL[mode] * 1.16;
     let best: (Candidate & { score: number }) | undefined;
-    // Within the band if anything is; past it only where nothing is.
+    // Within the band if anything there is colourful enough for the accent; past it otherwise.
     for (const band of [APPARENT_BAND, Infinity]) {
-    if (best) break;
+    if (best && (!a.vivid || best.C >= a.minChroma * 0.85)) break;
+    best = undefined;
     for (const c of candidates.get(key)!) {
       if (chosen.some((o) => deltaE(o, c.lab) < MIN_DELTA)) continue;
       const hd = hueDistance(c.h, a.hue);
-      if (hd > MAX_HUE_SHIFT || Math.abs(c.apparent - apparent) > band) continue;
+      // However the season leans, an accent stays near its name's hue.
+      if (hueDistance(c.h, a0.hue) > MAX_HUE_SHIFT || Math.abs(c.apparent - apparent) > band) continue;
       const score =
         hd * COST.hue +
         Math.max(0, hd - HUE_EASY) * COST.hueFar +

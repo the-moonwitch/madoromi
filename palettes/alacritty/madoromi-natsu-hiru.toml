@@ -13,8 +13,8 @@ background = "#9fb5be"
 
 [colors.normal]
 black = "#4e6872"
-red = "#b0384b"
-green = "#618c32"
+red = "#b53753"
+green = "#00915c"
 yellow = "#b2953c"
 blue = "#526ccb"
 magenta = "#b0599b"
@@ -23,8 +23,8 @@ white = "#9fb5be"
 
 [colors.bright]
 black = "#57717a"
-red = "#b0384b"
-green = "#4f7935"
+red = "#b53753"
+green = "#007d4e"
 yellow = "#a18138"
 blue = "#4259ba"
 magenta = "#9e458a"
