@@ -161,12 +161,12 @@ export function View3D(props: View3DProps) {
     const paper = paperLab()[0];
     g.setAttribute("color", new THREE.BufferAttribute(inkColors(pts, v.ramp[0][0], paper < 0.5 ? paper : 1), 4));
     // Broad, faint Gaussian splats, overlapping many deep, add up to an even haze of colour.
-    pointLayer.add(
-      new THREE.Points(
-        g,
-        new THREE.PointsMaterial({ size: 0.3, vertexColors: true, map: softDot(), transparent: true, opacity: 0.07, depthWrite: false }),
-      ),
+    const cloud = new THREE.Points(
+      g,
+      new THREE.PointsMaterial({ size: 0.3, vertexColors: true, map: softDot(), transparent: true, opacity: 0.07, depthWrite: false }),
     );
+    cloud.renderOrder = 1;
+    pointLayer.add(cloud);
   });
 
   createEffect(() => {
@@ -188,26 +188,24 @@ export function View3D(props: View3DProps) {
     const lg = new LineGeometry();
     lg.setPositions(lp);
     lg.setColors(lc);
-    // The curve runs through the middle of the cloud, so it's drawn over the points.
-    const lm = new LineMaterial({ vertexColors: true, linewidth: 4, worldUnits: false, depthTest: false });
+    // The curve, its steps and the peak are solid and hide each other by depth; the haze of points
+    // is drawn after them, so it veils whatever is behind it.
+    const lm = new LineMaterial({ vertexColors: true, linewidth: 4, worldUnits: false });
     lm.resolution.set(host?.clientWidth || 1, host?.clientHeight || 1);
     lineMaterials.push(lm);
     const line = new Line2(lg, lm);
-    line.renderOrder = 10;
     curveLayer.add(line);
 
     const ball = new THREE.SphereGeometry(0.045, 16, 12);
     for (const lab of a.ramp) {
-      const s = new THREE.Mesh(ball, new THREE.MeshBasicMaterial({ color: linearColor(lab), depthTest: false }));
-      s.renderOrder = 11;
+      const s = new THREE.Mesh(ball, new THREE.MeshBasicMaterial({ color: linearColor(lab) }));
       s.position.set(...fr.at(lab));
       curveLayer.add(s);
     }
     const ring = new THREE.Mesh(
       new THREE.TorusGeometry(0.09, 0.012, 8, 32),
-      new THREE.MeshBasicMaterial({ color: 0xffffff, depthTest: false }),
+      new THREE.MeshBasicMaterial({ color: 0xffffff }),
     );
-    ring.renderOrder = 12;
     ring.position.set(...fr.at(a.peak.lab));
     ring.lookAt(camera.position);
     curveLayer.add(ring);

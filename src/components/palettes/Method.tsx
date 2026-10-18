@@ -105,7 +105,7 @@ export function Method(props: { flavour: Flavour; family: Flavour[]; ramp: (id: 
           <li>A flat gradient is fitted through all the points, to show how the ink varies around the curve.</li>
           <li>An accent colour is one point on one ink's curve.</li>
         </ol>
-        <InkSteps ramp={props.ramp} start={f().colours.fuji.ink} />
+        <InkSteps ramp={props.ramp} />
       </section>
 
       <section>

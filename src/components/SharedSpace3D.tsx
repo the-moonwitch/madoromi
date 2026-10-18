@@ -100,10 +100,10 @@ export function SharedSpace3D(props: SharedSpace3DProps) {
       const lg = new LineGeometry();
       lg.setPositions(lp);
       lg.setColors(lc);
-      const line = new LineMaterial({ vertexColors: true, linewidth: 2.5, worldUnits: false, transparent: true });
+      const line = new LineMaterial({ vertexColors: true, linewidth: 2.5, worldUnits: false });
       line.resolution.set(host?.clientWidth || 1, host?.clientHeight || 1);
       layer.add(new Line2(lg, line));
-      const ball = new THREE.Mesh(new THREE.SphereGeometry(0.016, 16, 12), new THREE.MeshBasicMaterial({ color: color(r.main), transparent: true }));
+      const ball = new THREE.Mesh(new THREE.SphereGeometry(0.016, 16, 12), new THREE.MeshBasicMaterial({ color: color(r.main) }));
       ball.position.set(...pos(r.main));
       at.push(ball.position.clone());
       layer.add(ball);
@@ -119,10 +119,18 @@ export function SharedSpace3D(props: SharedSpace3DProps) {
       const focus = id === hovered;
       const faded = hovered && !focus ? 0.15 : 1;
       o.line.linewidth = focus ? 5 : 2.5;
-      o.line.opacity = faded;
-      (o.ball.material as THREE.MeshBasicMaterial).opacity = faded;
+      // Solid (and so hidden by depth) unless faded; faded ones are drawn after the solid ones
+      // and don't hide anything.
+      const ballMaterial = o.ball.material as THREE.MeshBasicMaterial;
+      for (const m of [o.line, ballMaterial]) {
+        if (m.transparent !== faded < 1) {
+          m.transparent = faded < 1;
+          m.depthWrite = faded === 1;
+          m.needsUpdate = true;
+        }
+        m.opacity = faded;
+      }
       o.ball.scale.setScalar(focus ? 1.8 : 1);
-      o.ball.renderOrder = focus ? 1 : 0;
     }
   };
   createEffect(() => highlight(props.hovered));
