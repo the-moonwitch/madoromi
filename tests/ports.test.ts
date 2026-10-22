@@ -50,6 +50,17 @@ test.skipIf(!has("nvim"))("every Neovim colour scheme loads", () => {
   }
 });
 
+test.skipIf(!has("emacs"))("every Emacs theme loads", () => {
+  const dir = mkdtempSync(join(tmpdir(), "madoromi-"));
+  for (const [path, text] of ofType("-theme.el")) writeFileSync(join(dir, path.split("/").pop()!), text);
+  for (const [path] of ofType("-theme.el")) {
+    const name = path.split("/").pop()!.replace("-theme.el", "");
+    const r = spawnSync("emacs", ["--batch", "--eval", `(progn (add-to-list 'custom-theme-load-path "${dir}/") (load-theme '${name} t) (princ (format "%s" custom-enabled-themes)))`]);
+    expect(r.stderr.toString()).toBe("");
+    expect(r.stdout.toString()).toContain(name);
+  }
+});
+
 test.skipIf(!has("unzip"))("the page's zips open", () => {
   const dir = mkdtempSync(join(tmpdir(), "madoromi-"));
   for (const port of PORTS.filter((p) => p.dir !== ".")) {

@@ -87,6 +87,17 @@ curl -fsSL --create-dirs -o ~/.config/zed/themes/madoromi.json https://raw.githu
 }
 ```
 
+### Emacs
+
+1. Run this to fetch the day and night themes for your season.
+2. Add to your init file: `(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")`, then `(load-theme 'madoromi-haru-yoru t)`.
+3. To try another, `M-x load-theme`; Emacs stacks themes, so `M-x disable-theme` the old one first.
+4. To follow the system's light and dark setting (builds with `ns-system-appearance-change-functions`), swap madoromi-haru-hiru and madoromi-haru-yoru from that hook.
+
+```sh
+curl -fsSL --create-dirs -o ~/.emacs.d/themes/madoromi-haru-hiru-theme.el https://raw.githubusercontent.com/the-moonwitch/madoromi/main/palettes/emacs/madoromi-haru-hiru-theme.el -o ~/.emacs.d/themes/madoromi-haru-yoru-theme.el https://raw.githubusercontent.com/the-moonwitch/madoromi/main/palettes/emacs/madoromi-haru-yoru-theme.el
+```
+
 ## tokens
 
 ### CSS
