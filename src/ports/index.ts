@@ -4,6 +4,7 @@
 // latest release.
 import type { Flavour } from "../core/palette";
 import type { Files } from "./common";
+import { emacs } from "./emacs";
 import { nvim } from "./nvim";
 import { terminals } from "./terminals";
 import { tokens } from "./tokens";
@@ -132,6 +133,25 @@ export const PORTS: Port[] = [
     manual: ["Unzip it, and add its folder to your plugins (with lazy.nvim: `{ dir = \"<the folder>\" }`).", "Run `:colorscheme madoromi-{id}`."],
   },
   {
+    id: "emacs",
+    name: "Emacs",
+    group: "editors",
+    dir: "emacs",
+    file: (f) => `emacs/madoromi-${f.id}-theme.el`,
+    install: [
+      "Run this to fetch the day and night themes for your season.",
+      "Add to your init file: `(add-to-list 'custom-theme-load-path \"~/.emacs.d/themes/\")`, then `(load-theme 'madoromi-{id} t)`.",
+      "To try another, `M-x load-theme`; Emacs stacks themes, so `M-x disable-theme` the old one first.",
+      "To follow the system's light and dark setting (builds with `ns-system-appearance-change-functions`), swap madoromi-{hiru} and madoromi-{yoru} from that hook.",
+    ],
+    command: `curl -fsSL --create-dirs -o ~/.emacs.d/themes/madoromi-{hiru}-theme.el ${RAW}/emacs/madoromi-{hiru}-theme.el -o ~/.emacs.d/themes/madoromi-{yoru}-theme.el ${RAW}/emacs/madoromi-{yoru}-theme.el`,
+    manual: [
+      "Save the files in `~/.emacs.d/themes/`.",
+      "Add to your init file: `(add-to-list 'custom-theme-load-path \"~/.emacs.d/themes/\")`, then `(load-theme 'madoromi-{id} t)`.",
+      "To try another, `M-x load-theme`; Emacs stacks themes, so `M-x disable-theme` the old one first.",
+    ],
+  },
+  {
     id: "css",
     name: "CSS",
     group: "tokens",
@@ -164,7 +184,7 @@ export const GROUPS: { id: Port["group"]; name: string }[] = [
  * extension, the Zed theme family, the Neovim module, the tokens), so a mix installs beside madoromi.
  */
 export function portFiles(family: Flavour[], name = "madoromi"): Files {
-  return { ...tokens(family, name), ...terminals(family), ...vscode(family, name), ...zed(family, name), ...nvim(family, name) };
+  return { ...tokens(family, name), ...terminals(family), ...vscode(family, name), ...zed(family, name), ...nvim(family, name), ...emacs(family) };
 }
 
 /** A port's whole folder, as the files to put in its zip (under one folder named after it). */
